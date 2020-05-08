@@ -4,6 +4,132 @@
 
     
   <url>
+    <loc>http://blog.xiaoruiit.com/swagger2%E5%85%A5%E9%97%A8.html/</loc>
+    <lastmod>2020-05-08T13:19:46.451Z</lastmod>
+    <data>
+        <display>
+        <title>swagger2入门</title>
+        <pubTime>2020-04-27T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="swagger" url="http://blog.xiaoruiit.com/categories/swagger/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/jspxcms%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD.html/</loc>
+    <lastmod>2020-05-08T13:19:14.319Z</lastmod>
+    <data>
+        <display>
+        <title>jspxcms添加一个功能</title>
+        <pubTime>2020-04-28T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="jspxcms" url="http://blog.xiaoruiit.com/categories/jspxcms/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/jspxcms%E6%B7%BB%E5%8A%A0%E5%8A%9F%E8%83%BD%E6%9C%89%E5%85%B3%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.html/</loc>
+    <lastmod>2020-05-08T13:18:59.157Z</lastmod>
+    <data>
+        <display>
+        <title>jspxcms二次开发配置文件</title>
+        <pubTime>2020-04-28T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="jspxcms" url="http://blog.xiaoruiit.com/categories/jspxcms/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/jeecg%E7%94%A8%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD.html/</loc>
+    <lastmod>2020-05-08T13:18:07.037Z</lastmod>
+    <data>
+        <display>
+        <title>jeecg用代码生成器添加一个功能</title>
+        <pubTime>2020-04-17T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="jeecg" url="http://blog.xiaoruiit.com/categories/jeecg/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/jeecg%E6%8C%89%E9%92%AE%E6%9D%83%E9%99%90.html/</loc>
+    <lastmod>2020-05-08T13:17:50.827Z</lastmod>
+    <data>
+        <display>
+        <title>jeecg按钮权限</title>
+        <pubTime>2020-05-08T12:43:05.141Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="jeecg" url="http://blog.xiaoruiit.com/categories/jeecg/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/hexo%E6%9D%A5%E5%BF%85%E5%8A%9B%E8%AF%84%E8%AE%BA+learncloud%E7%BB%9F%E8%AE%A1%E8%AE%BF%E5%AE%A2.html/</loc>
+    <lastmod>2020-05-08T13:08:54.975Z</lastmod>
+    <data>
+        <display>
+        <title>hexo来必力评论+learncloud统计访客</title>
+        <pubTime>2018-04-15T02:03:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="learn computer" url="http://blog.xiaoruiit.com/categories/learn-computer/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2.html/</loc>
+    <lastmod>2020-05-08T12:54:07.455Z</lastmod>
+    <data>
+        <display>
+        <title>Hexo搭建博客</title>
+        <pubTime>2018-04-12T02:11:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="learn computer" url="http://blog.xiaoruiit.com/categories/learn-computer/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.xiaoruiit.com/%E9%87%8D%E8%BD%BD%E4%B8%8E%E9%87%8D%E5%86%99.html/</loc>
     <lastmod>2018-07-29T13:31:11.511Z</lastmod>
     <data>
@@ -154,42 +280,6 @@
         <display>
         <title>hexo博客百度收录</title>
         <pubTime>2018-04-16T14:49:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="learn computer" url="http://blog.xiaoruiit.com/categories/learn-computer/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://blog.xiaoruiit.com/hexo%E6%9D%A5%E5%BF%85%E5%8A%9B%E8%AF%84%E8%AE%BA+learncloud%E7%BB%9F%E8%AE%A1%E8%AE%BF%E5%AE%A2.html/</loc>
-    <lastmod>2018-04-15T02:29:54.724Z</lastmod>
-    <data>
-        <display>
-        <title>hexo来必力评论+learncloud统计访客</title>
-        <pubTime>2018-04-15T02:03:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="learn computer" url="http://blog.xiaoruiit.com/categories/learn-computer/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://blog.xiaoruiit.com/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2.html/</loc>
-    <lastmod>2018-04-13T01:17:15.312Z</lastmod>
-    <data>
-        <display>
-        <title>Hexo搭建博客</title>
-        <pubTime>2018-04-12T02:11:00.000Z</pubTime>
         
          
            
