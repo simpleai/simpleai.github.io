@@ -86,14 +86,14 @@
 <meta property="og:site_name" content="Go after">
 <meta property="og:description" content="注意：提交博客域名到百度，等待的时间比较长。错误{“error”:401,”message”:”site error”}解决方法。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/hexo博客百度收录/1-1.png">
-<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/hexo博客百度收录/1-2.png">
-<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/hexo博客百度收录/1-3.png">
+<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/1-1.png">
+<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/1-2.png">
+<meta property="og:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/1-3.png">
 <meta property="og:updated_time" content="2018-04-17T01:41:24.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo博客百度收录">
 <meta name="twitter:description" content="注意：提交博客域名到百度，等待的时间比较长。错误{“error”:401,”message”:”site error”}解决方法。">
-<meta name="twitter:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/hexo博客百度收录/1-1.png">
+<meta name="twitter:image" content="http://blog.xiaoruiit.com/hexo博客百度收录.html/1-1.png">
 
 
 
@@ -368,7 +368,7 @@
 
       
         <p>注意：提交博客域名到百度，等待的时间比较长。错误{“error”:401,”message”:”site error”}解决方法。<br><a id="more"></a></p>
-<h1 id="向百度提交信息"><a href="#向百度提交信息" class="headerlink" title="向百度提交信息"></a>向百度提交信息</h1><p>1登录<a href="https://ziyuan.baidu.com/linksubmit" target="_blank" rel="noopener">百度站长管理</a>，移动鼠标到网站支持，点击下边的链接提交。<br><img src="/hexo博客百度收录.html/hexo博客百度收录/1-1.png" alt=""><br>2按步骤提交网址<br>3验证。三种验证方式CNAME验证最简单。去域名管理处在网址解析添加一条记录。<br><img src="/hexo博客百度收录.html/hexo博客百度收录/1-2.png" alt=""><br>3拿到token。<br><img src="/hexo博客百度收录.html/hexo博客百度收录/1-3.png" alt=""><br>4进入根目录的配置文件，新增以下字段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">baidu_url_submit:</span><br><span class="line">  count: 1 ## 提交最新的一个链接</span><br><span class="line">  host: www.blog.xiaoruiit.com ## 在百度站长平台中注册的域名</span><br><span class="line">  token: H4KSennR803cks3C ## 请注意这是您的秘钥， 所以请不要把博客源代码发布在公众仓库里!</span><br><span class="line">  path: baidu_urls.txt## 文本文档的地址， 新链接会保存在此文本文档里</span><br></pre></td></tr></table></figure></p>
+<h1 id="向百度提交信息"><a href="#向百度提交信息" class="headerlink" title="向百度提交信息"></a>向百度提交信息</h1><p>1登录<a href="https://ziyuan.baidu.com/linksubmit" target="_blank" rel="noopener">百度站长管理</a>，移动鼠标到网站支持，点击下边的链接提交。<br><img src="//blog.xiaoruiit.com/hexo博客百度收录.html/1-1.png" alt=""><br>2按步骤提交网址<br>3验证。三种验证方式CNAME验证最简单。去域名管理处在网址解析添加一条记录。<br><img src="//blog.xiaoruiit.com/hexo博客百度收录.html/1-2.png" alt=""><br>3拿到token。<br><img src="//blog.xiaoruiit.com/hexo博客百度收录.html/1-3.png" alt=""><br>4进入根目录的配置文件，新增以下字段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">baidu_url_submit:</span><br><span class="line">  count: 1 ## 提交最新的一个链接</span><br><span class="line">  host: www.blog.xiaoruiit.com ## 在百度站长平台中注册的域名</span><br><span class="line">  token: H4KSennR803cks3C ## 请注意这是您的秘钥， 所以请不要把博客源代码发布在公众仓库里!</span><br><span class="line">  path: baidu_urls.txt## 文本文档的地址， 新链接会保存在此文本文档里</span><br></pre></td></tr></table></figure></p>
 <p>记得查看URL,如果是<a href="http://yoursite.com/child，修改为自己的网址。" target="_blank" rel="noopener">http://yoursite.com/child，修改为自己的网址。</a></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url: http://www.blog.xiaoruiit.com</span><br></pre></td></tr></table></figure>
 <p>新加deploy</p>
@@ -527,7 +527,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -538,7 +538,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>

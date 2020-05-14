@@ -4,11 +4,83 @@
 
     
   <url>
-    <loc>http://blog.xiaoruiit.com/Number6%20Vue%E7%9A%84%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%952.html/</loc>
-    <lastmod>2020-05-10T14:15:49.135Z</lastmod>
+    <loc>http://blog.xiaoruiit.com/Java%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2.html/</loc>
+    <lastmod>2020-05-14T14:22:30.124Z</lastmod>
     <data>
         <display>
-        <title>Vue的模板语法2</title>
+        <title>Java进制转换</title>
+        <pubTime>2020-05-12T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="编程题" url="http://blog.xiaoruiit.com/categories/%E7%BC%96%E7%A8%8B%E9%A2%98/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82.html/</loc>
+    <lastmod>2020-05-14T14:22:30.108Z</lastmod>
+    <data>
+        <display>
+        <title>设计模式-简单工厂</title>
+        <pubTime>2020-05-13T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="设计模式-简单工厂" url="http://blog.xiaoruiit.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E4%B8%A4%E5%A4%A7%E6%95%B0%E7%9A%84%E7%A7%AF.html/</loc>
+    <lastmod>2020-05-14T14:22:30.084Z</lastmod>
+    <data>
+        <display>
+        <title>两大数的积</title>
+        <pubTime>2020-05-12T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="编程题" url="http://blog.xiaoruiit.com/categories/%E7%BC%96%E7%A8%8B%E9%A2%98/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.html/</loc>
+    <lastmod>2020-05-10T14:20:46.731Z</lastmod>
+    <data>
+        <display>
+        <title>单例模式</title>
+        <pubTime>2020-05-07T16:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="设计模式Design pattern" url="http://blog.xiaoruiit.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8FDesign-pattern/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/Number6%20Vue%E7%9A%84%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%952.html/</loc>
+    <lastmod>2020-05-10T14:19:44.456Z</lastmod>
+    <data>
+        <display>
+        <title>Number6Vue的模板语法2</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -23,10 +95,10 @@
     
   <url>
     <loc>http://blog.xiaoruiit.com/Number5%20Vue%E7%9A%84%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%951.html/</loc>
-    <lastmod>2020-05-10T14:13:28.795Z</lastmod>
+    <lastmod>2020-05-10T14:19:27.535Z</lastmod>
     <data>
         <display>
-        <title>Vue的模板语法1</title>
+        <title>Number5Vue的模板语法1</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -41,10 +113,10 @@
     
   <url>
     <loc>http://blog.xiaoruiit.com/Number4%20Vue%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90.html/</loc>
-    <lastmod>2020-05-10T14:12:03.130Z</lastmod>
+    <lastmod>2020-05-10T14:19:17.516Z</lastmod>
     <data>
         <display>
-        <title>Vue的生命周期钩子</title>
+        <title>Number4 Vue的生命周期钩子</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -59,10 +131,10 @@
     
   <url>
     <loc>http://blog.xiaoruiit.com/Number3%20%E5%88%9D%E8%AF%86Vue%E7%9A%84%E6%95%B0%E6%8D%AE%E5%92%8C%E6%96%B9%E6%B3%95.html/</loc>
-    <lastmod>2020-05-10T14:10:22.614Z</lastmod>
+    <lastmod>2020-05-10T14:19:08.060Z</lastmod>
     <data>
         <display>
-        <title>初始Vue的数据和方法</title>
+        <title>Number3初始Vue的数据和方法</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -77,10 +149,10 @@
     
   <url>
     <loc>http://blog.xiaoruiit.com/Number2%20%E5%88%9B%E5%BB%BAVue%E5%AE%9E%E4%BE%8B.html/</loc>
-    <lastmod>2020-05-10T14:09:10.945Z</lastmod>
+    <lastmod>2020-05-10T14:18:58.480Z</lastmod>
     <data>
         <display>
-        <title>创建Vue实例</title>
+        <title>Number2创建Vue实例</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -95,10 +167,10 @@
     
   <url>
     <loc>http://blog.xiaoruiit.com/Number1%20%E5%BC%95%E5%85%A5Vue.html/</loc>
-    <lastmod>2020-05-10T14:07:27.470Z</lastmod>
+    <lastmod>2020-05-10T14:18:48.751Z</lastmod>
     <data>
         <display>
-        <title>引入Vue</title>
+        <title>Number1引入Vue</title>
         <pubTime>2019-10-09T16:00:00.000Z</pubTime>
         
          
@@ -231,24 +303,6 @@
            
              
               <breadCrumb title="jeecg" url="http://blog.xiaoruiit.com/categories/jeecg/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://blog.xiaoruiit.com/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.html/</loc>
-    <lastmod>2020-05-10T11:48:09.229Z</lastmod>
-    <data>
-        <display>
-        <title>单例模式</title>
-        <pubTime>2019-05-07T16:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="设计模式Design pattern" url="http://blog.xiaoruiit.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8FDesign-pattern/"/>
           
         </display>
     </data>
