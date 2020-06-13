@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="手写框架流程,附上了获取bean和创建bean的代码，为附上加载配置文件，生成bean定义的代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring-手写框架流程">
+<meta property="og:url" content="http://blog.xiaoruiit.com/Spring-手写框架流程.html/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="手写框架流程,附上了获取bean和创建bean的代码，为附上加载配置文件，生成bean定义的代码">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-13T01:51:38.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring-手写框架流程">
+<meta name="twitter:description" content="手写框架流程,附上了获取bean和创建bean的代码，为附上加载配置文件，生成bean定义的代码">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.xiaoruiit.com/Spring-手写框架流程.html/"/>
+
+
+
+
+
+  <title>Spring-手写框架流程 | Go after</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Go after</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/Spring-手写框架流程.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring-手写框架流程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-05T00:00:00+08:00">
+                2020-02-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/Spring-手写框架流程.html/" class="leancloud_visitors" data-flag-title="Spring-手写框架流程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  847
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>手写框架流程,附上了获取bean和创建bean的代码，为附上加载配置文件，生成bean定义的代码<br><a id="more"></a></p>
+<h2 id="一-准备环境"><a href="#一-准备环境" class="headerlink" title="一.准备环境"></a>一.准备环境</h2><h3 id="1-导入依赖"><a href="#1-导入依赖" class="headerlink" title="1.导入依赖"></a>1.导入依赖</h3><h3 id="2-写xml配置文件"><a href="#2-写xml配置文件" class="headerlink" title="2.写xml配置文件"></a>2.写xml配置文件</h3><h3 id="3-编写测试代码"><a href="#3-编写测试代码" class="headerlink" title="3.编写测试代码"></a>3.编写测试代码</h3><h2 id="二-写框架"><a href="#二-写框架" class="headerlink" title="二.写框架"></a>二.写框架</h2><h3 id="1-加载并解析配置文件"><a href="#1-加载并解析配置文件" class="headerlink" title="1.加载并解析配置文件"></a>1.加载并解析配置文件</h3><p>​    涉及到Bedifinition</p>
+<h3 id="2-创建Bean实例"><a href="#2-创建Bean实例" class="headerlink" title="2.创建Bean实例"></a>2.创建Bean实例</h3><ol>
+<li><p>判断单例缓存Map中是否存在需要的实例</p>
+<ol>
+<li><p>存在</p>
+<p>返回单例实例</p>
+</li>
+<li><p>不存在</p>
+<p>创建实例</p>
+<ol>
+<li><p>获取Bedifinition，判断是否为null</p>
+<ol>
+<li><p>null,return null</p>
+</li>
+<li><p>判断是单例还是多例</p>
+<ol>
+<li><p>单例</p>
+<ol>
+<li>创建实例</li>
+<li><p>创建bean的实例</p>
+<ol start="2">
+<li><p>注入属性</p>
+</li>
+<li><p>是否有初始化方法</p>
+</li>
+<li>有<ol>
+<li>执行方法 通过反射</li>
+</ol>
+</li>
+<li><p>无</p>
+</li>
+<li><p>是否有后置处理方法</p>
+</li>
+<li>有<ol>
+<li>通过aop处理</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>加入缓存Map</p>
+</li>
+<li><p>返回实例对象</p>
+</li>
+</ol>
+</li>
+<li><p>多例</p>
+<ol>
+<li><p>创建实例</p>
+</li>
+<li><p>返回实例对象</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>创建bean实例简化代码，只实现核心部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">private Map&lt;String, BeanDefinition&gt; beanDefinitions = new HashMap&lt;&gt;();</span><br><span class="line">// 单例缓存</span><br><span class="line">Map&lt;String, Object&gt; beans = new HashMap&lt;String, Object&gt;();</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public void registerBeanDefinition(String beanName, BeanDefinition bd) &#123;</span><br><span class="line">	beanDefinitions.put(beanName, bd);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public BeanDefinition getBeanDefinition(String beanName) &#123;</span><br><span class="line">	return beanDefinitions.get(beanName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// @Override</span><br><span class="line">public Object getBean2(String name) &#123;</span><br><span class="line">	</span><br><span class="line">	// 从单例缓存获取实例对象</span><br><span class="line">	Object object = beans.get(name);</span><br><span class="line">	// 有实例对象时返回实现对象</span><br><span class="line">	if (object != null) &#123;</span><br><span class="line">		return object;</span><br><span class="line">	&#125;</span><br><span class="line">	// 没有实例对象，创建实例对象</span><br><span class="line">	// 获取Bedifinition,类的定义</span><br><span class="line">	BeanDefinition beanDefinition = getBeanDefinition(name);</span><br><span class="line">	// 没有类的定义时返回实例null</span><br><span class="line">	if (beanDefinition == null) &#123;</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	// 获取单例多例属性，判断多例还是单例</span><br><span class="line">	String scope = beanDefinition.getScope();</span><br><span class="line">	if (&quot;singleton&quot;.equals(scope)) &#123;</span><br><span class="line">		// 单例：</span><br><span class="line">		// 一、创建实例</span><br><span class="line">		Object bean = creaBean2(name, beanDefinition);</span><br><span class="line">		// 二、加入单例缓存</span><br><span class="line">		beans.put(name, bean);</span><br><span class="line">		// 三、返回单例实例</span><br><span class="line">		return bean;</span><br><span class="line">	&#125; else if (&quot;prototype&quot;.equals(scope)) &#123;</span><br><span class="line">		// 多例：</span><br><span class="line">		// 一、创建实例</span><br><span class="line">		// 二、返回实例</span><br><span class="line">		 return creaBean2(name, beanDefinition);</span><br><span class="line">	&#125;</span><br><span class="line">	return object;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private Object creaBean2(String name, BeanDefinition beanDefinition) &#123;</span><br><span class="line">	// 1.创建bean的实例</span><br><span class="line">	// 1.1获取类的类型</span><br><span class="line">	String clazzName = beanDefinition.getClazzName();</span><br><span class="line">	// 1.2创建</span><br><span class="line">	Class&lt;?&gt; type = null;</span><br><span class="line">	try &#123;</span><br><span class="line">		type = Class.forName(clazzName);</span><br><span class="line">	&#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	Object bean = ReflectUtils.createObject(type);</span><br><span class="line">	// 2.注入属性</span><br><span class="line">	List&lt;PropertyValue&gt; propertyValues = beanDefinition.getPropertyValues();</span><br><span class="line">	for (PropertyValue propertyValue : propertyValues) &#123;</span><br><span class="line">		// 类属性名称</span><br><span class="line">		String name2 = propertyValue.getName();</span><br><span class="line">		// 类属性值 分两种，普通类型value和引用类型ref  propertity中的value标签中的内容</span><br><span class="line">		Object value = propertyValue.getValue();</span><br><span class="line">		</span><br><span class="line">		Object valueToUse = null;</span><br><span class="line">		// 判断普通类型or引用类型</span><br><span class="line">		if (value instanceof TypedStringValue) &#123;// 判断是否为普通类型</span><br><span class="line">			TypedStringValue typedStringValue = (TypedStringValue) value;</span><br><span class="line">			String stringValue = typedStringValue.getValue();</span><br><span class="line">			Class&lt;?&gt; targetType = typedStringValue.getTargetType();</span><br><span class="line">			</span><br><span class="line">			// 只匹配了两种Integer和String</span><br><span class="line">			if (targetType == Integer.class) &#123;</span><br><span class="line">				// 确定了value的类型为Integer，注入属性 name2:属性名称:age;valueToUse:属性值:18</span><br><span class="line">				valueToUse = Integer.parseInt(stringValue);</span><br><span class="line">			&#125; else if (targetType == String.class) &#123;</span><br><span class="line">				valueToUse = stringValue;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125; else if (value instanceof RuntimeBeanReference) &#123;// 判断是否为引用类型</span><br><span class="line">			RuntimeBeanReference runtimeBeanReference = (RuntimeBeanReference) value;</span><br><span class="line">			String ref = runtimeBeanReference.getRef();</span><br><span class="line">			</span><br><span class="line">			// TODO 容易引起循环依赖问题</span><br><span class="line">			// 获取引用类型的属性，并注入。获取引用类型时，需要把引用类型Course中的属性name和age先注入到Course中</span><br><span class="line">			valueToUse = getBean2(ref);</span><br><span class="line">		&#125;</span><br><span class="line">		// 设置属性</span><br><span class="line">		ReflectUtils.setProperty(bean, name2, valueToUse);</span><br><span class="line">	&#125;</span><br><span class="line">	// 3.处理初始化方法</span><br><span class="line">	String initMethod = beanDefinition.getInitMethod();</span><br><span class="line">	if (&quot;init&quot;.equals(initMethod)) &#123;</span><br><span class="line">		ReflectUtils.invokeMethod(bean, initMethod);</span><br><span class="line">	&#125;</span><br><span class="line">	// 4.处理后置方法 aop</span><br><span class="line">	</span><br><span class="line">	return bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得不错，就打赏一下吧！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="追逐 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="追逐 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/设计模式-策略模式.html/" rel="next" title="设计模式-策略模式">
+                <i class="fa fa-chevron-left"></i> 设计模式-策略模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/编程题-两大数的积.html/" rel="prev" title="两大数的积">
+                两大数的积 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">追逐</p>
+              <p class="site-description motion-element" itemprop="description">技术融于生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-准备环境"><span class="nav-number">1.</span> <span class="nav-text">一.准备环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-导入依赖"><span class="nav-number">1.1.</span> <span class="nav-text">1.导入依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-写xml配置文件"><span class="nav-number">1.2.</span> <span class="nav-text">2.写xml配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-编写测试代码"><span class="nav-number">1.3.</span> <span class="nav-text">3.编写测试代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-写框架"><span class="nav-number">2.</span> <span class="nav-text">二.写框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-加载并解析配置文件"><span class="nav-number">2.1.</span> <span class="nav-text">1.加载并解析配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-创建Bean实例"><span class="nav-number">2.2.</span> <span class="nav-text">2.创建Bean实例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz", "4uuoVMQeqKxIXcX7xwgWjGat");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
