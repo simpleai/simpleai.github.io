@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="索引原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL-索引">
+<meta property="og:url" content="http://blog.xiaoruiit.com/Mysql-索引.html/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="索引原理">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-03T23:10:48.304Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL-索引">
+<meta name="twitter:description" content="索引原理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.xiaoruiit.com/Mysql-索引.html/"/>
+
+
+
+
+
+  <title>MySQL-索引 | Go after</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Go after</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/Mysql-索引.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL-索引</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-24T00:00:00+08:00">
+                2020-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/Mysql-索引.html/" class="leancloud_visitors" data-flag-title="MySQL-索引">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,647
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>索引原理</p>
+<a id="more"></a>
+<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="索引介绍"><a href="#索引介绍" class="headerlink" title="索引介绍"></a>索引介绍</h2><h2 id="索引优劣势"><a href="#索引优劣势" class="headerlink" title="索引优劣势"></a>索引优劣势</h2><p>优点：提高查询速度</p>
+<p>缺点：额外占存储空间，影响更新表效率。增删操作不应更新数据，还会更新索引。</p>
+<h2 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h2><p>主键索引：主键自带</p>
+<p>单列索引：普通索引，唯一索引，全文索引（鸡肋，对文本的索引。ES的效率更好）</p>
+<p>组合索引：组合多个列</p>
+<p>空间索引</p>
+<p>位图索引：Oracle</p>
+<h2 id="索引语法"><a href="#索引语法" class="headerlink" title="索引语法"></a>索引语法</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><p>普通索引:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE INDEX index_name ON table(column(length)) ; </span><br><span class="line">ALTER TABLE table_name ADD INDEX index_name (column(length)) ;</span><br></pre></td></tr></table></figure>
+<p>唯一索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATE UNIQUE INDEX index_name ON table(column(length)) ; </span><br><span class="line">alter table table_name add unique index index_name(column);</span><br></pre></td></tr></table></figure>
+<p>组合索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE article ADD INDEX index_titme_time (title(50),time(10)) ;</span><br></pre></td></tr></table></figure>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX index_name ON table</span><br></pre></td></tr></table></figure>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW INDEX FROM table_name</span><br></pre></td></tr></table></figure>
+<p><strong>例子：</strong></p>
+<p>show index from table_name</p>
+<p>空间复杂度：O(1)</p>
+<p>排序方式：In-place （占用常数内存，不占用额外内存）</p>
+<p>稳定性：稳定</p>
+<p><strong>Implementation</strong>:Primary</p>
+<p>主键索引Primary  索引方式</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Non_unique</th>
+<th>key_name</th>
+<th>seq_in_index</th>
+<th>coulmn_name</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主键</td>
+<td>0</td>
+<td>primary</td>
+<td>1</td>
+<td>id</td>
+<td>btree（B+tree）</td>
+</tr>
+<tr>
+<td>唯一索引</td>
+<td>0</td>
+<td>ids_loginname</td>
+<td>1</td>
+<td>loginname</td>
+<td>btree（B+tree）</td>
+</tr>
+<tr>
+<td>组合索引</td>
+<td>1</td>
+<td>ids_age_sex_name</td>
+<td>1</td>
+<td>age</td>
+<td>btree（B+tree）</td>
+</tr>
+<tr>
+<td>组合索引</td>
+<td>1</td>
+<td>ids_age_sex_name</td>
+<td>2</td>
+<td>sex</td>
+<td>btree（B+tree）</td>
+</tr>
+<tr>
+<td>组合索引</td>
+<td>1</td>
+<td>ids_age_sex_name</td>
+<td>3</td>
+<td>name</td>
+<td>btree（B+tree）</td>
+</tr>
+<tr>
+<td>普通索引</td>
+<td>1</td>
+<td>ids_dep</td>
+<td>1</td>
+<td>dep</td>
+<td>btree（B+tree）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引原理"><a href="#索引原理" class="headerlink" title="索引原理"></a>索引原理</h2><h3 id="索引使用的数据结构"><a href="#索引使用的数据结构" class="headerlink" title="索引使用的数据结构"></a>索引使用的数据结构</h3><p> 数据量：三层20G，四层几十T</p>
+<p>  树演示网址：<a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" target="_blank" rel="noopener">https://www.cs.usfca.edu/~galles/visualization/Algorithms.html</a></p>
+<h4 id="B-tree"><a href="#B-tree" class="headerlink" title="B+tree"></a>B+tree</h4><p>特点：</p>
+<ul>
+<li>所有数据存储在叶子节点。</li>
+<li>叶子节点排成了一个链表</li>
+<li>叶子节点的链表顺序取出可得到有序的数据</li>
+</ul>
+<h4 id="Btree"><a href="#Btree" class="headerlink" title="Btree"></a>Btree</h4><p>特点 ：</p>
+<ul>
+<li>数据存储在叶子节点和非叶子节点上。</li>
+<li>无链表结构</li>
+</ul>
+<h3 id="索引树："><a href="#索引树：" class="headerlink" title="索引树："></a>索引树：</h3><p>每建立一个索引会建立一颗索引树</p>
+<h3 id="非聚集索引-MyISAM"><a href="#非聚集索引-MyISAM" class="headerlink" title="非聚集索引-MyISAM"></a>非聚集索引-MyISAM</h3><p>主键索引：存储主键和指向数据的地址。</p>
+<p>辅助索引：存储辅助索引值和指向数据的地址。</p>
+<h3 id="聚集索引-InnoDB"><a href="#聚集索引-InnoDB" class="headerlink" title="聚集索引-InnoDB"></a>聚集索引-InnoDB</h3><h4 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h4><p>存储主键值和数据</p>
+<p>索引是排序后建立的。主键的创建最好用自增整数。不要用大字符串比如 uuid —- 》 雪花算法 snowflflakes</p>
+<h4 id="辅助索引"><a href="#辅助索引" class="headerlink" title="辅助索引"></a>辅助索引</h4><p>存储索引值和主键值</p>
+<h5 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h5><p>存储组合索引中的各个值和主键值</p>
+<p>组合索引优点：一定程度上避免回表。回表：组合索引树没有要查询的列数据，根据组合索引树的主键回到主键索引树查找数据。</p>
+<h2 id="索引使用场景"><a href="#索引使用场景" class="headerlink" title="索引使用场景"></a>索引使用场景</h2><p>什么情况建立索引</p>
+<ul>
+<li>主键自动创建主键索引</li>
+<li>表数据量大，100万条。</li>
+<li>频繁作为查询字段</li>
+<li>多表关联查询，on两端都要建立索引</li>
+<li>查询中排序的字段创建B+Tree，B+Tree可直接有序取出</li>
+<li>覆盖索引，使用组合索引防止回表</li>
+<li>统计或分组字段，应该创建索引</li>
+</ul>
+<p>什么情况没必要建立索引</p>
+<ul>
+<li>表数据量少</li>
+<li><p>频繁更新，索引需要维护</p>
+</li>
+<li><p>查询字段使用频率低</p>
+</li>
+</ul>
+<h2 id="索引的执行"><a href="#索引的执行" class="headerlink" title="索引的执行"></a>索引的执行</h2><p>数据量少时，返回的数据量超过一半时，不使用索引。数据量多时，返回的数据量超过1/3不使用索引。</p>
+<p>组合索引的创建顺序是使用顺序。</p>
+<p>最左前缀原则:</p>
+<ol>
+<li><p>前缀索引</p>
+<p>like 常量% 使用索引</p>
+<p>like %常量不使用索引</p>
+</li>
+<li><p>最左前缀</p>
+</li>
+</ol>
+<p>​    按照索引的建立顺序搜索，范围查询（&gt;&lt;between）后的索引失效。</p>
+<p>where id =1 and name =”han” and a &gt; 1 and b =1</p>
+<h3 id="查看执行-计划"><a href="#查看执行-计划" class="headerlink" title="查看执行 计划"></a>查看执行 计划</h3><h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id、select_type、table、type、possible_keys、key、key_len、ref、rows、Extra</span><br></pre></td></tr></table></figure>
+<p>id:</p>
+<ul>
+<li>每个 SELECT语句都会自动分配的一个唯一标识符. </li>
+<li>id相同：执行顺序由上到下,id不同：如果是子查询，id号会自增，<strong>id越大，优先级越高</strong>。id相同的不同的同时存在</li>
+<li>id列为null的就表示这是一个结果集，不需要使用它来进行查询。</li>
+</ul>
+<h5 id="select-type"><a href="#select-type" class="headerlink" title="select_type:"></a>select_type:</h5><ul>
+<li>主要用于区别普通查询、联合查询(union、union all)、子查询等复杂查询。</li>
+<li><strong>simple</strong>:表示不需要union操作或者不包含子查询的简单select查询。有连接查询时，外层的查询为simple，且只有一个</li>
+<li><strong>primary</strong>:一个需要union操作或者含有子查询的select，位于最外层的单位查询的select_type即为primary。且只有一个</li>
+<li><strong>subquery</strong>:除了from字句中包含的子查询外，其他地方出现的子查询都可能是subquery</li>
+<li><strong>dependent subquery</strong>:与dependent union类似，表示这个subquery的查询要受到外部表查询的影响</li>
+<li><strong>union</strong>:union连接的两个select查询，第一个查询是PRIMARY，除了第一个表外，第二个以后的表select_type都是union</li>
+<li><strong>union result</strong>:包含union的结果集，在union和union all语句中,因为它不需要参与查询，所以id字段为null</li>
+<li><strong>derived</strong>:from字句中出现的子查询，也叫做派生表，其他数据库中可能叫做内联视图或嵌套select</li>
+</ul>
+<p>table:</p>
+<ul>
+<li>显示的查询表名，如果查询使用了别名，那么这里显示的是别名</li>
+<li>如果不涉及对数据表的操作，那么这显示为null</li>
+</ul>
+<h5 id="type"><a href="#type" class="headerlink" title="type:"></a>type:</h5><h6 id="索引的类型（最好→最坏）："><a href="#索引的类型（最好→最坏）：" class="headerlink" title="索引的类型（最好→最坏）："></a>索引的类型（最好→最坏）：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system，const，eq_ref，ref，fulltext,ref_or_null,unique_subquery,index_subquery,range，index_merge，index，ALL</span><br></pre></td></tr></table></figure>
+<p><strong>除了all之外，其他的type都可以使用到索引，除了index_merge之外，其他的type只可以用到一个索引</strong></p>
+<p>system：空表,数据只有一行。</p>
+<p><strong>const（重要）</strong>：使用主键索引或唯一索引,返回1行记录。</p>
+<p><strong>eq_ref（重要）</strong>:连接字段是<strong>主键或者唯一性索引</strong>。</p>
+<p><strong>ref（重要）</strong>:<strong>针对非唯一性索引</strong>，使用<strong>等值（=）查询</strong>非主键。或者是使用了<strong>最左前缀规则索引的查询</strong>。</p>
+<p>index 列过滤，回表。比如组合索引没命中全部字段，回主键索引树查询数据。</p>
+<p>fulltext：全文索引检索。全文索引的优先级很高，若全文索引和普通索引同时存在时，mysql优先选择使用全文索引</p>
+<p>unique_subquery：用于where中的in形式子查询，子查询返回不重复值唯一值</p>
+<p>index_subquery：用于in形式子查询使用到了辅助索引或者in常数列表，子查询可能返回重复值，可以使用索引将子查询去重。</p>
+<p><strong>range（重要）</strong>：<strong>索引范围扫描</strong>，常见于使用&gt;,&lt;,is null,between ,in ,like等运算符的查询中。</p>
+<p>index_merge：表示查询使用了两个以上的索引，最后取交集或者并集，常见and ，or的条件使用了不同的索引</p>
+<p><strong>index（重要）</strong>：</p>
+<ul>
+<li><strong>条件出现在索引树中的节点。可能没有完全匹配索引。</strong></li>
+<li><strong>索引全表扫描</strong>，把索引从头到尾扫一遍，常见于使用索引列就可以处理不需要读取数据文件的查询、可以使用索引排序或者分组的查询。</li>
+<li>explain select loginname from tuser; #单索引</li>
+<li>explain select age from tuser; #组合索引</li>
+</ul>
+<p><strong>all（重要）</strong>：是全表扫描数据文件，然后再<strong>在server(layer(解析器、优化器))层进行过滤</strong>返回符合要求的记录。explain select * from tuser; </p>
+<p>possible_keys：此次查询中可能选用的索引，一个或多个。</p>
+<p>key：查询真正使用到的索引，select_type为index_merge时，这里可能出现两个以上的索引，其他的select_type这里只会出现一个。</p>
+<p>key_len：用于处理查询的索引长度，如果是单列索引，那就整个索引长度算进去，如果是多列索引，会计算具体使用到了多少个列的索引。</p>
+<p>ref：</p>
+<ul>
+<li>如果是等值查询，这里会显示const</li>
+<li>如果是连接查询，被驱动表的执行计划这里会显示驱动表的关联字段</li>
+<li>如果是条件使用了表达式或者函数，或者条件列发生了内部隐式转换，这里可能显示为func</li>
+</ul>
+<p>rows：估算的扫描行数，不是精确值（InnoDB不是精确的值，MyISAM是精确的值</p>
+<h5 id="extra（重要）："><a href="#extra（重要）：" class="headerlink" title="extra（重要）："></a>extra（重要）：</h5><p>包含不适合在其他列中显示单十分重要的额外的信息，这个列可以显示的信息非常多，有几十</p>
+<p>种，常用的有下列几种：</p>
+<ul>
+<li><strong>using fifilesort（重要）</strong>：    <ul>
+<li>排序时无法使用到索引时，就会出现这个。常见于order by和group by语句</li>
+<li>MySQL会使用一个外部的索引排序，而不是按照索引顺序进行读取。</li>
+<li>MySQL中无法利用索引完成的排序操作称为“文件排序“</li>
+</ul>
+</li>
+<li><strong>using index（重要）</strong>：<ul>
+<li>查询时<strong>不需要回表查询</strong>，直接通过索引就可以获取查询的数据。</li>
+<li>表示相应的SELECT查询中使用到了<strong>覆盖索引</strong></li>
+<li>如果同时出现Using Where ，说明索引被用来执行查找索引键值</li>
+<li>如果没有同时出现Using Where ，表明索引用来读取数据而非执行查找动作</li>
+</ul>
+</li>
+<li><strong>using where（重要）</strong>：表示存储引擎返回的记录并不是所有的都满足查询条件，需要在server层进行过滤。</li>
+<li><strong>using index condition</strong>：5.6.x之后支持<strong>ICP</strong>特性，可以把检查条件（非主键索引）也下推到存储引擎层，不符合检查条件和限制条件的数据，直接不读取，这样就大大减少了存储引擎扫描的记录数量。</li>
+</ul>
+<h2 id="索引失效分析"><a href="#索引失效分析" class="headerlink" title="索引失效分析"></a>索引失效分析</h2><p>口诀:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1.全值匹配我最爱</span><br><span class="line">2.最佳左前缀法则</span><br><span class="line">3.不在索引列上做任何操作（计算、函数、（自动or手动）类型转换），会导致索引失效而转向全表扫描</span><br><span class="line">4.存储引擎不能使用索引中范围条件右边的列</span><br><span class="line">5.尽量使用覆盖索引（只访问索引的查询（索引列和查询列一致）</span><br><span class="line">6.mysql在使用不等于（！=或者&lt;&gt;）的时候无法使用索引会导致全表扫描(5.6之后主键是特例)</span><br><span class="line">7.is null，is not null 也无法使用索引（有特例）</span><br><span class="line">8.like以通配符开头（%abc..）mysql索引失效会变成全表扫描的操作（有特例）</span><br><span class="line">9.字符串不加单引号索引失效</span><br><span class="line">10.少用or，用它来连接时会索引失效</span><br></pre></td></tr></table></figure>
+<p>索引字段上使用 is null 判断时，可使用索引</p>
+<p>解决like ‘%字符串%’时，索引失效问题的方法？使用覆盖索引可以解决。 </p>
+<p>explain select name , age,sex from tuser where name like ‘%a%’; </p>
+<p><strong>2.最佳左前缀法则</strong></p>
+<p>组合索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">带头索引不能死，中间索引不能断</span><br></pre></td></tr></table></figure>
+<p>如果索引了多个列，要遵守最佳左前缀法则。指的是查询从索引的最左前列开始 并且不跳过索引中的列。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得不错，就打赏一下吧！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="追逐 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="追逐 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Mysql-基础+架构.html/" rel="next" title="Mysql-基础+架构">
+                <i class="fa fa-chevron-left"></i> Mysql-基础+架构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Mysql-锁.html/" rel="prev" title="Mysql-锁">
+                Mysql-锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">追逐</p>
+              <p class="site-description motion-element" itemprop="description">技术融于生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#索引"><span class="nav-number">1.</span> <span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引介绍"><span class="nav-number">1.1.</span> <span class="nav-text">索引介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引优劣势"><span class="nav-number">1.2.</span> <span class="nav-text">索引优劣势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引分类"><span class="nav-number">1.3.</span> <span class="nav-text">索引分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引语法"><span class="nav-number">1.4.</span> <span class="nav-text">索引语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建"><span class="nav-number">1.4.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除"><span class="nav-number">1.4.2.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看"><span class="nav-number">1.4.3.</span> <span class="nav-text">查看</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引原理"><span class="nav-number">1.5.</span> <span class="nav-text">索引原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引使用的数据结构"><span class="nav-number">1.5.1.</span> <span class="nav-text">索引使用的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#B-tree"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">B+tree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Btree"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">Btree</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引树："><span class="nav-number">1.5.2.</span> <span class="nav-text">索引树：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非聚集索引-MyISAM"><span class="nav-number">1.5.3.</span> <span class="nav-text">非聚集索引-MyISAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚集索引-InnoDB"><span class="nav-number">1.5.4.</span> <span class="nav-text">聚集索引-InnoDB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主键索引"><span class="nav-number">1.5.4.1.</span> <span class="nav-text">主键索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助索引"><span class="nav-number">1.5.4.2.</span> <span class="nav-text">辅助索引</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#组合索引"><span class="nav-number">1.5.4.2.1.</span> <span class="nav-text">组合索引</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引使用场景"><span class="nav-number">1.6.</span> <span class="nav-text">索引使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引的执行"><span class="nav-number">1.7.</span> <span class="nav-text">索引的执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看执行-计划"><span class="nav-number">1.7.1.</span> <span class="nav-text">查看执行 计划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数说明"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">参数说明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#select-type"><span class="nav-number">1.7.1.1.1.</span> <span class="nav-text">select_type:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#type"><span class="nav-number">1.7.1.1.2.</span> <span class="nav-text">type:</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#索引的类型（最好→最坏）："><span class="nav-number">1.7.1.1.2.1.</span> <span class="nav-text">索引的类型（最好→最坏）：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#extra（重要）："><span class="nav-number">1.7.1.1.3.</span> <span class="nav-text">extra（重要）：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引失效分析"><span class="nav-number">1.8.</span> <span class="nav-text">索引失效分析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz", "4uuoVMQeqKxIXcX7xwgWjGat");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
