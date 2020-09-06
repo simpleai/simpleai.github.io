@@ -1,1 +1,1 @@
-http://blog.xiaoruiit.com/Mysql-事务.html/
+http://blog.xiaoruiit.com/RabbitMQ-与SpringBoot整合.html/

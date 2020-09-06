@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="mysql优化.包括软件、硬件、SQL语句">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql-性能分析和优化">
+<meta property="og:url" content="http://blog.xiaoruiit.com/Mysql-性能分析和优化.html/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="mysql优化.包括软件、硬件、SQL语句">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-10T14:47:34.479Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql-性能分析和优化">
+<meta name="twitter:description" content="mysql优化.包括软件、硬件、SQL语句">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.xiaoruiit.com/Mysql-性能分析和优化.html/"/>
+
+
+
+
+
+  <title>Mysql-性能分析和优化 | Go after</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Go after</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/Mysql-性能分析和优化.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mysql-性能分析和优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-09T00:00:00+08:00">
+                2020-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/Mysql-性能分析和优化.html/" class="leancloud_visitors" data-flag-title="Mysql-性能分析和优化">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  641
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>mysql优化.包括软件、硬件、SQL语句</p>
+<a id="more"></a>
+<h1 id="Mysql-性能分析和优化"><a href="#Mysql-性能分析和优化" class="headerlink" title="Mysql-性能分析和优化"></a>Mysql-性能分析和优化</h1><h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><h3 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h3><p>分析：</p>
+<ol>
+<li>通过慢查询日志获取查询时间较长的SQL</li>
+<li>查看SQL的执行计划explain</li>
+<li>使用show profile[s] 查看SQL的性能使用情况</li>
+</ol>
+<p>注意：开启慢查询日志影响mysql性能，排查问题时再开启。</p>
+<h4 id="开启慢查询日志："><a href="#开启慢查询日志：" class="headerlink" title="开启慢查询日志："></a>开启慢查询日志：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=ON </span><br><span class="line">long_query_time=3 </span><br><span class="line">slow_query_log_file=/var/lib/mysql/slow-log.log</span><br></pre></td></tr></table></figure>
+<h4 id="慢查询工具"><a href="#慢查询工具" class="headerlink" title="慢查询工具"></a>慢查询工具</h4><h5 id="mysqldumpslow"><a href="#mysqldumpslow" class="headerlink" title="mysqldumpslow"></a>mysqldumpslow</h5><p>mysql自带的慢查询日志工具。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">到按照时间排序的前10条里面含有左连接的查询语句：</span><br><span class="line">mysqldumpslow -s t -t 10 -g “left join”  /var/log/mysql/slow.log</span><br></pre></td></tr></table></figure>
+<h5 id="percona-toolkit"><a href="#percona-toolkit" class="headerlink" title="percona-toolkit"></a>percona-toolkit</h5><p>高级命令行工具的集合，可以查看当前服务的摘要信息，磁盘检测，分析慢查询日志，查找重复索引，实现表同步等等。</p>
+<p>linux:</p>
+<p><a href="https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz" target="_blank" rel="noopener">https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz</a></p>
+<h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><h4 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h4><p>默认128M，修改为系统内存的4/5，尽量从内存中读取。</p>
+<p>buffer pool越大和存储引擎I/O次数越少。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like &apos;innodb_buffer_pool_pages_%&apos;; </span><br><span class="line">| Innodb_buffer_pool_pages_free | 0 | 0 表示已经被用光</span><br></pre></td></tr></table></figure>
+<p>修改 my.cnf</p>
+<p>innodb_buffffer_pool_size =3000M</p>
+<h4 id="redo-log-file"><a href="#redo-log-file" class="headerlink" title="redo log file"></a>redo log file</h4><p>默认8M,修改为Buffer的1/4.降低磁盘写入次数。</p>
+<h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><p>普通硬盘更换为SSD，提高磁盘读写，SSD寻道时间很短。</p>
+<h3 id="内存预热"><a href="#内存预热" class="headerlink" title="内存预热"></a>内存预热</h3><h3 id="表和字段设计"><a href="#表和字段设计" class="headerlink" title="表和字段设计"></a>表和字段设计</h3><ul>
+<li>减少关联查询，创建合理的冗余字段</li>
+<li>字段太多的大表，拆表</li>
+<li>表中不常用的字段或者存储数据比较多的字段，拆表。（商品表中的商品介绍字段单独拆解到另一个表中，使用ID关联）</li>
+<li>每张表都要有主键，主键最好是int类型。</li>
+</ul>
+<h3 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h3><h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p>数量不要超过6个。通过索引返回的数据量需要小于1/3才有效。</p>
+<p>where字段、组合索引（最左前缀）、索引下推、索引覆盖（不回表） on两边  order排序  group by分组统计</p>
+<p>不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算</p>
+<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>有截断效果（停止全表扫描），但还是在server层处理数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user limit 10</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 一千万条数据</span><br><span class="line"># 速度很慢 10</span><br><span class="line">select * from user limit 9000000 for 10</span><br><span class="line"># 速度很快 0.03</span><br><span class="line">select * from user where id &gt; 9000000 limit 10</span><br></pre></td></tr></table></figure>
+<h4 id="count"><a href="#count" class="headerlink" title="count"></a>count</h4><p>count（*）找普通索引，即去最小的索引树遍历，包含null</p>
+<p>count（字段） ，走缓存，不包含null</p>
+<p>count（1） 包含null</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得不错，就打赏一下吧！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="追逐 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="追逐 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/前端-弹出框底层不可选.html/" rel="next" title="前端-弹出框底层不可选">
+                <i class="fa fa-chevron-left"></i> 前端-弹出框底层不可选
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Mysql-集群、主从复制、读写分离.html/" rel="prev" title="Mysql-集群、主从复制、读写分离">
+                Mysql-集群、主从复制、读写分离 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">追逐</p>
+              <p class="site-description motion-element" itemprop="description">技术融于生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql-性能分析和优化"><span class="nav-number">1.</span> <span class="nav-text">Mysql-性能分析和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能分析"><span class="nav-number">1.1.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢查询日志"><span class="nav-number">1.1.1.</span> <span class="nav-text">慢查询日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启慢查询日志："><span class="nav-number">1.1.1.1.</span> <span class="nav-text">开启慢查询日志：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢查询工具"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">慢查询工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mysqldumpslow"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">mysqldumpslow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#percona-toolkit"><span class="nav-number">1.1.1.2.2.</span> <span class="nav-text">percona-toolkit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化"><span class="nav-number">1.2.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#软件"><span class="nav-number">1.2.1.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Pool"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Buffer Pool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-file"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">redo log file</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">1.2.2.</span> <span class="nav-text">硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存预热"><span class="nav-number">1.2.3.</span> <span class="nav-text">内存预热</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表和字段设计"><span class="nav-number">1.2.4.</span> <span class="nav-text">表和字段设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL语句"><span class="nav-number">1.2.5.</span> <span class="nav-text">SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#索引"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#limit"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">count</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz", "4uuoVMQeqKxIXcX7xwgWjGat");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
