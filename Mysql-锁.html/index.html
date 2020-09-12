@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Mysql,锁," />
 
 
 
@@ -80,6 +80,7 @@
 
 
 <meta name="description" content="MySQL锁介绍锁分类乐观锁程序实现。使用版本号或者时间戳。 mysql实现效率并不好，redis实现更好。 表锁MySQLLayer层 MySQL 实现的表级锁定的争用状态变量： 表锁可查询。 1mysql&amp;gt; show status like &amp;apos;table%&amp;apos;; 123456Variable_name				ValueTable_locks_immediate		76">
+<meta name="keywords" content="Mysql,锁">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql-锁">
 <meta property="og:url" content="http://blog.xiaoruiit.com/Mysql-锁.html/index.html">
@@ -87,7 +88,7 @@
 <meta property="og:description" content="MySQL锁介绍锁分类乐观锁程序实现。使用版本号或者时间戳。 mysql实现效率并不好，redis实现更好。 表锁MySQLLayer层 MySQL 实现的表级锁定的争用状态变量： 表锁可查询。 1mysql&amp;gt; show status like &amp;apos;table%&amp;apos;; 123456Variable_name				ValueTable_locks_immediate		76">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.loli.net/2020/08/09/mBG6OTNK25ePEsb.png">
-<meta property="og:updated_time" content="2020-08-09T14:22:52.803Z">
+<meta property="og:updated_time" content="2020-09-12T01:11:05.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mysql-锁">
 <meta name="twitter:description" content="MySQL锁介绍锁分类乐观锁程序实现。使用版本号或者时间戳。 mysql实现效率并不好，redis实现更好。 表锁MySQLLayer层 MySQL 实现的表级锁定的争用状态变量： 表锁可查询。 1mysql&amp;gt; show status like &amp;apos;table%&amp;apos;; 123456Variable_name				ValueTable_locks_immediate		76">
@@ -188,6 +189,26 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -524,8 +545,37 @@
     
 
     
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/Mysql-锁.html/" title="Mysql-锁">http://blog.xiaoruiit.com/Mysql-锁.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+  <li class="post-copyright-license">
+    并保留本声明。感谢您的阅读和支持！
+  </li>
+</ul>
+
+      </div>
+    
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/锁/" rel="tag"># 锁</a>
+          
+        </div>
       
 
       
@@ -536,8 +586,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Bootstrap-table-树.html/" rel="next" title="BootStrap-Table-树">
-                <i class="fa fa-chevron-left"></i> BootStrap-Table-树
+              <a href="/Mysql-索引.html/" rel="next" title="MySQL-索引">
+                <i class="fa fa-chevron-left"></i> MySQL-索引
               </a>
             
           </div>
@@ -546,8 +596,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/查找算法-二分查找.html/" rel="prev" title="查找算法-二分查找">
-                查找算法-二分查找 <i class="fa fa-chevron-right"></i>
+              <a href="/Bootstrap-table-树.html/" rel="prev" title="BootStrap-Table-树">
+                BootStrap-Table-树 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -640,13 +690,22 @@
               
               
               <div class="site-state-item site-state-categories">
-                
-                  <span class="site-state-item-count">29</span>
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">分类</span>
-                
+                </a>
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>
