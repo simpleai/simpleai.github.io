@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="高级特性,RabbitMQ," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="消息可靠投递，Consumer ACK，消费者限流（削峰填谷)，TTL，DLX死信队列，延迟队列，消息追踪">
+<meta name="keywords" content="高级特性,RabbitMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ-高级特性">
+<meta property="og:url" content="http://blog.xiaoruiit.com/RabbitMQ-高级特性.html/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="消息可靠投递，Consumer ACK，消费者限流（削峰填谷)，TTL，DLX死信队列，延迟队列，消息追踪">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-09-12T11:06:41.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ-高级特性">
+<meta name="twitter:description" content="消息可靠投递，Consumer ACK，消费者限流（削峰填谷)，TTL，DLX死信队列，延迟队列，消息追踪">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.xiaoruiit.com/RabbitMQ-高级特性.html/"/>
+
+
+
+
+
+  <title>RabbitMQ-高级特性 | Go after</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Go after</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/RabbitMQ-高级特性.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RabbitMQ-高级特性</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-27T00:00:00+08:00">
+                2020-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/RabbitMQ-高级特性.html/" class="leancloud_visitors" data-flag-title="RabbitMQ-高级特性">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,185
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  16
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>消息可靠投递，Consumer ACK，消费者限流（削峰填谷)，TTL，DLX死信队列，延迟队列，消息追踪</p>
+<a id="more"></a>
+<h1 id="RabbitMQ-高级特性"><a href="#RabbitMQ-高级特性" class="headerlink" title="RabbitMQ-高级特性"></a>RabbitMQ-高级特性</h1><h2 id="消息可靠投递"><a href="#消息可靠投递" class="headerlink" title="消息可靠投递"></a>消息可靠投递</h2><p>producer到RabbitMQ</p>
+<ul>
+<li><p>producer→exchange</p>
+<p>通过confirmCallback回调函数确认消息的投递</p>
+<p>依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;5.1.7.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.amqp&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-rabbit&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.1.8.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-test&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;5.1.7.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;build&gt;</span><br><span class="line">    &lt;plugins&gt;</span><br><span class="line">        &lt;plugin&gt;</span><br><span class="line">            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.8.0&lt;/version&gt;</span><br><span class="line">            &lt;configuration&gt;</span><br><span class="line">                &lt;source&gt;1.8&lt;/source&gt;</span><br><span class="line">                &lt;target&gt;1.8&lt;/target&gt;</span><br><span class="line">            &lt;/configuration&gt;</span><br><span class="line">        &lt;/plugin&gt;</span><br><span class="line">    &lt;/plugins&gt;</span><br><span class="line">&lt;/build&gt;</span><br></pre></td></tr></table></figure>
+<p>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq.host=192.168.3.3</span><br><span class="line">rabbitmq.port=5672</span><br><span class="line">rabbitmq.username=guest</span><br><span class="line">rabbitmq.password=guest</span><br><span class="line">rabbitmq.virtual-host=/</span><br></pre></td></tr></table></figure>
+<p>xml配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:rabbit=&quot;http://www.springframework.org/schema/rabbit&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">                 http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">                 http://www.springframework.org/schema/context</span><br><span class="line">                 https://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">                 http://www.springframework.org/schema/rabbit</span><br><span class="line">                 http://www.springframework.org/schema/rabbit/spring-rabbit.xsd&quot;&gt;</span><br><span class="line">    &lt;!--加载配置文件--&gt;</span><br><span class="line">    &lt;context:property-placeholder location=&quot;classpath:rabbitmq.properties&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义rabbitmq connectionFactory  1. 设置  publisher-confirms=&quot;true&quot; --&gt;</span><br><span class="line">    &lt;rabbit:connection-factory id=&quot;connectionFactory&quot; host=&quot;$&#123;rabbitmq.host&#125;&quot;</span><br><span class="line">                               port=&quot;$&#123;rabbitmq.port&#125;&quot;</span><br><span class="line">                               username=&quot;$&#123;rabbitmq.username&#125;&quot;</span><br><span class="line">                               password=&quot;$&#123;rabbitmq.password&#125;&quot;</span><br><span class="line">                               virtual-host=&quot;$&#123;rabbitmq.virtual-host&#125;&quot;</span><br><span class="line">                               </span><br><span class="line">                               publisher-confirms=&quot;true&quot;</span><br><span class="line">                               /&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;rabbit:admin connection-factory=&quot;connectionFactory&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--rabbitTemplate对象操作可以在代码中方便发送消息--&gt;</span><br><span class="line">    &lt;rabbit:template id=&quot;rabbitTemplate&quot; connection-factory=&quot;connectionFactory&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--2. 消息可靠性投递（生产端）--&gt;</span><br><span class="line">    &lt;!--队列--&gt;</span><br><span class="line">   &lt;rabbit:queue id=&quot;test_queue_confirm&quot; name=&quot;test_queue_confirm&quot;&gt;&lt;/rabbit:queue&gt;</span><br><span class="line">   &lt;!--交换机--&gt;</span><br><span class="line">    &lt;rabbit:direct-exchange name=&quot;test_exchange_confirm&quot;&gt;</span><br><span class="line">    	&lt;!--交换机绑定队列--&gt;</span><br><span class="line">        &lt;rabbit:bindings&gt;</span><br><span class="line">            &lt;rabbit:binding queue=&quot;test_queue_confirm&quot; key=&quot;confirm&quot;&gt;			               &lt;/rabbit:binding&gt;</span><br><span class="line">        &lt;/rabbit:bindings&gt;</span><br><span class="line">    &lt;/rabbit:direct-exchange&gt;</span><br><span class="line">    </span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  测试代码</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">@ContextConfiguration(locations = &quot;classpath:spring-rabbitmq-producer.xml&quot;)</span><br><span class="line">public class ProducerTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 确认模式：</span><br><span class="line">     * 步骤：</span><br><span class="line">     * 1. 确认模式开启：ConnectionFactory中开启publisher-confirms=&quot;true&quot;</span><br><span class="line">     * 2. 在rabbitTemplate定义ConfirmCallBack回调函数</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testConfirm() &#123;</span><br><span class="line"></span><br><span class="line">        //2. 定义回调 **</span><br><span class="line">        rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() &#123;</span><br><span class="line">            /**</span><br><span class="line">             *</span><br><span class="line">             * @param correlationData 相关配置信息</span><br><span class="line">             * @param ack   exchange交换机 是否成功收到了消息。true 成功，false代表失败</span><br><span class="line">             * @param cause 失败原因</span><br><span class="line">             */</span><br><span class="line">            @Override</span><br><span class="line">            public void confirm(CorrelationData correlationData, boolean ack, String cause) &#123;</span><br><span class="line">                System.out.println(&quot;confirm方法被执行了....&quot;);</span><br><span class="line"></span><br><span class="line">                if (ack) &#123;</span><br><span class="line">                    //接收成功</span><br><span class="line">                    System.out.println(&quot;接收成功消息&quot; + cause);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    //接收失败</span><br><span class="line">                    System.out.println(&quot;接收失败消息&quot; + cause);</span><br><span class="line">                    //做处理，如让消息再次发送。</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        //3. 发送消息</span><br><span class="line">        //rabbitTemplate.convertAndSend(&quot;test_exchange_confirm&quot;, &quot;confirm&quot;, &quot;message confirm....&quot;);</span><br><span class="line">        rabbitTemplate.convertAndSend(&quot;test_exchange_confirm1&quot;, &quot;confirm&quot;, &quot;message confirm....&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>exchange→queue</p>
+<p>returnCallback</p>
+<ol>
+<li><p>xml开启配置return-true。增加publisher-returns=”true”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 定义rabbitmq connectionFactory  1. 设置  publisher-confirms=&quot;true&quot; --&gt;</span><br><span class="line">    &lt;rabbit:connection-factory id=&quot;connectionFactory&quot; host=&quot;$&#123;rabbitmq.host&#125;&quot;</span><br><span class="line">                             port=&quot;$&#123;rabbitmq.port&#125;&quot;</span><br><span class="line">                               username=&quot;$&#123;rabbitmq.username&#125;&quot;</span><br><span class="line">                             password=&quot;$&#123;rabbitmq.password&#125;&quot;</span><br><span class="line">                               virtual-host=&quot;$&#123;rabbitmq.virtual-host&#125;&quot;</span><br><span class="line">                               </span><br><span class="line">                               publisher-confirms=&quot;true&quot;</span><br><span class="line">                             &lt;!-- 开启配置return-true --&gt;</span><br><span class="line">                               publisher-returns=&quot;true&quot;</span><br><span class="line">                             /&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li><p>producer中编写测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">   * 步骤：</span><br><span class="line">   * 1. 开启回退模式:publisher-returns=&quot;true&quot;</span><br><span class="line">   * 2. 设置ReturnCallBack</span><br><span class="line">   * 3. 设置Exchange处理消息的模式：</span><br><span class="line">   *  1. 如果消息没有路由到Queue，则丢弃消息（默认）</span><br><span class="line">   *  2. 如果消息没有路由到Queue，返回给消息发送方ReturnCallBack</span><br><span class="line">   */</span><br><span class="line">  </span><br><span class="line">  @Test</span><br><span class="line">  public void testReturn() &#123;</span><br><span class="line">  </span><br><span class="line">      //设置交换机处理失败消息的模式</span><br><span class="line">      rabbitTemplate.setMandatory(true);</span><br><span class="line">  </span><br><span class="line">      //2.设置ReturnCallBack</span><br><span class="line">      rabbitTemplate.setReturnCallback(new RabbitTemplate.ReturnCallback() &#123;</span><br><span class="line">          /**</span><br><span class="line">           *</span><br><span class="line">           * @param message   消息对象</span><br><span class="line">           * @param replyCode 错误码</span><br><span class="line">           * @param replyText 错误信息</span><br><span class="line">           * @param exchange  交换机</span><br><span class="line">           * @param routingKey 路由键</span><br><span class="line">           */</span><br><span class="line">          @Override</span><br><span class="line">          public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) &#123;</span><br><span class="line">              System.out.println(&quot;return 执行了....&quot;);</span><br><span class="line">  </span><br><span class="line">              System.out.println(message);</span><br><span class="line">              System.out.println(replyCode);</span><br><span class="line">              System.out.println(replyText);</span><br><span class="line">              System.out.println(exchange);</span><br><span class="line">              System.out.println(routingKey);</span><br><span class="line">  </span><br><span class="line">              //处理</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">      //3. 发送消息   </span><br><span class="line">      rabbitTemplate.convertAndSend(&quot;test_exchange_confirm&quot;, &quot;confirm&quot;, &quot;message confirm....&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="Consumer-ACK"><a href="#Consumer-ACK" class="headerlink" title="Consumer ACK"></a>Consumer ACK</h2><p>RabbitMQ到consumer</p>
+<p>消费端收到消息后的确认方式有三种。</p>
+<ul>
+<li>自动确认：acknowledge=”<strong>none</strong>“，当消息被Consumer接收到，则自动确认收到，并将message 从 RabbitMQ 的消息缓存中移除。</li>
+</ul>
+<ul>
+<li>手动确认：acknowledge=”<strong>manual</strong>“，在业务处理完成后，调用channel.basicAck()，手动签收；如果出现异常，则调用channel.basicNack()方法，让其重新发送消息。</li>
+</ul>
+<ul>
+<li>根据异常情况确认：acknowledge=”<strong>auto</strong>“</li>
+</ul>
+<ol>
+<li><p>xml中配置手动接收</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:rabbit=&quot;http://www.springframework.org/schema/rabbit&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">             http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">             http://www.springframework.org/schema/context</span><br><span class="line">             https://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">             http://www.springframework.org/schema/rabbit</span><br><span class="line">             http://www.springframework.org/schema/rabbit/spring-rabbit.xsd&quot;&gt;</span><br><span class="line">    &lt;!--加载配置文件--&gt;</span><br><span class="line">    &lt;context:property-placeholder location=&quot;classpath:rabbitmq.properties&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义rabbitmq connectionFactory --&gt;</span><br><span class="line">    &lt;rabbit:connection-factory id=&quot;connectionFactory&quot; host=&quot;$&#123;rabbitmq.host&#125;&quot;</span><br><span class="line">                               port=&quot;$&#123;rabbitmq.port&#125;&quot;</span><br><span class="line">                               username=&quot;$&#123;rabbitmq.username&#125;&quot;</span><br><span class="line">                               password=&quot;$&#123;rabbitmq.password&#125;&quot;</span><br><span class="line">                               virtual-host=&quot;$&#123;rabbitmq.virtual-host&#125;&quot;/&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;context:component-scan base-package=&quot;com.xiaoruiit.listener&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--定义监听器容器  添加  acknowledge=&quot;manual&quot; 手动--&gt;</span><br><span class="line">    &lt;rabbit:listener-container connection-factory=&quot;connectionFactory&quot; acknowledge=&quot;manual&quot; &gt;</span><br><span class="line">        &lt;rabbit:listener ref=&quot;ackListener&quot; queue-names=&quot;test_queue_confirm&quot;&gt;	</span><br><span class="line">        &lt;/rabbit:listener&gt;</span><br><span class="line">    &lt;/rabbit:listener-container&gt;</span><br><span class="line"></span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>监听类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">package com.xiaoruiit.listener;</span><br><span class="line"></span><br><span class="line">import com.rabbitmq.client.Channel;</span><br><span class="line">import org.springframework.amqp.core.Message;</span><br><span class="line">import org.springframework.amqp.core.MessageListener;</span><br><span class="line">import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Consumer ACK机制：</span><br><span class="line"> *  1. 设置手动签收。acknowledge=&quot;manual&quot;</span><br><span class="line"> *  2. 让监听器类实现ChannelAwareMessageListener接口</span><br><span class="line"> *  3. 如果消息成功处理，则调用channel的 basicAck()签收</span><br><span class="line"> *  4. 如果消息处理失败，则调用channel的basicNack()拒绝签收，broker重新发送给consumer</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class AckListener implements ChannelAwareMessageListener &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(Message message, Channel channel) throws Exception &#123;</span><br><span class="line">        long deliveryTag = message.getMessageProperties().getDeliveryTag();</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            //1.接收转换消息</span><br><span class="line">            System.out.println(new String(message.getBody()));</span><br><span class="line"></span><br><span class="line">            //2. 处理业务逻辑</span><br><span class="line">            System.out.println(&quot;处理业务逻辑...&quot;);</span><br><span class="line">            int i = 3/0;//出现错误</span><br><span class="line">            //3. 手动签收</span><br><span class="line">            channel.basicAck(deliveryTag,true);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            //e.printStackTrace();</span><br><span class="line"></span><br><span class="line">            //4.拒绝签收</span><br><span class="line">            /*</span><br><span class="line">            第三个参数：requeue：重回队列。如果设置为true，则消息重新回到queue，broker会重新发送该消息给消费端</span><br><span class="line">             */</span><br><span class="line">            channel.basicNack(deliveryTag,true,true);</span><br><span class="line">            // 了解</span><br><span class="line">            //channel.basicReject(deliveryTag,true);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写测试类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">@ContextConfiguration(locations = &quot;classpath:spring-rabbitmq-consumer.xml&quot;)</span><br><span class="line">public class ConsumerTest &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void test()&#123;</span><br><span class="line">        while (true)&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="消费者限流"><a href="#消费者限流" class="headerlink" title="消费者限流"></a>消费者限流</h2><p>削（xue)峰填谷,RabbitMQ将瞬时的高并发消息慢慢分发给对消息后续处理的系统。</p>
+<p>作用：</p>
+<ul>
+<li><p>缓解瞬时压力。</p>
+</li>
+<li><p>保护处理RabbitMQ消息的系统，防止系统崩溃。高可用</p>
+</li>
+</ul>
+<p>implementation：</p>
+<ul>
+<li><p>Consumer需要设置为手动签收</p>
+<p>监听类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class QosListener implements ChannelAwareMessageListener &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(Message message, Channel channel) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">        //1.获取消息</span><br><span class="line">        System.out.println(new String(message.getBody()));</span><br><span class="line">        //2. 处理业务逻辑</span><br><span class="line">        //3. 签收</span><br><span class="line">        channel.basicAck(message.getMessageProperties().getDeliveryTag(),true);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置手动签收 acknowledge=”manual”</p>
+</li>
+<li><p>设置每次处理多少条消息后再次获取消息。perfetch = 1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;rabbit:listener-container connection-factory=&quot;connectionFactory&quot; acknowledge=&quot;manual&quot; prefetch=&quot;1&quot; &gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="TTL"><a href="#TTL" class="headerlink" title="TTL"></a>TTL</h2><p><strong>解释：</strong>当消息到达存活时间后，还没有被消费，会被自动清除。</p>
+<p>可设置消息或队列的过期时间。</p>
+<ul>
+<li><p>队列的过期可在<code>xml</code>的<code>queue</code>标签配置,</p>
+</li>
+<li><p>消息过期在发送消息时增加过期时间的参数即可。</p>
+</li>
+</ul>
+<p><strong>注意：</strong>单条消息和队列都设置了过期时间时，以短的为准。</p>
+<p><strong>示例：</strong>订单系统发送到RabbitMQ的消息设置为30分钟过期。交易系统30分钟不取走订单消息，则订单关闭。</p>
+<p><strong>implementation：</strong></p>
+<ul>
+<li><p>设置队列过期时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--ttl--&gt;</span><br><span class="line">&lt;rabbit:queue name=&quot;test_queue_ttl&quot; id=&quot;test_queue_ttl&quot;&gt;</span><br><span class="line">    &lt;!--设置queue的参数--&gt;</span><br><span class="line">    &lt;rabbit:queue-arguments&gt;</span><br><span class="line">        &lt;!--x-message-ttl指队列的过期时间,注意Integer类型--&gt;</span><br><span class="line">        &lt;entry key=&quot;x-message-ttl&quot; value=&quot;100000&quot; value-type=&quot;java.lang.Integer&quot;/&gt;</span><br><span class="line">    &lt;/rabbit:queue-arguments&gt;</span><br><span class="line">&lt;/rabbit:queue&gt;</span><br><span class="line"></span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;test_exchange_ttl&quot; &gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;ttl.#&quot; queue=&quot;test_queue_ttl&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testTtl() &#123;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">        // 发送消息</span><br><span class="line">        rabbitTemplate.convertAndSend(&quot;test_exchange_ttl&quot;,</span><br><span class="line">                                      &quot;ttl.hehe&quot;, &quot;message ttl....&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置单个消息的过期时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testTtl() &#123;</span><br><span class="line">  // 消息后处理对象，设置一些消息的参数信息</span><br><span class="line">    MessagePostProcessor messagePostProcessor = new MessagePostProcessor() &#123;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public Message postProcessMessage(Message message) throws AmqpException &#123;</span><br><span class="line">            //1.设置message的信息</span><br><span class="line">            message.getMessageProperties().setExpiration(&quot;5000&quot;);//消息的过期时间</span><br><span class="line">            //2.返回该消息</span><br><span class="line">            return message;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    //消息单独过期</span><br><span class="line">    rabbitTemplate.convertAndSend(&quot;test_exchange_ttl&quot;, &quot;ttl.hehe&quot;, &quot;message ttl....&quot;,messagePostProcessor);</span><br><span class="line">    for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">        if(i == 5)&#123;</span><br><span class="line">            //消息过期</span><br><span class="line">            rabbitTemplate.convertAndSend(&quot;test_exchange_ttl&quot;, &quot;ttl.hehe&quot;, &quot;message ttl....&quot;,messagePostProcessor);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            //不过期的消息</span><br><span class="line">            rabbitTemplate.convertAndSend(&quot;test_exchange_ttl&quot;, &quot;ttl.hehe&quot;, &quot;message ttl....&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="DLX-死信队列"><a href="#DLX-死信队列" class="headerlink" title="DLX 死信队列"></a>DLX 死信队列</h2><p>死信：</p>
+<ul>
+<li>TTL过期的消息</li>
+<li>未签收的消息,并且没把消息重新放入原队列，requeue=false</li>
+<li>超过队列的长度</li>
+</ul>
+<p><strong>implementation</strong></p>
+<ol>
+<li><p>设置正常队列，正常交换机，正常交换机绑定正常队列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;rabbit:queue name=&quot;test_queue_dlx&quot; id=&quot;test_queue_dlx&quot;&gt;</span><br><span class="line">&lt;/rabbit:queue&gt;</span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;test_exchange_dlx&quot;&gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;test.dlx.#&quot; queue=&quot;test_queue_dlx&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置死信队列，死信交换机，死信交换机绑定死信队列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;rabbit:queue name=&quot;queue_dlx&quot; id=&quot;queue_dlx&quot;&gt;&lt;/rabbit:queue&gt;</span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;exchange_dlx&quot;&gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;dlx.#&quot; queue=&quot;queue_dlx&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li><p>设置正常队列的死信绑定死信交换机，设置正常队列到死信交换机的路由key</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;rabbit:queue name=&quot;test_queue_dlx&quot; id=&quot;test_queue_dlx&quot;&gt;</span><br><span class="line">    &lt;!--3. 正常队列绑定死信交换机--&gt;</span><br><span class="line">    &lt;rabbit:queue-arguments&gt;</span><br><span class="line">        &lt;!--3.1 x-dead-letter-exchange：死信交换机名称--&gt;</span><br><span class="line">        &lt;entry key=&quot;x-dead-letter-exchange&quot; value=&quot;exchange_dlx&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--3.2 x-dead-letter-routing-key：发送给死信交换机的routingkey--&gt;</span><br><span class="line">        &lt;entry key=&quot;x-dead-letter-routing-key&quot; value=&quot;dlx.hehe&quot; /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--4.1 设置队列的过期时间 ttl--&gt;</span><br><span class="line">        &lt;entry key=&quot;x-message-ttl&quot; value=&quot;10000&quot; value-type=&quot;java.lang.Integer&quot; /&gt;</span><br><span class="line">        &lt;!--4.2 设置队列的长度限制 max-length --&gt;</span><br><span class="line">        &lt;entry key=&quot;x-max-length&quot; value=&quot;10&quot; value-type=&quot;java.lang.Integer&quot; /&gt;</span><br><span class="line">    &lt;/rabbit:queue-arguments&gt;</span><br><span class="line">&lt;/rabbit:queue&gt;</span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;test_exchange_dlx&quot;&gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;test.dlx.#&quot; queue=&quot;test_queue_dlx&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>producer 测试方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 发送测试死信消息：</span><br><span class="line"> *  1. 时间过期</span><br><span class="line"> *  2. 超过长度</span><br><span class="line"> *  3. 消息拒收</span><br><span class="line"> */</span><br><span class="line">@Test</span><br><span class="line">public void testDlx()&#123;</span><br><span class="line">    //1. 测试时间过期，死信消息</span><br><span class="line">    rabbitTemplate.convertAndSend(&quot;test_exchange_dlx&quot;,</span><br><span class="line">                                  &quot;test.dlx.haha&quot;,&quot;我是一条时间过期的消息&quot;);</span><br><span class="line">   </span><br><span class="line">    //2. 测试超过长度后，消息死信</span><br><span class="line">   for (int i = 0; i &lt; 20; i++) &#123;</span><br><span class="line">        rabbitTemplate.convertAndSend(&quot;test_exchange_dlx&quot;,</span><br><span class="line">                                      &quot;test.dlx.haha&quot;,&quot;我是一条超过长度的消息&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    //3. 测试消息拒收</span><br><span class="line">    rabbitTemplate.convertAndSend(&quot;test_exchange_dlx&quot;,</span><br><span class="line">                                  &quot;test.dlx.haha&quot;,&quot;我是一条消息拒收&quot;);</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="延迟队列"><a href="#延迟队列" class="headerlink" title="延迟队列"></a>延迟队列</h2><p>TTL+死信队列</p>
+<p>架构图：</p>
+<p>需求：订单30分钟未支付，取消订单，并回滚库存。</p>
+<p>实现思路：正常队列设置30分钟有效期，30分钟内不做处理。30分钟后转入另一个队列判断订单状态，并处理</p>
+<p>implementation</p>
+<p>xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 1. 定义正常交换机（order_exchange）和队列(order_queue)--&gt;</span><br><span class="line">&lt;rabbit:queue id=&quot;order_queue&quot; name=&quot;order_queue&quot;&gt;</span><br><span class="line">    &lt;!-- 3. 绑定，设置正常队列过期时间30分钟--&gt;</span><br><span class="line">    &lt;rabbit:queue-arguments&gt;</span><br><span class="line">        &lt;entry key=&quot;x-dead-letter-exchange&quot; value=&quot;order_exchange_dlx&quot; /&gt;</span><br><span class="line">        &lt;entry key=&quot;x-dead-letter-routing-key&quot; value=&quot;dlx.order.cancel&quot; /&gt;</span><br><span class="line">        &lt;entry key=&quot;x-message-ttl&quot; value=&quot;10000&quot; value-type=&quot;java.lang.Integer&quot; /&gt;</span><br><span class="line">    &lt;/rabbit:queue-arguments&gt;</span><br><span class="line">&lt;/rabbit:queue&gt;</span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;order_exchange&quot;&gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;order.#&quot; queue=&quot;order_queue&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--  2. 定义死信交换机（order_exchange_dlx）和队列(order_queue_dlx)--&gt;</span><br><span class="line">&lt;rabbit:queue id=&quot;order_queue_dlx&quot; name=&quot;order_queue_dlx&quot;&gt;&lt;/rabbit:queue&gt;</span><br><span class="line">&lt;rabbit:topic-exchange name=&quot;order_exchange_dlx&quot;&gt;</span><br><span class="line">    &lt;rabbit:bindings&gt;</span><br><span class="line">        &lt;rabbit:binding pattern=&quot;dlx.order.#&quot; queue=&quot;order_queue_dlx&quot;&gt;&lt;/rabbit:binding&gt;</span><br><span class="line">    &lt;/rabbit:bindings&gt;</span><br><span class="line">&lt;/rabbit:topic-exchange&gt;</span><br></pre></td></tr></table></figure>
+<p>测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public  void testDelay() throws InterruptedException &#123;</span><br><span class="line">    //1.发送订单消息。 订单系统中，下单成功后，发送消息</span><br><span class="line">    rabbitTemplate.convertAndSend(&quot;order_exchange&quot;,&quot;order.msg&quot;,&quot;订单信息：id=1,time=2020&quot;);</span><br><span class="line"></span><br><span class="line">    //2.打印倒计时10秒</span><br><span class="line">    for (int i = 10; i &gt; 0 ; i--) &#123;</span><br><span class="line">        System.out.println(i+&quot;...&quot;);</span><br><span class="line">        Thread.sleep(1000);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="消息追踪"><a href="#消息追踪" class="headerlink" title="消息追踪"></a>消息追踪</h2><p><strong>问题：</strong>配置写错，producer宕机、consumer宕机，服务器宕机、连接断开可能导致消息不能成功发送。</p>
+<p><strong>解决：</strong>通过追踪消息可以排查这些问题。</p>
+<p>Firehose、rabbitmq_tracing插件都可以实现消息追踪。</p>
+<p>Firehose是额外发送一条消息到系统内部的一个交换机（amq.rabbitmq.trace）。</p>
+<p>rabbitmq_tracing是额外发送一条消息（更详细）到内部交换机，并将消息记录到mytrace.log文件中。系统内部发送的消息不容易失败。</p>
+<p>开启</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_tracing</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">控制台发送一条消息</span><br></pre></td></tr></table></figure>
+<p>log会显示详细信息</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得不错，就打赏一下吧！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="追逐 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="追逐 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/RabbitMQ-高级特性.html/" title="RabbitMQ-高级特性">http://blog.xiaoruiit.com/RabbitMQ-高级特性.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+  <li class="post-copyright-license">
+    并保留本声明。感谢您的阅读和支持！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/高级特性/" rel="tag"># 高级特性</a>
+          
+            <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/RabbitMQ-与SpringBoot整合.html/" rel="next" title="RabbitMQ-与SpringBoot整合">
+                <i class="fa fa-chevron-left"></i> RabbitMQ-与SpringBoot整合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Rabbit-应用问题解决.html/" rel="prev" title="Rabbit-应用问题解决">
+                Rabbit-应用问题解决 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">追逐</p>
+              <p class="site-description motion-element" itemprop="description">技术融于生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RabbitMQ-高级特性"><span class="nav-number">1.</span> <span class="nav-text">RabbitMQ-高级特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息可靠投递"><span class="nav-number">1.1.</span> <span class="nav-text">消息可靠投递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consumer-ACK"><span class="nav-number">1.2.</span> <span class="nav-text">Consumer ACK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消费者限流"><span class="nav-number">1.3.</span> <span class="nav-text">消费者限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TTL"><span class="nav-number">1.4.</span> <span class="nav-text">TTL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DLX-死信队列"><span class="nav-number">1.5.</span> <span class="nav-text">DLX 死信队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#延迟队列"><span class="nav-number">1.6.</span> <span class="nav-text">延迟队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息追踪"><span class="nav-number">1.7.</span> <span class="nav-text">消息追踪</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz", "4uuoVMQeqKxIXcX7xwgWjGat");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

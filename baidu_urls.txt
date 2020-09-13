@@ -1,1 +1,1 @@
-http://blog.xiaoruiit.com/RabbitMQ-与SpringBoot整合.html/
+http://blog.xiaoruiit.com/RandomAccessFile-分块加载.html/

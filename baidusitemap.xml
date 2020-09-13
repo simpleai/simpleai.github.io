@@ -4,6 +4,142 @@
 
     
   <url>
+    <loc>http://blog.xiaoruiit.com/Zookeeper-%E5%85%A5%E9%97%A8.html/</loc>
+    <lastmod>2020-09-13T14:28:46.886Z</lastmod>
+    <data>
+        <display>
+        <title>ZooKeeper-入门</title>
+        <pubTime>2020-08-24T16:00:00.000Z</pubTime>
+        
+        <tag>入门</tag>
+         
+        <tag>集群</tag>
+         
+        <tag>ZooKeeper</tag>
+         
+         
+           
+             
+              <breadCrumb title="ZooKeeper" url="http://blog.xiaoruiit.com/categories/ZooKeeper/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/Zookeeper-%E5%AE%89%E8%A3%85.html/</loc>
+    <lastmod>2020-09-13T14:28:25.643Z</lastmod>
+    <data>
+        <display>
+        <title>ZooKeeper-安装</title>
+        <pubTime>2020-08-24T16:00:00.000Z</pubTime>
+        
+        <tag>安装</tag>
+         
+        <tag>ZooKeeper</tag>
+         
+         
+           
+             
+              <breadCrumb title="ZooKeeper" url="http://blog.xiaoruiit.com/categories/ZooKeeper/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/Rabbit-%E5%BA%94%E7%94%A8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3.html/</loc>
+    <lastmod>2020-09-13T14:27:43.995Z</lastmod>
+    <data>
+        <display>
+        <title>Rabbit-应用问题解决</title>
+        <pubTime>2020-08-28T16:00:00.000Z</pubTime>
+        
+        <tag>RabbitMQ</tag>
+         
+        <tag>消息队列</tag>
+         
+         
+           
+             
+              <breadCrumb title="RabbitMQ" url="http://blog.xiaoruiit.com/categories/RabbitMQ/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/HTTP-%E5%9F%BA%E7%A1%80.html/</loc>
+    <lastmod>2020-09-13T13:21:50.438Z</lastmod>
+    <data>
+        <display>
+        <title>HTTP-基础</title>
+        <pubTime>2020-09-08T16:00:00.000Z</pubTime>
+        
+        <tag>HTTP</tag>
+         
+        <tag>基础</tag>
+         
+         
+           
+             
+              <breadCrumb title="协议" url="http://blog.xiaoruiit.com/categories/%E5%8D%8F%E8%AE%AE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/RandomAccessFile-%E5%88%86%E5%9D%97%E5%8A%A0%E8%BD%BD.html/</loc>
+    <lastmod>2020-09-13T11:45:11.923Z</lastmod>
+    <data>
+        <display>
+        <title>RandomAccessFile-分块加载</title>
+        <pubTime>2020-09-09T16:00:00.000Z</pubTime>
+        
+        <tag>RandomAccessFile</tag>
+         
+        <tag>分块加载</tag>
+         
+        <tag>pdf</tag>
+         
+         
+           
+             
+              <breadCrumb title="文件流" url="http://blog.xiaoruiit.com/categories/%E6%96%87%E4%BB%B6%E6%B5%81/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/RabbitMQ-%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7.html/</loc>
+    <lastmod>2020-09-12T11:06:41.954Z</lastmod>
+    <data>
+        <display>
+        <title>RabbitMQ-高级特性</title>
+        <pubTime>2020-08-26T16:00:00.000Z</pubTime>
+        
+        <tag>高级特性</tag>
+         
+        <tag>RabbitMQ</tag>
+         
+         
+           
+             
+              <breadCrumb title="RabbitMQ" url="http://blog.xiaoruiit.com/categories/RabbitMQ/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.xiaoruiit.com/JavaSE-ArrayList.html/</loc>
     <lastmod>2020-09-12T01:50:46.542Z</lastmod>
     <data>
@@ -1165,9 +1301,9 @@
         <title>Mysql-基础+架构</title>
         <pubTime>2020-07-17T16:00:00.000Z</pubTime>
         
-        <tag>Mysql</tag>
-         
         <tag>基础</tag>
+         
+        <tag>Mysql</tag>
          
         <tag>架构</tag>
          
@@ -1457,9 +1593,9 @@
         <title>JS-获取url参数</title>
         <pubTime>2020-08-11T16:00:00.000Z</pubTime>
         
-        <tag>前端</tag>
-         
         <tag>JS</tag>
+         
+        <tag>前端</tag>
          
          
            
@@ -1635,9 +1771,9 @@
         <title>BootStrap-Table-树</title>
         <pubTime>2020-07-26T16:00:00.000Z</pubTime>
         
-        <tag>BootStrap</tag>
-         
         <tag>前端</tag>
+         
+        <tag>BootStrap</tag>
          
         <tag>table</tag>
          
