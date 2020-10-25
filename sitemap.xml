@@ -2,6 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.xiaoruiit.com/nginx-%E9%97%AE%E9%A2%98.html/</loc>
+    
+    <lastmod>2020-10-25T07:01:04.428Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E9%A1%B9%E7%9B%AE-%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B.html/</loc>
+    
+    <lastmod>2020-10-25T07:00:34.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E9%A1%B9%E7%9B%AE-%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F.html/</loc>
+    
+    <lastmod>2020-10-25T07:00:28.245Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E9%A1%B9%E7%9B%AE-%E4%BA%A7%E5%93%81%E5%8C%96.html/</loc>
+    
+    <lastmod>2020-10-25T07:00:22.181Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%85%A5%E9%97%A8.html/</loc>
+    
+    <lastmod>2020-10-25T06:59:13.315Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/Exception-Mybatis-BindingException.html/</loc>
+    
+    <lastmod>2020-10-25T06:45:57.861Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/bootshiro-%E5%AD%A6%E4%B9%A0.html/</loc>
+    
+    <lastmod>2020-10-25T06:44:38.782Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/linux-xshell.html/</loc>
+    
+    <lastmod>2020-10-25T06:36:10.019Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83-%E9%97%AE%E9%A2%98.html/</loc>
+    
+    <lastmod>2020-10-25T02:05:11.781Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F.html/</loc>
+    
+    <lastmod>2020-10-25T02:05:11.611Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/shiro-%E6%8B%A6%E6%88%AA%E5%99%A8.html/</loc>
+    
+    <lastmod>2020-10-06T14:36:43.884Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/shiro-web.html/</loc>
+    
+    <lastmod>2020-09-26T11:33:30.242Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/shiro-%E6%9D%83%E9%99%90.html/</loc>
+    
+    <lastmod>2020-09-21T14:29:03.244Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/Exception-HeadlessException.html/</loc>
+    
+    <lastmod>2020-09-21T13:52:07.040Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/shiro-%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81.html/</loc>
+    
+    <lastmod>2020-09-20T14:02:31.284Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.xiaoruiit.com/shiro-%E5%85%A5%E9%97%A8.html/</loc>
+    
+    <lastmod>2020-09-20T08:21:57.591Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.xiaoruiit.com/Zookeeper-%E5%85%A5%E9%97%A8.html/</loc>
     
     <lastmod>2020-09-13T14:28:46.886Z</lastmod>

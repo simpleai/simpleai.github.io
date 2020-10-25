@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="shiro," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="学习官网10分钟教程">
+<meta name="keywords" content="shiro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shiro-入门">
+<meta property="og:url" content="http://blog.xiaoruiit.com/shiro-入门.html/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="学习官网10分钟教程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2020/09/18/EfF3iMILywYzqko.png">
+<meta property="og:updated_time" content="2020-09-20T08:21:57.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shiro-入门">
+<meta name="twitter:description" content="学习官网10分钟教程">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/18/EfF3iMILywYzqko.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.xiaoruiit.com/shiro-入门.html/"/>
+
+
+
+
+
+  <title>shiro-入门 | Go after</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Go after</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/shiro-入门.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">shiro-入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-18T00:00:00+08:00">
+                2020-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/shiro/" itemprop="url" rel="index">
+                    <span itemprop="name">shiro</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/shiro-入门.html/" class="leancloud_visitors" data-flag-title="shiro-入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,649
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>学习官网10分钟教程</p>
+<a id="more"></a>
+<h1 id="shiro-入门"><a href="#shiro-入门" class="headerlink" title="shiro-入门"></a>shiro-入门</h1><h2 id="overview"><a href="#overview" class="headerlink" title="overview"></a>overview</h2><p><a href="http://shiro.apache.org/10-minute-tutorial.html" target="_blank" rel="noopener">官网地址</a></p>
+<p>用途：solution to authentication, authorization, cryptography, and session management.<a href="http://shiro.apache.org/features.html" target="_blank" rel="noopener">更详细</a></p>
+<p>此教程：了解shiro的API</p>
+<h2 id="practice"><a href="#practice" class="headerlink" title="practice:"></a>practice:</h2><h3 id="download"><a href="#download" class="headerlink" title="download"></a>download</h3><ol>
+<li><p>require: JDK 1.8+ and Maven 3.0.3+</p>
+</li>
+<li><p><a href="http://shiro.apache.org/download.html" target="_blank" rel="noopener">download</a></p>
+<p>版本1.6.0</p>
+</li>
+<li><p>unzip 解压</p>
+</li>
+<li><p>cmd下进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:</span><br><span class="line">cd shiro-learn\shiro-root-1.6.0\samples\quickstart</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>maven编译并启动Quickstart.java 需等待下载jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn compile exec:java</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/09/18/EfF3iMILywYzqko.png" alt="image-20200918184659372"></p>
+</li>
+</ol>
+<h3 id="learn-Quickstart-java"><a href="#learn-Quickstart-java" class="headerlink" title="learn Quickstart.java"></a>learn Quickstart.java</h3><p>获取当前用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Subject currentUser = SecurityUtils.getSubject();</span><br><span class="line">log.info(&quot;currentUser: &quot; + currentUser);</span><br></pre></td></tr></table></figure>
+<p>设置当前用户的session</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Session session = currentUser.getSession();</span><br><span class="line">session.setAttribute( &quot;someKey&quot;, &quot;aValue&quot; );</span><br></pre></td></tr></table></figure>
+<p>认证用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 如果没被认证过。（可能认证过并且记录以后不需要认证。）</span><br><span class="line">if ( !currentUser.isAuthenticated() ) &#123;</span><br><span class="line">    //collect user principals and credentials in a gui specific manner</span><br><span class="line">    //such as username/password html form, X509 certificate, OpenID, etc.</span><br><span class="line">    //We&apos;ll use the username/password example here since it is the most common.</span><br><span class="line">    //(do you know what movie this is from? ;)</span><br><span class="line">    UsernamePasswordToken token = new UsernamePasswordToken(&quot;lonestarr&quot;, &quot;vespa&quot;);</span><br><span class="line">    //this is all you have to do to support &apos;remember me&apos; (no config - built in!):</span><br><span class="line">    token.setRememberMe(true);</span><br><span class="line">    // 认证从登录框输入的token用户是否存在于currentUser中。</span><br><span class="line">    currentUser.login(token);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>捕获不同的异常，对应认证不通过的情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    currentUser.login( token );</span><br><span class="line">    //if no exception, that&apos;s it, we&apos;re done!</span><br><span class="line">&#125; catch ( UnknownAccountException uae ) &#123;</span><br><span class="line">	// 无此账号</span><br><span class="line">    //username wasn&apos;t in the system, show them an error message?</span><br><span class="line">&#125; catch ( IncorrectCredentialsException ice ) &#123;</span><br><span class="line">	// 密码错误</span><br><span class="line">    //password didn&apos;t match, try again?</span><br><span class="line">&#125; catch ( LockedAccountException lae ) &#123;</span><br><span class="line">	//账号被锁定。</span><br><span class="line">    //account for that username is locked - can&apos;t login.  Show them a message?</span><br><span class="line">&#125;</span><br><span class="line">    ... more types exceptions to check if you want ...</span><br><span class="line">&#125; catch ( AuthenticationException ae ) &#123;</span><br><span class="line">    //unexpected condition - error?</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>登录成功，打印用户信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log.info( &quot;User [&quot; + currentUser.getPrincipal() + &quot;] logged in successfully.&quot; );</span><br></pre></td></tr></table></figure>
+<p>判断用户是否拥有某个角色</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ( currentUser.hasRole( &quot;schwartz&quot; ) ) &#123;</span><br><span class="line">    log.info(&quot;May the Schwartz be with you!&quot; );</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    log.info( &quot;Hello, mere mortal.&quot; );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>判断用户是否拥有某个权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if ( currentUser.isPermitted( &quot;lightsaber:weild&quot; ) ) &#123;</span><br><span class="line">    log.info(&quot;You may use a lightsaber ring.  Use it wisely.&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    log.info(&quot;Sorry, lightsaber rings are for schwartz masters only.&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ( currentUser.isPermitted( &quot;winnebago:drive:eagle5&quot; ) ) &#123;</span><br><span class="line">    log.info(&quot;You are permitted to &apos;drive&apos; the &apos;winnebago&apos; with license plate (id) &apos;eagle5&apos;.  &quot; +</span><br><span class="line">                &quot;Here are the keys - have fun!&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    log.info(&quot;Sorry, you aren&apos;t allowed to drive the &apos;eagle5&apos; winnebago!&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>登出，清理session</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">currentUser.logout();</span><br></pre></td></tr></table></figure>
+<h3 id="source-code"><a href="#source-code" class="headerlink" title="source code"></a>source code</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * Licensed to the Apache Software Foundation (ASF) under one</span><br><span class="line"> * or more contributor license agreements.  See the NOTICE file</span><br><span class="line"> * distributed with this work for additional information</span><br><span class="line"> * regarding copyright ownership.  The ASF licenses this file</span><br><span class="line"> * to you under the Apache License, Version 2.0 (the</span><br><span class="line"> * &quot;License&quot;); you may not use this file except in compliance</span><br><span class="line"> * with the License.  You may obtain a copy of the License at</span><br><span class="line"> *</span><br><span class="line"> *     http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="line"> *</span><br><span class="line"> * Unless required by applicable law or agreed to in writing,</span><br><span class="line"> * software distributed under the License is distributed on an</span><br><span class="line"> * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span><br><span class="line"> * KIND, either express or implied.  See the License for the</span><br><span class="line"> * specific language governing permissions and limitations</span><br><span class="line"> * under the License.</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">import org.apache.shiro.SecurityUtils;</span><br><span class="line">import org.apache.shiro.authc.*;</span><br><span class="line">import org.apache.shiro.config.IniSecurityManagerFactory;</span><br><span class="line">import org.apache.shiro.mgt.SecurityManager;</span><br><span class="line">import org.apache.shiro.session.Session;</span><br><span class="line">import org.apache.shiro.subject.Subject;</span><br><span class="line">import org.apache.shiro.util.Factory;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Simple Quickstart application showing how to use Shiro&apos;s API.</span><br><span class="line"> *</span><br><span class="line"> * @since 0.9 RC2</span><br><span class="line"> */</span><br><span class="line">public class Quickstart &#123;</span><br><span class="line"></span><br><span class="line">    private static final transient Logger log = LoggerFactory.getLogger(Quickstart.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        // The easiest way to create a Shiro SecurityManager with configured</span><br><span class="line">        // realms, users, roles and permissions is to use the simple INI config.</span><br><span class="line">        // We&apos;ll do that by using a factory that can ingest a .ini file and</span><br><span class="line">        // return a SecurityManager instance:</span><br><span class="line"></span><br><span class="line">        // Use the shiro.ini file at the root of the classpath</span><br><span class="line">        // (file: and url: prefixes load from files and urls respectively):</span><br><span class="line">        Factory&lt;SecurityManager&gt; factory = new IniSecurityManagerFactory(&quot;classpath:shiro.ini&quot;);</span><br><span class="line">        SecurityManager securityManager = factory.getInstance();</span><br><span class="line"></span><br><span class="line">        // for this simple example quickstart, make the SecurityManager</span><br><span class="line">        // accessible as a JVM singleton.  Most applications wouldn&apos;t do this</span><br><span class="line">        // and instead rely on their container configuration or web.xml for</span><br><span class="line">        // webapps.  That is outside the scope of this simple quickstart, so</span><br><span class="line">        // we&apos;ll just do the bare minimum so you can continue to get a feel</span><br><span class="line">        // for things.</span><br><span class="line">        SecurityUtils.setSecurityManager(securityManager);</span><br><span class="line"></span><br><span class="line">        // Now that a simple Shiro environment is set up, let&apos;s see what you can do:</span><br><span class="line"></span><br><span class="line">        // get the currently executing user:</span><br><span class="line">        Subject currentUser = SecurityUtils.getSubject();</span><br><span class="line"></span><br><span class="line">        // Do some stuff with a Session (no need for a web or EJB container!!!)</span><br><span class="line">        Session session = currentUser.getSession();</span><br><span class="line">        session.setAttribute(&quot;someKey&quot;, &quot;aValue&quot;);</span><br><span class="line">        String value = (String) session.getAttribute(&quot;someKey&quot;);</span><br><span class="line">        if (value.equals(&quot;aValue&quot;)) &#123;</span><br><span class="line">            log.info(&quot;Retrieved the correct value! [&quot; + value + &quot;]&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // let&apos;s login the current user so we can check against roles and permissions:</span><br><span class="line">        if (!currentUser.isAuthenticated()) &#123;</span><br><span class="line">            UsernamePasswordToken token = new UsernamePasswordToken(&quot;lonestarr&quot;, &quot;vespa&quot;);</span><br><span class="line">            token.setRememberMe(true);</span><br><span class="line">            try &#123;</span><br><span class="line">                currentUser.login(token);</span><br><span class="line">            &#125; catch (UnknownAccountException uae) &#123;</span><br><span class="line">                log.info(&quot;There is no user with username of &quot; + token.getPrincipal());</span><br><span class="line">            &#125; catch (IncorrectCredentialsException ice) &#123;</span><br><span class="line">                log.info(&quot;Password for account &quot; + token.getPrincipal() + &quot; was incorrect!&quot;);</span><br><span class="line">            &#125; catch (LockedAccountException lae) &#123;</span><br><span class="line">                log.info(&quot;The account for username &quot; + token.getPrincipal() + &quot; is locked.  &quot; +</span><br><span class="line">                        &quot;Please contact your administrator to unlock it.&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            // ... catch more exceptions here (maybe custom ones specific to your application?</span><br><span class="line">            catch (AuthenticationException ae) &#123;</span><br><span class="line">                //unexpected condition?  error?</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //say who they are:</span><br><span class="line">        //print their identifying principal (in this case, a username):</span><br><span class="line">        log.info(&quot;User [&quot; + currentUser.getPrincipal() + &quot;] logged in successfully.&quot;);</span><br><span class="line"></span><br><span class="line">        //test a role:</span><br><span class="line">        if (currentUser.hasRole(&quot;schwartz&quot;)) &#123;</span><br><span class="line">            log.info(&quot;May the Schwartz be with you!&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            log.info(&quot;Hello, mere mortal.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //test a typed permission (not instance-level)</span><br><span class="line">        if (currentUser.isPermitted(&quot;lightsaber:wield&quot;)) &#123;</span><br><span class="line">            log.info(&quot;You may use a lightsaber ring.  Use it wisely.&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            log.info(&quot;Sorry, lightsaber rings are for schwartz masters only.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //a (very powerful) Instance Level permission:</span><br><span class="line">        if (currentUser.isPermitted(&quot;winnebago:drive:eagle5&quot;)) &#123;</span><br><span class="line">            log.info(&quot;You are permitted to &apos;drive&apos; the winnebago with license plate (id) &apos;eagle5&apos;.  &quot; +</span><br><span class="line">                    &quot;Here are the keys - have fun!&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            log.info(&quot;Sorry, you aren&apos;t allowed to drive the &apos;eagle5&apos; winnebago!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //all done - log out!</span><br><span class="line">        currentUser.logout();</span><br><span class="line"></span><br><span class="line">        System.exit(0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>classparh:shiro.ini</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># Licensed to the Apache Software Foundation (ASF) under one</span><br><span class="line"># or more contributor license agreements.  See the NOTICE file</span><br><span class="line"># distributed with this work for additional information</span><br><span class="line"># regarding copyright ownership.  The ASF licenses this file</span><br><span class="line"># to you under the Apache License, Version 2.0 (the</span><br><span class="line"># &quot;License&quot;); you may not use this file except in compliance</span><br><span class="line"># with the License.  You may obtain a copy of the License at</span><br><span class="line">#</span><br><span class="line">#     http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="line">#</span><br><span class="line"># Unless required by applicable law or agreed to in writing,</span><br><span class="line"># software distributed under the License is distributed on an</span><br><span class="line"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span><br><span class="line"># KIND, either express or implied.  See the License for the</span><br><span class="line"># specific language governing permissions and limitations</span><br><span class="line"># under the License.</span><br><span class="line">#</span><br><span class="line"># =============================================================================</span><br><span class="line"># Quickstart INI Realm configuration</span><br><span class="line">#</span><br><span class="line"># For those that might not understand the references in this file, the</span><br><span class="line"># definitions are all based on the classic Mel Brooks&apos; film &quot;Spaceballs&quot;. ;)</span><br><span class="line"># =============================================================================</span><br><span class="line"></span><br><span class="line"># -----------------------------------------------------------------------------</span><br><span class="line"># Users and their assigned roles</span><br><span class="line">#</span><br><span class="line"># Each line conforms to the format defined in the</span><br><span class="line"># org.apache.shiro.realm.text.TextConfigurationRealm#setUserDefinitions JavaDoc</span><br><span class="line"># -----------------------------------------------------------------------------</span><br><span class="line">[users]</span><br><span class="line"># user &apos;root&apos; with password &apos;secret&apos; and the &apos;admin&apos; role</span><br><span class="line">root = secret, admin</span><br><span class="line"># user &apos;guest&apos; with the password &apos;guest&apos; and the &apos;guest&apos; role</span><br><span class="line">guest = guest, guest</span><br><span class="line"># user &apos;presidentskroob&apos; with password &apos;12345&apos; (&quot;That&apos;s the same combination on</span><br><span class="line"># my luggage!!!&quot; ;)), and role &apos;president&apos;</span><br><span class="line">presidentskroob = 12345, president</span><br><span class="line"># user &apos;darkhelmet&apos; with password &apos;ludicrousspeed&apos; and roles &apos;darklord&apos; and &apos;schwartz&apos;</span><br><span class="line">darkhelmet = ludicrousspeed, darklord, schwartz</span><br><span class="line"># user &apos;lonestarr&apos; with password &apos;vespa&apos; and roles &apos;goodguy&apos; and &apos;schwartz&apos;</span><br><span class="line">lonestarr = vespa, goodguy, schwartz</span><br><span class="line"></span><br><span class="line"># -----------------------------------------------------------------------------</span><br><span class="line"># Roles with assigned permissions</span><br><span class="line"># </span><br><span class="line"># Each line conforms to the format defined in the</span><br><span class="line"># org.apache.shiro.realm.text.TextConfigurationRealm#setRoleDefinitions JavaDoc</span><br><span class="line"># -----------------------------------------------------------------------------</span><br><span class="line">[roles]</span><br><span class="line"># &apos;admin&apos; role has all permissions, indicated by the wildcard &apos;*&apos;</span><br><span class="line">admin = *</span><br><span class="line"># The &apos;schwartz&apos; role can do anything (*) with any lightsaber:</span><br><span class="line">schwartz = lightsaber:*</span><br><span class="line"># The &apos;goodguy&apos; role is allowed to &apos;drive&apos; (action) the winnebago (type) with</span><br><span class="line"># license plate &apos;eagle5&apos; (instance specific id)</span><br><span class="line">goodguy = winnebago:drive:eagle5</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果觉得不错，就打赏一下吧！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.png" alt="追逐 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/zhifubao.jpg" alt="追逐 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/shiro-入门.html/" title="shiro-入门">http://blog.xiaoruiit.com/shiro-入门.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+  <li class="post-copyright-license">
+    并保留本声明。感谢您的阅读和支持！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shiro/" rel="tag"># shiro</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/RandomAccessFile-分块加载.html/" rel="next" title="RandomAccessFile-分块加载">
+                <i class="fa fa-chevron-left"></i> RandomAccessFile-分块加载
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/shiro-权限.html/" rel="prev" title="shiro-权限">
+                shiro-权限 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">追逐</p>
+              <p class="site-description motion-element" itemprop="description">技术融于生活</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#shiro-入门"><span class="nav-number">1.</span> <span class="nav-text">shiro-入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#overview"><span class="nav-number">1.1.</span> <span class="nav-text">overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#practice"><span class="nav-number">1.2.</span> <span class="nav-text">practice:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#download"><span class="nav-number">1.2.1.</span> <span class="nav-text">download</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#learn-Quickstart-java"><span class="nav-number">1.2.2.</span> <span class="nav-text">learn Quickstart.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#source-code"><span class="nav-number">1.2.3.</span> <span class="nav-text">source code</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz", "4uuoVMQeqKxIXcX7xwgWjGat");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

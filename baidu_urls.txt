@@ -1,1 +1,1 @@
-http://blog.xiaoruiit.com/RandomAccessFile-分块加载.html/
+http://blog.xiaoruiit.com/nginx-问题.html/
