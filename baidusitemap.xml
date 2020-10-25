@@ -4,6 +4,77 @@
 
     
   <url>
+    <loc>http://blog.xiaoruiit.com/spring%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html/</loc>
+    <lastmod>2020-10-25T13:37:54.827Z</lastmod>
+    <data>
+        <display>
+        <title>spring源码中的设计模式</title>
+        <pubTime>2020-10-24T16:00:00.000Z</pubTime>
+        
+        <tag>spring</tag>
+         
+        <tag>设计模式</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring" url="http://blog.xiaoruiit.com/categories/spring/"/>
+          
+             
+              <breadCrumb title="设计模式" url="http://blog.xiaoruiit.com/categories/spring/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/spring%E6%BA%90%E7%A0%81%E6%80%BB%E7%BB%93.html/</loc>
+    <lastmod>2020-10-25T10:33:28.974Z</lastmod>
+    <data>
+        <display>
+        <title>spring源码总结</title>
+        <pubTime>2020-10-24T16:00:00.000Z</pubTime>
+        
+        <tag>源码</tag>
+         
+        <tag>spring</tag>
+         
+        <tag>总结</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring" url="http://blog.xiaoruiit.com/categories/spring/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://blog.xiaoruiit.com/spring%E6%80%BB%E7%BB%93.html/</loc>
+    <lastmod>2020-10-25T08:24:02.682Z</lastmod>
+    <data>
+        <display>
+        <title>spring总结</title>
+        <pubTime>2020-10-24T16:00:00.000Z</pubTime>
+        
+        <tag>spring</tag>
+         
+        <tag>总结</tag>
+         
+         
+           
+             
+              <breadCrumb title="spring" url="http://blog.xiaoruiit.com/categories/spring/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://blog.xiaoruiit.com/nginx-%E9%97%AE%E9%A2%98.html/</loc>
     <lastmod>2020-10-25T07:01:04.428Z</lastmod>
     <data>
@@ -755,9 +826,9 @@
         <title>选择排序-排序算法</title>
         <pubTime>2019-10-14T16:00:00.000Z</pubTime>
         
-        <tag>排序算法</tag>
-         
         <tag>算法</tag>
+         
+        <tag>排序算法</tag>
          
          
            
@@ -780,9 +851,9 @@
         <title>冒泡排序2-排序算法</title>
         <pubTime>2019-10-14T16:00:00.000Z</pubTime>
         
-        <tag>排序算法</tag>
-         
         <tag>算法</tag>
+         
+        <tag>排序算法</tag>
          
          
            
@@ -805,9 +876,9 @@
         <title>排序算法-冒泡排序</title>
         <pubTime>2018-04-17T12:30:00.000Z</pubTime>
         
-        <tag>排序算法</tag>
-         
         <tag>算法</tag>
+         
+        <tag>排序算法</tag>
          
          
            
@@ -830,9 +901,9 @@
         <title>计数排序-排序算法</title>
         <pubTime>2019-10-14T16:00:00.000Z</pubTime>
         
-        <tag>排序算法</tag>
-         
         <tag>算法</tag>
+         
+        <tag>排序算法</tag>
          
          
            
@@ -855,9 +926,9 @@
         <title>插入排序-排序算法</title>
         <pubTime>2019-10-14T16:00:00.000Z</pubTime>
         
-        <tag>排序算法</tag>
-         
         <tag>算法</tag>
+         
+        <tag>排序算法</tag>
          
          
            
