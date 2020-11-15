@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Go after">
 <meta property="og:description" content="mysql优化.包括软件、硬件、SQL语句">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-09-12T01:11:31.608Z">
+<meta property="og:updated_time" content="2020-10-31T02:21:58.679Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mysql-性能分析和优化">
 <meta name="twitter:description" content="mysql优化.包括软件、硬件、SQL语句">
@@ -347,7 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  641
+                  726
                 </span>
               
 
@@ -413,8 +413,31 @@
 <li>每张表都要有主键，主键最好是int类型。</li>
 </ul>
 <h3 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h3><h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p>数量不要超过6个。通过索引返回的数据量需要小于1/3才有效。</p>
-<p>where字段、组合索引（最左前缀）、索引下推、索引覆盖（不回表） on两边  order排序  group by分组统计</p>
-<p>不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算</p>
+<ul>
+<li><p><strong>建立索引：</strong></p>
+<ol>
+<li>on两边，where字段</li>
+<li>组合索引（最左前缀）</li>
+<li>order排序</li>
+<li>group by分组统计</li>
+</ol>
+</li>
+<li><p><strong>避免索引失效：</strong></p>
+<ol>
+<li>or，is null,is not null</li>
+<li>between右边</li>
+<li>where 子句中的“=”左边进行函数、算术运算或其他表达式运算</li>
+<li>不遵循组合索引最左前缀</li>
+<li>字符串不加’’(单引号)</li>
+<li>like (%abc)，可通过组合索引解决</li>
+</ol>
+</li>
+</ul>
+<h4 id="左连接"><a href="#左连接" class="headerlink" title="左连接"></a>左连接</h4><p>注意sql执行顺序</p>
+<ol>
+<li>小表驱动大表</li>
+<li>使用条件缩小左表后再连接右表，会有数量级的提升</li>
+</ol>
 <h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>有截断效果（停止全表扫描），但还是在server层处理数据</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user limit 10</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 一千万条数据</span><br><span class="line"># 速度很慢 10</span><br><span class="line">select * from user limit 9000000 for 10</span><br><span class="line"># 速度很快 0.03</span><br><span class="line">select * from user where id &gt; 9000000 limit 10</span><br></pre></td></tr></table></figure>
@@ -505,8 +528,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/前端-弹出框底层不可选.html/" rel="next" title="前端-弹出框底层不可选">
-                <i class="fa fa-chevron-left"></i> 前端-弹出框底层不可选
+              <a href="/localStorage-内容消失.html/" rel="next" title="localStorage-内容消失">
+                <i class="fa fa-chevron-left"></i> localStorage-内容消失
               </a>
             
           </div>
@@ -599,7 +622,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -610,7 +633,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -621,7 +644,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -654,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql-性能分析和优化"><span class="nav-number">1.</span> <span class="nav-text">Mysql-性能分析和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能分析"><span class="nav-number">1.1.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢查询日志"><span class="nav-number">1.1.1.</span> <span class="nav-text">慢查询日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启慢查询日志："><span class="nav-number">1.1.1.1.</span> <span class="nav-text">开启慢查询日志：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢查询工具"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">慢查询工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mysqldumpslow"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">mysqldumpslow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#percona-toolkit"><span class="nav-number">1.1.1.2.2.</span> <span class="nav-text">percona-toolkit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化"><span class="nav-number">1.2.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#软件"><span class="nav-number">1.2.1.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Pool"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Buffer Pool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-file"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">redo log file</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">1.2.2.</span> <span class="nav-text">硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存预热"><span class="nav-number">1.2.3.</span> <span class="nav-text">内存预热</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表和字段设计"><span class="nav-number">1.2.4.</span> <span class="nav-text">表和字段设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL语句"><span class="nav-number">1.2.5.</span> <span class="nav-text">SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#索引"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#limit"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">count</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql-性能分析和优化"><span class="nav-number">1.</span> <span class="nav-text">Mysql-性能分析和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能分析"><span class="nav-number">1.1.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢查询日志"><span class="nav-number">1.1.1.</span> <span class="nav-text">慢查询日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启慢查询日志："><span class="nav-number">1.1.1.1.</span> <span class="nav-text">开启慢查询日志：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#慢查询工具"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">慢查询工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mysqldumpslow"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">mysqldumpslow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#percona-toolkit"><span class="nav-number">1.1.1.2.2.</span> <span class="nav-text">percona-toolkit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化"><span class="nav-number">1.2.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#软件"><span class="nav-number">1.2.1.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Pool"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Buffer Pool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-file"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">redo log file</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">1.2.2.</span> <span class="nav-text">硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存预热"><span class="nav-number">1.2.3.</span> <span class="nav-text">内存预热</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表和字段设计"><span class="nav-number">1.2.4.</span> <span class="nav-text">表和字段设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL语句"><span class="nav-number">1.2.5.</span> <span class="nav-text">SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#索引"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#左连接"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">左连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#limit"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">count</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>

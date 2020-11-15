@@ -88,7 +88,7 @@
 <meta property="og:description" content="单例模式的介绍、原理、常用的实现方式。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.loli.net/2020/05/09/iJUyFpWdfhulX9S.gif">
-<meta property="og:updated_time" content="2020-09-12T01:43:04.085Z">
+<meta property="og:updated_time" content="2020-11-15T10:28:58.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单例模式">
 <meta name="twitter:description" content="单例模式的介绍、原理、常用的实现方式。">
@@ -349,7 +349,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  995
+                  1,026
                 </span>
               
 
@@ -388,7 +388,8 @@
       
         <p>单例模式的介绍、原理、常用的实现方式。<br><a id="more"></a></p>
 <h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p> <strong>介绍</strong>：单例模式的类只有单个对象会被创建（实例化），向其他类只提供一种访问方式。可以全局访问.</p>
-<p><strong>解决了什么</strong>：减小了频繁创建和销毁类（GC）的系统开销。多线安全的单例模式解决了多线程问题。</p>
+<p><strong>解决了什么</strong>：只能有一个实例操作资源。多个打印任务，正在打印的实例只存在一个。</p>
+<p><strong>优点</strong>：减小了频繁创建和销毁类（GC）的系统开销。多线安全的单例模式解决了多线程问题。</p>
 <p><strong>哪里用到了</strong>：要求只有一个对象的场景.Controller类中的Service类可用单例模式创建对象。Spring用单例模式管理注入容器的类。</p>
 <p><strong>如何实现：</strong>使用一个私有静态变量、一个私有构造函数、以及一个公有静态函数来实现。</p>
 <h2 id="Implementation（具体实现）："><a href="#Implementation（具体实现）：" class="headerlink" title="Implementation（具体实现）："></a>Implementation（具体实现）：</h2><p><img src="https://i.loli.net/2020/05/09/iJUyFpWdfhulX9S.gif" alt="Singleton Implementation - UML Class Diagram"></p>
@@ -597,7 +598,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -608,7 +609,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -619,7 +620,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Go after">
 <meta property="og:description" content="将各个子类中的共有的实现方法放在父类实现。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-09-12T01:43:26.065Z">
+<meta property="og:updated_time" content="2020-11-15T10:34:50.358Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式-模板模式">
 <meta name="twitter:description" content="将各个子类中的共有的实现方法放在父类实现。">
@@ -347,7 +347,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  149
+                  189
                 </span>
               
 
@@ -386,7 +386,9 @@
       
         <p>将各个子类中的共有的实现方法放在父类实现。</p>
 <a id="more"></a>
-<h1 id="模板模式"><a href="#模板模式" class="headerlink" title="模板模式"></a>模板模式</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例子：养动物，养乌龟和养鱼都需要水，但喂的食物不同</span><br></pre></td></tr></table></figure>
+<h1 id="模板模式"><a href="#模板模式" class="headerlink" title="模板模式"></a>模板模式</h1><p>解决了什么：代码复用。</p>
+<p>解决方法： 定义一个操作中的算法骨架，而将算法的一些步骤延迟到子类中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例子：养动物，养乌龟和养鱼都需要水，但喂的食物不同</span><br></pre></td></tr></table></figure>
 <p><strong>Implementation</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">abstract class RaiseAnimal &#123;</span><br><span class="line">    void water()&#123;</span><br><span class="line">        System.out.println(&quot;水&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    abstract void food();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class RaiseTortoise extends  RaiseAnimal &#123;</span><br><span class="line">    @Override</span><br><span class="line">    void food()&#123;</span><br><span class="line">        System.out.println(&quot;龟粮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class RaiseFish extends  RaiseAnimal &#123;</span><br><span class="line">    @Override</span><br><span class="line">    void food()&#123;</span><br><span class="line">        System.out.println(&quot;鱼粮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Template &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        RaiseAnimal raiseAnimal1 = new RaiseTortoise();</span><br><span class="line">        raiseAnimal1.water();</span><br><span class="line">        raiseAnimal1.food();</span><br><span class="line"></span><br><span class="line">        RaiseAnimal raiseAnimal2 = new RaiseFish();</span><br><span class="line">        raiseAnimal2.water();</span><br><span class="line">        raiseAnimal2.food();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>结果：</p>
@@ -568,7 +570,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -579,7 +581,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -590,7 +592,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

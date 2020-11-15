@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.loli.net/2020/08/23/4oOue7PfNEI9C3s.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/23/Q1OcS5LPMiTCZ4j.png">
-<meta property="og:updated_time" content="2020-09-12T01:28:20.483Z">
+<meta property="og:updated_time" content="2020-11-15T13:50:16.801Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringMVC-全面了解">
 <meta name="twitter:description" content="参数绑定，RequestMapping、返回值处理、拦截器、RESTful支持、跨域">
@@ -350,7 +350,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,103
+                  3,267
                 </span>
               
 
@@ -389,7 +389,22 @@
       
         <p>参数绑定，RequestMapping、返回值处理、拦截器、RESTful支持、跨域</p>
 <a id="more"></a>
-<h1 id="SpringMVC-全面了解"><a href="#SpringMVC-全面了解" class="headerlink" title="SpringMVC-全面了解"></a>SpringMVC-全面了解</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>SpringMVC是spring-web模块的一部分。</p>
+<h1 id="SpringMVC-全面了解"><a href="#SpringMVC-全面了解" class="headerlink" title="SpringMVC-全面了解"></a>SpringMVC-全面了解</h1><p>处理请求映射，视图解析。对servlet做了封装。</p>
+<p>执行流程：</p>
+<ol>
+<li>用户发送请求至前端控制器DispatcherServlet。</li>
+<li>DispatcherServlet收到请求调用HandlerMapping处理器映射器。</li>
+<li>处理器映射器找到具体的处理器返回给DispatcherServlet。</li>
+<li>DispatcherServlet调用HandlerAdapter处理器适配器。</li>
+<li>HandlerAdapter经过适配调用具体的处理器(Controller，也叫后端控制器)。</li>
+<li>Controller执行完成返回ModelAndView。</li>
+<li>HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet。</li>
+<li>DispatcherServlet将ModelAndView传给ViewReslover视图解析器。</li>
+<li>ViewReslover解析后返回具体View.</li>
+<li>DispatcherServlet根据View进行渲染视图（即将模型数据填充至视图中）。</li>
+<li>DispatcherServlet响应用户。</li>
+</ol>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>SpringMVC是spring-web模块的一部分。</p>
 <p>六大组件</p>
 <p>对外的三大组件</p>
 <p>​    前端控制器、处理器、视图</p>
@@ -622,8 +637,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Rabbit-入门.html/" rel="prev" title="RabbitMQ-入门">
-                RabbitMQ-入门 <i class="fa fa-chevron-right"></i>
+              <a href="/Rabbit-安装.html/" rel="prev" title="Rabbit-安装">
+                Rabbit-安装 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -706,7 +721,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -717,7 +732,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -728,7 +743,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">76</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
