@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="BootStrap-Table树形显示，包含js请求后端的代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BootStrap-Table-树">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="BootStrap-Table树形显示，包含js请求后端的代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/WVJLnlT3ZRU4or5.png">
+<meta property="article:published_time" content="2020-07-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-17T00:50:33.467Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="BootStrap">
+<meta property="article:tag" content="table">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/WVJLnlT3ZRU4or5.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BootStrap-Table-树 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BootStrap-Table-树
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-27 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-27T00:00:00+08:00">2020-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-17 08:50:33" itemprop="dateModified" datetime="2024-03-17T08:50:33+08:00">2024-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/" class="post-meta-item leancloud_visitors" data-flag-title="BootStrap-Table-树" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>BootStrap-Table树形显示，包含js请求后端的代码</p>
+<span id="more"></span>
+
+<h1 id="BootStrap-Table-树"><a href="#BootStrap-Table-树" class="headerlink" title="BootStrap-Table-树"></a>BootStrap-Table-树</h1><h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/WVJLnlT3ZRU4or5.png" alt="image-20200729155605576"></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html lang=&quot;zh-cn&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">    &lt;meta content=&quot;width=device-width,initial-scale=1.0&quot; name=&quot;viewport&quot;&gt;</span><br><span class="line">    &lt;meta content=&quot;yes&quot; name=&quot;apple-mobile-web-app-capable&quot;&gt;</span><br><span class="line">    &lt;meta content=&quot;black&quot; name=&quot;apple-mobile-web-app-status-bar-style&quot;&gt;</span><br><span class="line">    &lt;meta content=&quot;telephone=no&quot; name=&quot;format-detection&quot;&gt;</span><br><span class="line">    &lt;meta content=&quot;email=no&quot; name=&quot;format-detection&quot;&gt;</span><br><span class="line">    &lt;title&gt;系统管理&lt;/title&gt;</span><br><span class="line">    &lt;link href=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">    &lt;link href=&quot;https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css&quot; rel=&quot;stylesheet&quot;&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css&quot;&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">    &lt;h1&gt;树形表格 ： Table Treegrid&lt;/h1&gt;</span><br><span class="line">    &lt;table id=&quot;table&quot;&gt;&lt;/table&gt;</span><br><span class="line">    &lt;br/&gt;</span><br><span class="line">    &lt;button onclick=&quot;test()&quot;&gt;选择&lt;/button&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;script src=&quot;https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;https://cdn.bootcss.com/bootstrap-table/1.12.1/bootstrap-table.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;https://cdn.bootcss.com/bootstrap-table/1.12.0/extensions/treegrid/bootstrap-table-treegrid.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script src=&quot;https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">    var $table = $(&#x27;#table&#x27;);</span><br><span class="line">    var data = JSON.parse(</span><br><span class="line">        &#x27;[&#123;&quot;id&quot;:1,&quot;pid&quot;:0,&quot;status&quot;:1,&quot;name&quot;:&quot;用户管理&quot;,&quot;permissionValue&quot;:&quot;open:user:manage&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:2,&quot;pid&quot;:0,&quot;status&quot;:1,&quot;name&quot;:&quot;系统管理&quot;,&quot;permissionValue&quot;:&quot;open:system:manage&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:3,&quot;pid&quot;:1,&quot;status&quot;:1,&quot;name&quot;:&quot;新增用户&quot;,&quot;permissionValue&quot;:&quot;open:user:add&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:4,&quot;pid&quot;:1,&quot;status&quot;:1,&quot;name&quot;:&quot;修改用户&quot;,&quot;permissionValue&quot;:&quot;open:user:edit&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:5,&quot;pid&quot;:1,&quot;status&quot;:0,&quot;name&quot;:&quot;删除用户&quot;,&quot;permissionValue&quot;:&quot;open:user:del&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:6,&quot;pid&quot;:2,&quot;status&quot;:1,&quot;name&quot;:&quot;系统配置管理&quot;,&quot;permissionValue&quot;:&quot;open:systemconfig:manage&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:7,&quot;pid&quot;:6,&quot;status&quot;:1,&quot;name&quot;:&quot;新增配置&quot;,&quot;permissionValue&quot;:&quot;open:systemconfig:add&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:8,&quot;pid&quot;:6,&quot;status&quot;:1,&quot;name&quot;:&quot;修改配置&quot;,&quot;permissionValue&quot;:&quot;open:systemconfig:edit&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:9,&quot;pid&quot;:6,&quot;status&quot;:0,&quot;name&quot;:&quot;删除配置&quot;,&quot;permissionValue&quot;:&quot;open:systemconfig:del&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:10,&quot;pid&quot;:2,&quot;status&quot;:1,&quot;name&quot;:&quot;系统日志管理&quot;,&quot;permissionValue&quot;:&quot;open:log:manage&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:11,&quot;pid&quot;:10,&quot;status&quot;:1,&quot;name&quot;:&quot;新增日志&quot;,&quot;permissionValue&quot;:&quot;open:log:add&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:12,&quot;pid&quot;:10,&quot;status&quot;:1,&quot;name&quot;:&quot;修改日志&quot;,&quot;permissionValue&quot;:&quot;open:log:edit&quot;&#125;,&#x27; +</span><br><span class="line">        &#x27;&#123;&quot;id&quot;:13,&quot;pid&quot;:10,&quot;status&quot;:0,&quot;name&quot;:&quot;删除日志&quot;,&quot;permissionValue&quot;:&quot;open:log:del&quot;&#125;]&#x27;);</span><br><span class="line"></span><br><span class="line">    $(function() &#123;</span><br><span class="line"></span><br><span class="line">        //控制台输出一下数据</span><br><span class="line">        console.log(data);</span><br><span class="line"></span><br><span class="line">        $table.bootstrapTable(&#123;</span><br><span class="line">            data:data,</span><br><span class="line">            idField: &#x27;id&#x27;,</span><br><span class="line">            dataType:&#x27;jsonp&#x27;,//json也可以</span><br><span class="line">			/*访问后台 访问后端时不需要data属性</span><br><span class="line">			responseHandler: function(res) &#123;</span><br><span class="line">				console.log(res);</span><br><span class="line">				if (res.meta.code == 200) &#123;</span><br><span class="line">					var mydata = res.data.menuTree;</span><br><span class="line">					return &#123;</span><br><span class="line">						&quot;data&quot;: mydata//注意这里</span><br><span class="line">					&#125;</span><br><span class="line">				&#125; </span><br><span class="line">			&#125;,</span><br><span class="line">			*/</span><br><span class="line">            columns: [</span><br><span class="line">                &#123; field: &#x27;check&#x27;,  checkbox: true, formatter: function (value, row, index) &#123;</span><br><span class="line">                        if (row.check == true) &#123;</span><br><span class="line">                           // console.log(row.serverName);</span><br><span class="line">                            //设置选中</span><br><span class="line">                            return &#123;  checked: true &#125;;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123; field: &#x27;name&#x27;,  title: &#x27;名称&#x27; &#125;,</span><br><span class="line">               // &#123;field: &#x27;id&#x27;, title: &#x27;编号&#x27;, sortable: true, align: &#x27;center&#x27;&#125;,</span><br><span class="line">               // &#123;field: &#x27;pid&#x27;, title: &#x27;所属上级&#x27;&#125;,</span><br><span class="line">                &#123; field: &#x27;status&#x27;,  title: &#x27;状态&#x27;, sortable: true,  align: &#x27;center&#x27;, formatter: &#x27;statusFormatter&#x27;  &#125;,</span><br><span class="line">                &#123; field: &#x27;permissionValue&#x27;, title: &#x27;权限值&#x27;  &#125;,</span><br><span class="line">                &#123; field: &#x27;operate&#x27;, title: &#x27;操作&#x27;, align: &#x27;center&#x27;, events : operateEvents, formatter: &#x27;operateFormatter&#x27; &#125;,</span><br><span class="line">            ],</span><br><span class="line"></span><br><span class="line">            // bootstrap-table-treegrid.js 插件配置 -- start</span><br><span class="line"></span><br><span class="line">            //在哪一列展开树形</span><br><span class="line">            treeShowField: &#x27;name&#x27;,</span><br><span class="line">            //指定父id列</span><br><span class="line">            parentIdField: &#x27;pid&#x27;,//pid&gt;=0 小于0时不显示</span><br><span class="line">            </span><br><span class="line">            onResetView: function(data) &#123;</span><br><span class="line">                //console.log(&#x27;load&#x27;);</span><br><span class="line">                $table.treegrid(&#123;</span><br><span class="line">                    initialState: &#x27;collapsed&#x27;,// 所有节点都折叠</span><br><span class="line">                    // initialState: &#x27;expanded&#x27;,// 所有节点都展开，默认展开</span><br><span class="line">                    treeColumn: 1,//第几列折叠</span><br><span class="line">                    // expanderExpandedClass: &#x27;glyphicon glyphicon-minus&#x27;,  //图标样式</span><br><span class="line">                    // expanderCollapsedClass: &#x27;glyphicon glyphicon-plus&#x27;,</span><br><span class="line">                    onChange: function() &#123;</span><br><span class="line">                        $table.bootstrapTable(&#x27;resetWidth&#x27;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">                //只展开树形的第一级节点</span><br><span class="line">                $table.treegrid(&#x27;getRootNodes&#x27;).treegrid(&#x27;expand&#x27;);</span><br><span class="line"></span><br><span class="line">            &#125;,</span><br><span class="line">            onCheck:function(row)&#123;</span><br><span class="line">                var datas = $table.bootstrapTable(&#x27;getData&#x27;);</span><br><span class="line">                // 勾选子类</span><br><span class="line">                selectChilds(datas,row,&quot;id&quot;,&quot;pid&quot;,true);</span><br><span class="line"></span><br><span class="line">                // 勾选父类</span><br><span class="line">                selectParentChecked(datas,row,&quot;id&quot;,&quot;pid&quot;)</span><br><span class="line"></span><br><span class="line">                // 刷新数据</span><br><span class="line">                $table.bootstrapTable(&#x27;load&#x27;, datas);</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">            //onUncheck:function(row)&#123;</span><br><span class="line">            //    var datas = $table.bootstrapTable(&#x27;getData&#x27;);</span><br><span class="line">            //    selectChilds(datas,row,&quot;id&quot;,&quot;pid&quot;,false);</span><br><span class="line">            //    $table.bootstrapTable(&#x27;load&#x27;, datas);</span><br><span class="line">            //&#125;,</span><br><span class="line">            // bootstrap-table-treetreegrid.js 插件配置 -- end</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    // 格式化按钮</span><br><span class="line">    function operateFormatter(value, row, index) &#123;</span><br><span class="line">        return [</span><br><span class="line">            &#x27;&lt;button type=&quot;button&quot; class=&quot;RoleOfadd btn-small  btn-primary&quot; style=&quot;margin-right:15px;&quot;&gt;&lt;i class=&quot;fa fa-plus&quot; &gt;&lt;/i&gt;&amp;nbsp;新增&lt;/button&gt;&#x27;,</span><br><span class="line">            &#x27;&lt;button type=&quot;button&quot; class=&quot;RoleOfedit btn-small   btn-primary&quot; style=&quot;margin-right:15px;&quot;&gt;&lt;i class=&quot;fa fa-pencil-square-o&quot; &gt;&lt;/i&gt;&amp;nbsp;修改&lt;/button&gt;&#x27;,</span><br><span class="line">            &#x27;&lt;button type=&quot;button&quot; class=&quot;RoleOfdelete btn-small   btn-primary&quot; style=&quot;margin-right:15px;&quot;&gt;&lt;i class=&quot;fa fa-trash-o&quot; &gt;&lt;/i&gt;&amp;nbsp;删除&lt;/button&gt;&#x27;</span><br><span class="line">        ].join(&#x27;&#x27;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    // 格式化类型</span><br><span class="line">    function typeFormatter(value, row, index) &#123;</span><br><span class="line">        if (value === &#x27;menu&#x27;) &#123;  return &#x27;菜单&#x27;;  &#125;</span><br><span class="line">        if (value === &#x27;button&#x27;) &#123;  return &#x27;按钮&#x27;; &#125;</span><br><span class="line">        if (value === &#x27;api&#x27;) &#123;  return &#x27;接口&#x27;; &#125;</span><br><span class="line">        return &#x27;-&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line">    // 格式化状态</span><br><span class="line">    function statusFormatter(value, row, index) &#123;</span><br><span class="line">        if (value === 1) &#123;</span><br><span class="line">            return &#x27;&lt;span class=&quot;label label-success&quot;&gt;正常&lt;/span&gt;&#x27;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return &#x27;&lt;span class=&quot;label label-default&quot;&gt;锁定&lt;/span&gt;&#x27;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //初始化操作按钮的方法</span><br><span class="line">    window.operateEvents = &#123;</span><br><span class="line">        &#x27;click .RoleOfadd&#x27;: function (e, value, row, index) &#123;</span><br><span class="line">            add(row.id);</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;click .RoleOfdelete&#x27;: function (e, value, row, index) &#123;</span><br><span class="line">            del(row.id);</span><br><span class="line">        &#125;,</span><br><span class="line">        &#x27;click .RoleOfedit&#x27;: function (e, value, row, index) &#123;</span><br><span class="line">            update(row.id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    /**</span><br><span class="line">     * 选中父项时，同时选中子项</span><br><span class="line">     * @param datas 所有的数据</span><br><span class="line">     * @param row 当前数据</span><br><span class="line">     * @param id id 字段名</span><br><span class="line">     * @param pid 父id字段名</span><br><span class="line">     */</span><br><span class="line">    function selectChilds(datas,row,id,pid,checked) &#123;</span><br><span class="line">        for(var i in datas)&#123;</span><br><span class="line">            if(datas[i][pid] == row[id])&#123;</span><br><span class="line">                datas[i].check=checked;</span><br><span class="line">                selectChilds(datas,datas[i],id,pid,checked);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function selectParentChecked(datas,row,id,pid)&#123;</span><br><span class="line">        for(var i in datas)&#123;</span><br><span class="line">            if(datas[i][id] == row[pid])&#123;</span><br><span class="line">                datas[i].check=true;</span><br><span class="line">                selectParentChecked(datas,datas[i],id,pid);</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function test() &#123;</span><br><span class="line">        var selRows = $table.bootstrapTable(&quot;getSelections&quot;);</span><br><span class="line">        if(selRows.length == 0)&#123;</span><br><span class="line">            alert(&quot;请至少选择一行&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        var postData = &quot;&quot;;</span><br><span class="line">        $.each(selRows,function(i) &#123;</span><br><span class="line">            postData +=  this.id;</span><br><span class="line">            if (i &lt; selRows.length - 1) &#123;</span><br><span class="line">                postData += &quot;， &quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        alert(&quot;你选中行的 id 为：&quot;+postData);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function add(id) &#123;</span><br><span class="line">        alert(&quot;add 方法 , id = &quot; + id);</span><br><span class="line">    &#125;</span><br><span class="line">    function del(id) &#123;</span><br><span class="line">        alert(&quot;del 方法 , id = &quot; + id);</span><br><span class="line">    &#125;</span><br><span class="line">    function update(id) &#123;</span><br><span class="line">        alert(&quot;update 方法 , id = &quot; + id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>pid 大于等于0，pid为负数时无法显示。</p>
+<p>返回数据格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return &#123;&quot;data&quot;: mydata//注意这里&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没找到分页的办法</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/" title="BootStrap-Table-树">http://blog.xiaoruiit.com/2020/07/27/前端/Bootstrap-table-树/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BootStrap/" rel="tag"># BootStrap</a>
+              <a href="/tags/table/" rel="tag"># table</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/24/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E7%B4%A2%E5%BC%95/" rel="prev" title="MySQL-索引">
+      <i class="fa fa-chevron-left"></i> MySQL-索引
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/" rel="next" title="Mysql-锁">
+      Mysql-锁 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BootStrap-Table-%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">BootStrap-Table-树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">1.1.</span> <span class="nav-text">效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">1.3.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

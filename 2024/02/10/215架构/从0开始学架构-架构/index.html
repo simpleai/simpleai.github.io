@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="架构">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="架构">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231124094922081.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129150358189.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231201115627140.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231206110320875.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231207150949115.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231207151029154.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221103117067.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221103836731.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164615535.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164656202.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164814515.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164837141.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20240115115114726.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221145041172.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221174906031.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095424645.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095433482.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095445189.png">
+<meta property="article:published_time" content="2024-02-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T00:14:56.450Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="高性能">
+<meta property="article:tag" content="高可用">
+<meta property="article:tag" content="可扩展">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231124094922081.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>架构 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          架构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-10 00:00:00" itemprop="dateCreated datePublished" datetime="2024-02-10T00:00:00+08:00">2024-02-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 08:14:56" itemprop="dateModified" datetime="2024-03-15T08:14:56+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">架构</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/" class="post-meta-item leancloud_visitors" data-flag-title="架构" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>24k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>21 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>架构</p>
+<span id="more"></span>
+
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="对架构的一些看法"><a href="#对架构的一些看法" class="headerlink" title="对架构的一些看法"></a>对架构的一些看法</h2><ol>
+<li>架构设计关注的是取舍。业务开发关注的是逻辑和实现。</li>
+<li>架构设计没有体系化的培训和训练机制。</li>
+<li>架构没有那么高大上。不是一定要技术天分，创造力；架构设计可以不高大上，可以没有高可用、高性能。</li>
+</ol>
+<p>架构内容：</p>
+<ol>
+<li><p>架构基础</p>
+<p>背景，目的，复杂度来源，设计原则、流程</p>
+</li>
+<li><p>高可用架构</p>
+</li>
+<li><p>高性能架构</p>
+</li>
+<li><p>可扩展架构</p>
+</li>
+<li><p>架构实战</p>
+</li>
+</ol>
+<p>任何能力的提升都离不开知行合一，架构设计也不例外。架构设计可以有多种方式：</p>
+<ol>
+<li><p>亲自负责一个系统的架构设计</p>
+<p>这种机会最锻炼人，但不可能一个工程师从来没做过架构设计然后某天突然被委以重任，必须要先有一定的积累才会有这样的机会；</p>
+</li>
+<li><p>参与某个系统的架构设计，在总架构师的指导下，负责其中一部分的设计；</p>
+</li>
+<li><p>在设计好的架构下进行开发</p>
+<p>虽然没有亲自参与架构设计，但如果能理解和看懂架构设计，对开发本身也很有帮助，如果能看出和分析出架构存在的问题，那就是一个展现自己的机会。</p>
+</li>
+</ol>
+<p>因此，在没有进行架构设计的时候要做好“知”的储备，并尝试运用这些知识技能去分析和研究已有系统的架构，通过这种方式逐步积累和提升，等到真正有机会的时候，能够做到快速开始，快速把握机会，然后在实践中逐步提升自己的能力。</p>
+<h2 id="语言演进-amp-软件多次危机"><a href="#语言演进-amp-软件多次危机" class="headerlink" title="语言演进&amp;软件多次危机"></a>语言演进&amp;软件多次危机</h2><p>机器语言：直接由01组成。难以排查。出现过火箭发射问题。</p>
+<p>汇编语言：指令转化为英文。编写同一用途的程序，需要针对不对的CPU指令写不同的实现。</p>
+<p>高级语言：由编译器统一处理多套CPU指令之间的不同。</p>
+<p>20世纪60年代出现的第一次危机，出现了结构化编程。</p>
+<p>解决：代码开发复杂性</p>
+<p>特性：自顶向下（执行顺序），逐步细化，模块化（函数）</p>
+<p>80年代第二次危机，面对对象开始流行。</p>
+<p>解决：软件的扩展性</p>
+<p>特性：万物皆对象，封装、继承、多态</p>
+<p>90年代第三次危机，软件架构开始流行</p>
+<p>解决：大型公司当时多部分软件组成的系统带来的问题。</p>
+<p>内部耦合严重，开发和排查效率低</p>
+<ol>
+<li>理解代码慢</li>
+<li>难以修改、扩展</li>
+<li>新增修改出现问题多</li>
+<li>难以排查出现的问题</li>
+</ol>
+<p>模块”“对象”“组件”本质上都是对达到一定规模的软件进行拆分，差别只是在于随着软件的复杂度不断增加，拆分的粒度越来越粗，拆分的层次越来越高。</p>
+<p>软件开发需要用有限的资源应对随时间变化而增加的复杂性。</p>
+<p>“银弹”产生于一定的历史背景和大环境，而历史和环境总是会变化的</p>
+<h2 id="2架构设计的目的"><a href="#2架构设计的目的" class="headerlink" title="2架构设计的目的"></a>2架构设计的目的</h2><p>架构设计不是为了什么？</p>
+<ol>
+<li>炫技</li>
+<li>有事干</li>
+<li>不是要按着大公司的架构来</li>
+<li>不是每个系统都需要架构设计。架构设计需要时间，不做设计开发更快</li>
+<li>不是为了使用流行技术</li>
+<li>不是最新的就是最好的</li>
+</ol>
+<p>架构设计可能导致的问题：</p>
+<ol>
+<li>推迟项目进度，项目上线遥遥无期</li>
+<li>成员每天争吵</li>
+</ol>
+<p>主要目的：识别软件系统的主要复杂度，综合考量软件系统的复杂度，提供解决软件系统复杂度问题的架构方案。</p>
+<h2 id="3架构知识"><a href="#3架构知识" class="headerlink" title="3架构知识"></a>3架构知识</h2><h3 id="软件复杂度"><a href="#软件复杂度" class="headerlink" title="软件复杂度"></a>软件复杂度</h3><h4 id="复杂度种类"><a href="#复杂度种类" class="headerlink" title="复杂度种类"></a>复杂度种类</h4><ol>
+<li>性能<ol>
+<li>延迟</li>
+<li>并发量</li>
+<li>数据量</li>
+<li>实时性</li>
+</ol>
+</li>
+<li>服务可用性</li>
+<li>功能扩展性</li>
+<li>数据安全性。<ol>
+<li>不丢失数据</li>
+<li>隐私数据。手机号、身份证、地址隐私数据保密，但达不到隐私照片、金融数据的保密性</li>
+<li>数据权限</li>
+</ol>
+</li>
+<li>成本</li>
+<li>业务复杂度<ol>
+<li>核心业务流、扩展点位置</li>
+</ol>
+</li>
+</ol>
+<h4 id="复杂度分析案例"><a href="#复杂度分析案例" class="headerlink" title="复杂度分析案例"></a>复杂度分析案例</h4><p>学生管理系统复杂度分析案例：</p>
+<ol>
+<li>性能：使用人1万左右，平均每天访问一次，无需特殊考虑。mysql足够，缓存可以不用，nginx也足够</li>
+<li>服务可用性：宕机2小时也影响不大，无需考虑</li>
+<li>功能扩展性：功能比较固定，无需考虑</li>
+<li>数据安全性：<ol>
+<li>需要不丢失大量数据，主备+备用机房</li>
+<li>访问数据要做控制，账号密码，数据库权限</li>
+</ol>
+</li>
+<li>成本：仅需几台服务器，对于大学来说不是问题。</li>
+</ol>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231124094922081.png" alt="image-20231124094922081"></p>
+<p>一个架构师一般可以支撑20人以上的团队。（2018 黄洲君 UC架构师）</p>
+<p>一个项目已经在持续推进，而当前的每个迭代只是不停地增加新的业务功能，一般不涉及任何底层设施的变动，此时开发人员设计代码架构图，如业务的活动图和类图。架构师无需考虑因开发新业务而引入的复杂度。</p>
+<h4 id="复杂度-高性能"><a href="#复杂度-高性能" class="headerlink" title="复杂度-高性能"></a>复杂度-高性能</h4><h5 id="单机内高性能"><a href="#单机内高性能" class="headerlink" title="单机内高性能"></a>单机内高性能</h5><p>单机发展：</p>
+<ul>
+<li><p>速度：每秒几次逐渐到每秒几亿次</p>
+</li>
+<li><p>业务种类：简单的科学计算到每秒几万次的搜索</p>
+</li>
+<li><p>软件系统规模：单机到上万台计算机</p>
+</li>
+<li><p>操作系统：用户单工字符界面到windows11多用户图形操作系统</p>
+</li>
+<li><p>组件</p>
+<ol>
+<li>等待手工输入、计算、输出</li>
+<li>从存储读取输入、计算、输出。CPU无需等待人直接输入</li>
+<li>从存储读取输入、多进程计算。A任务计算依赖并等待别的读取时，B任务开始计算。进程间通信被设计出来，包括管道、消息队列、信号量、共享存储等。</li>
+<li>从存储读取输入、多进程多线程计算。共享进程数据。为了保证数据的正确性，发明了互斥锁机制</li>
+<li>从存储读取输入、多CPU多进程多线程计算</li>
+</ol>
+</li>
+</ul>
+<p>单机性能：</p>
+<p>多进程、多线程、进程间通信、多线程并发。Nginx 可以用多进程也可以用多线程，JBoss 采用的是多线程；Redis 采用的是单进程，Memcache 采用的是多线程，这些系统都实现了高性能，但内部实现差异却很大。</p>
+<h5 id="集群高性能"><a href="#集群高性能" class="headerlink" title="集群高性能"></a>集群高性能</h5><p>计算机硬件的性能快速发展，但和业务的发展速度相比，还是小巫见大巫了，尤其是进入互联网时代后，业务的发展速度远远超过了硬件的发展速度。</p>
+<ol>
+<li><p>任务分配</p>
+<ol>
+<li>任务分配器<ul>
+<li>硬件网络设备，如F5，交换机</li>
+<li>软件网络设备，如LVS</li>
+<li>负载均衡软件，如Nginx,Gateway</li>
+</ul>
+</li>
+<li>任务分配器和业务服务器连接交互</li>
+<li>分配算法<ol>
+<li>轮询</li>
+<li>权重分配</li>
+<li>负载分配。需要业务服务器上报状态</li>
+</ol>
+</li>
+<li>1台任务分配不够，多台任务分配器</li>
+</ol>
+</li>
+<li><p>任务分解。微服务</p>
+<p>优点：改动影响小，也降低了风险</p>
+<p>缺点：增加代码量，增加调用链路，增加排查难度</p>
+<p>任务分解带来的性能收益是有一个度的，并不是任务分解越细越好，而对于架构设计来说，如何把握这个粒度非常关键。</p>
+</li>
+</ol>
+<h4 id="复杂度-高可用"><a href="#复杂度-高可用" class="headerlink" title="复杂度-高可用"></a>复杂度-高可用</h4><p>无中断。</p>
+<p>导致中断的因素：</p>
+<ol>
+<li>硬件。硬件老化，服务器、路由器、线路</li>
+<li>软件。bug</li>
+<li>基础设施。光缆</li>
+<li>天灾。断电、地震、火灾、洪水</li>
+</ol>
+<p>硬件：冗余处理单元</p>
+<p>软件：提升质量</p>
+<p>计算高可用：</p>
+<p>​    双机算法有主备、主主，主备方案又可以细分为冷备、温备、热备。</p>
+<p>​    分配算法需要结合实际业务需求来分析和判断。例如，ZooKeeper 采用的就是 1 主多备，而 Memcached 采用的就是全主 0 备。</p>
+<p>存储高可用：</p>
+<p>将数据从一台机器搬到到另一台机器，需要经过线路进行传输，也就需要一定的时间。</p>
+<p>这意味着整个系统在某个时间点上，数据肯定是不一致的。按照“<strong>数据 + 逻辑 = 业务</strong>”这个公式来套的话，数据不一致，即使逻辑一致，最后的业务表现就不一样了。</p>
+<p>线路传输的速度：</p>
+<ol>
+<li>同一机房内部能够做到几毫秒；</li>
+<li>分布在不同地方的机房，传输耗时需要几十甚至上百毫秒。例如，从广州机房到北京机房，稳定情况下 ping 延时大约是 50ms，不稳定情况下可能达到 1s 甚至更多。</li>
+</ol>
+<p>传输线路故障：短的十几分钟，长的几个小时的。例如，2015 年支付宝因为光缆被挖断，业务影响超过 4 个小时；2016 年中美海底光缆中断 3 小时等。</p>
+<p>软件故障：如：2023双十一后，因底层组件问题，阿里云故障1小时。</p>
+<p>正常情况下的传输延迟，会导致系统的数据在某个时间点或者时间段是不一致的，而数据的不一致又会导致业务问题；但如果完全不做冗余，系统的整体高可用又无法保证，所以<strong>存储高可用的难点不在于如何备份数据，而在于如何减少或者规避数据不一致对业务造成的影响</strong>。</p>
+<p>高可用状态决策：</p>
+<ol>
+<li>独裁</li>
+<li>协商</li>
+<li>民主选举，多数取胜。如：zoopkeeper</li>
+</ol>
+<h4 id="复杂度-可扩展性"><a href="#复杂度-可扩展性" class="headerlink" title="复杂度-可扩展性"></a>复杂度-可扩展性</h4><p>结合未来的需求做设计，达到未来做需求时仅需小的改动，或者仅需配置即可实现需求。</p>
+<ol>
+<li>不能所有的变化都考虑</li>
+<li>不能一点变化也不考虑</li>
+<li>预测有可能错误</li>
+</ol>
+<p>做法：</p>
+<ol>
+<li><p>预测变化</p>
+</li>
+<li><p>实现变化</p>
+<p>隔离变化，将变化和稳定层分开，即封装变化。</p>
+<ol>
+<li><p>将“变化”封装在一个“变化层”，将不变的部分封装在一个独立的“稳定层”。</p>
+<ol>
+<li>系统需要拆分出变化层和稳定层</li>
+<li>设计变化层和稳定层之间的接口</li>
+</ol>
+</li>
+<li><p>提炼出一个“抽象层”和一个“实现层”</p>
+<p>抽象层是稳定的，实现层可以根据具体业务需要定制开发，当加入新的功能时，只需要增加新的实现，无须修改抽象层。典型的实践就是设计模式和规则引擎。</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>如何把握预测的程度和提升预测结果的准确性，是一件很复杂的事情，没有通用的标准可以简单套上去，更多是靠自己的经验、直觉</p>
+<p>示例：装饰者模式</p>
+<h4 id="复杂度-其他：成本、安全、规模"><a href="#复杂度-其他：成本、安全、规模" class="headerlink" title="复杂度-其他：成本、安全、规模"></a>复杂度-其他：成本、安全、规模</h4><h5 id="成本"><a href="#成本" class="headerlink" title="成本"></a>成本</h5><p>几台十几台服务器一般不考虑服务器成本。</p>
+<p>从10000台降低到8000台差20%的2000台，成本会是4000万左右。</p>
+<p>低成本是高性能的约束。</p>
+<p>一般先定一个成本。架构设计好后，超出成本时，重新设计，多次设计都不行，找老板提高成本预算。</p>
+<p>技术和成本：</p>
+<ul>
+<li><p>新技术可以降低成本，需要成员学习新技术，与已有技术结合</p>
+<p>如：</p>
+<ol>
+<li>NoSQL（Memcache、Redis 等）的出现是为了解决关系型数据库无法应对高并发访问带来的访问压力。</li>
+<li>解决mysql的like查询效率的全文搜索引擎ES，solor</li>
+</ol>
+</li>
+<li><p>创造技术，需要研发出质变的技术。需要投入大量人力、技术、时间。</p>
+<p>如：</p>
+<ol>
+<li>facebook解决php低效研发的php转c++，php转字节码后在虚拟机中运行</li>
+<li>linkedin解决每天5000万消息处理研发的Kafaka</li>
+</ol>
+</li>
+</ul>
+<p>不同公司降低成本的方式：</p>
+<ul>
+<li>中小公司：引入新技术</li>
+<li>大公司：可能去创造技术。</li>
+</ul>
+<h5 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h5><p>软件安全：</p>
+<ul>
+<li><p>用途：防止漏洞攻击</p>
+</li>
+<li><p>漏洞：xss，crsf，sql注入，windows漏洞，密码破解，框架漏洞：Struts2多次远程代码执行漏洞，fastjson远程代码执行漏洞</p>
+</li>
+</ul>
+<p>攻防对抗中不断补漏洞。</p>
+<p>架构安全：</p>
+<ul>
+<li>攻击案例：<ol>
+<li>2016安全博客网站被攻击的流量，每秒665Gbps</li>
+<li>2018年，美国东部时间 2 月 28 日，GitHub 在一瞬间遭到高达 1.35Tbps</li>
+</ol>
+</li>
+<li>用途：防止强盗，DDos攻击</li>
+<li>实现<ul>
+<li>传统公司：使用云厂商提供的服务</li>
+<li>银行：分层多级防火墙</li>
+</ul>
+</li>
+</ul>
+<h5 id="规模"><a href="#规模" class="headerlink" title="规模"></a>规模</h5><p>功能：</p>
+<p>功能越多，功能之间联系越多，功能迭代时间越长越复杂。</p>
+<p>逻辑分支多，功能应用场景不清楚，细节无法掌握。黑盒系统</p>
+<p>数据：</p>
+<p>mysql在数据量大（2018年写的，单表大于10亿）之后，会出现</p>
+<ul>
+<li>插入索引需要几个小时</li>
+<li>条件查询很慢的情况</li>
+<li>表备份慢</li>
+<li>修改表结构慢</li>
+</ul>
+<p>google解决大量数据研发的：大数据计算mapreduce理论，大数据存储，大数据文档存储</p>
+<h3 id="架构设计原则"><a href="#架构设计原则" class="headerlink" title="架构设计原则"></a>架构设计原则</h3><p>选择难点示例：</p>
+<ol>
+<li>要选择业界最先进的技术，还是选择团队目前最熟悉的技术？如果选了最先进的技术后出了问题怎么办？如果选了目前最熟悉的技术，后续技术演进怎么办？</li>
+<li>选择 Google 的 Angular 的方案来做，还是选择 Facebook 的 React 来做？Angular 看起来更强大，但 React 看起来更灵活？</li>
+<li>选 MySQL 还是 MongoDB？团队对 MySQL 很熟悉，但是 MongoDB 更加适合业务场景？</li>
+<li>淘宝的电商网站架构很完善，我们新做一个电商网站，是否简单地照搬淘宝就可以了？</li>
+</ol>
+<h4 id="满足当下不过度"><a href="#满足当下不过度" class="headerlink" title="满足当下不过度"></a>满足当下不过度</h4><p>不因追求先进而设计远超当前需要的设计。</p>
+<p>追求架构大而精美的问题：</p>
+<ol>
+<li>人员不足</li>
+<li>没有时间实战<ol>
+<li>需要时间埋坑</li>
+<li>真实业务场景</li>
+</ol>
+</li>
+</ol>
+<h4 id="演进"><a href="#演进" class="headerlink" title="演进"></a>演进</h4><p>随着业务的变化，而逐渐调整架构</p>
+<h3 id="软件架构分析"><a href="#软件架构分析" class="headerlink" title="软件架构分析"></a>软件架构分析</h3><h4 id="识别复杂度"><a href="#识别复杂度" class="headerlink" title="识别复杂度"></a>识别复杂度</h4><p><strong>将主要的复杂度问题列出来，然后根据业务、技术、团队等综合情况进行排序，优先解决当前面临的最主要的复杂度问题</strong>。</p>
+<ol>
+<li>系统稳定性不高，经常出各种莫名的小问题；</li>
+<li>系统子系统数量太多，系统关系复杂，开发效率低；</li>
+<li>不支持异地多活，机房级别的故障会导致业务整体不可用。</li>
+</ol>
+<p>一次最好只解决1-2个问题</p>
+<p>背景信息罗列：</p>
+<ul>
+<li>中间件团队规模不大，大约 6 人左右。</li>
+<li>中间件团队熟悉 Java 语言，但有一个新同事 C/C++ 很牛。</li>
+<li>开发平台是 Linux，数据库是 MySQL。</li>
+<li>目前整个业务系统是单机房部署，没有双机房。</li>
+</ul>
+<p>QPS：峰值一般考虑是日均的3倍</p>
+<p>性能扩展性：微博这种的消息中间件可以考虑设计为峰值的4倍。一般不设定在10倍以上</p>
+<p>TPS：1000不算高性能</p>
+<p>QPS：10000算高性能</p>
+<h4 id="设计备选方案"><a href="#设计备选方案" class="headerlink" title="设计备选方案"></a>设计备选方案</h4><p>三种错误设计：</p>
+<ol>
+<li><p>要设计最强大的架构，架构本身最优</p>
+</li>
+<li><p>没有备选方案</p>
+<p>解决：防止思维狭隘，目光短浅，思维盲区等决策陷阱</p>
+<p>缺点：</p>
+<ol>
+<li><p>可能因为一个缺点就把某个方案否决。实际上没有完美的方案。</p>
+</li>
+<li><p>自身的评估和经验可能不准确</p>
+</li>
+<li><p>单一方案无法避免过度辩护</p>
+</li>
+</ol>
+<p>备选方案3-5个；备选方案需要有差异；备选方案可以考虑新技术，不是手里的锤子，遇到的问题都是钉子；</p>
+</li>
+<li><p>备选方案过于详细</p>
+<p>缺点：耗费时间长，评审容易陷在细节里边。</p>
+</li>
+</ol>
+<p>架构师的技术储备越丰富、经验越多，备选方案也会更多，从而才能更好地设计备选方案。</p>
+<p>前浪微博2013消息系统设计方案：</p>
+<ol>
+<li>引入Kafaka</li>
+<li>集群+Mysql存储</li>
+<li>集群+自研存储系统</li>
+</ol>
+<h4 id="评估和选择备选方案"><a href="#评估和选择备选方案" class="headerlink" title="评估和选择备选方案"></a>评估和选择备选方案</h4><p>如：简单，最牛，最熟悉，领导</p>
+<p>评分：评判维度给出权重分，计算总分</p>
+<p>优先级：评判维度按优先级排列，不满足的依次排除</p>
+<p>消息系统评判示例：</p>
+<p>评判人员：架构设计师、中间件研发人员、测试、运维、业务主管</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129150358189.png" alt="image-20231129150358189"></p>
+<p>最终选择方案2.</p>
+<ul>
+<li>排除备选方案 1 的主要原因是可运维性，因为再成熟的系统，上线后都可能出问题，如果出问题无法快速解决，则无法满足业务的需求；并且 Kafka 的主要设计目标是高性能日志传输，而我们的消息队列设计的主要目标是业务消息的可靠传输。</li>
+<li>排除备选方案 3 的主要原因是复杂度，目前团队技术实力和人员规模（总共 6 人，还有其他中间件系统需要开发和维护）无法支撑自研存储系统（参考架构设计原则 2：简单原则）。</li>
+</ul>
+<p>备选方案2缺点：</p>
+<ul>
+<li>备选方案 2 的第一个缺点是性能，业务目前需要的性能并不是非常高，方案 2 能够满足，即使后面性能需求增加，方案 2 的数据分组方案也能够平行扩展进行支撑（参考架构设计原则 3：演化原则）。</li>
+<li>备选方案 2 的第二个缺点是成本，一个分组就需要 4 台机器，支撑目前的业务需求可能需要 12 台服务器，但实际上备机（包括服务器和数据库）主要用作备份，可以和其他系统并行部署在同一台机器上。</li>
+<li>备选方案 2 的第三个缺点是技术上看起来并不很优越，但我们的设计目的不是为了证明自己（参考架构设计原则 1：合适原则），而是更快更好地满足业务需求。</li>
+</ul>
+<p>个人博客图床选择：</p>
+<p>搭建博客</p>
+<ol>
+<li><p>hexo+github搭建博客</p>
+<p>2018作为学生，为了博客版权归属自己，使用hexo+github搭建博客，图片存在github上</p>
+</li>
+<li><p>github图床切换为免费图床sm.ms</p>
+<p>搭建后发现github空间只有300M，一张截图十几KB，一天截图十几张，怕不够用。考虑空间功能性、使用成本，找到了免费图床sm.ms</p>
+</li>
+<li><p>sm.ms迁移到阿里云oss</p>
+<p>2022已工作，美国制裁，担心免费图床挂了，无法使用，数据丢失。使用过程也偶现过无法访问。考虑稳定性，存储安全性，切换到了国内付费阿里云oss.</p>
+<p>图片从sm.ms迁移到阿里云oss没有成熟可用的代码，自己写了一套。查询指定文件夹md文件，记录其中的https://*.png，下载并上传到阿里云oss，将返回的url替换</p>
+</li>
+</ol>
+<h4 id="详细方案设计"><a href="#详细方案设计" class="headerlink" title="详细方案设计"></a>详细方案设计</h4><p>中间件内的技术选型。</p>
+<p>如：</p>
+<ul>
+<li>nginx选择负载均衡策略。默认轮询，权重适合机器性能不一致，IP hash适合购物车、电商架构后端有session，根据响应时间分配不容器将某个服务器打卦。</li>
+</ul>
+<ol>
+<li><p>数据库表设计。</p>
+<ul>
+<li>使用日志表追加记录的方式存储消息</li>
+<li>消息表异步拉取日志表，存储30天。日志表被拉取后，清楚记录。</li>
+<li>消息表本身主备</li>
+<li>字段设计</li>
+</ul>
+</li>
+<li><p>主备如何切换。</p>
+<p>采用 ZooKeeper 来做主备决策，主备服务器都连接到 ZooKeeper 建立自己的节点，主服务器的路径规则为“/MQ/server/ 分区编号 /master”，备机为“/MQ/server/ 分区编号 /slave”，节点类型为 EPHEMERAL。</p>
+<p>备机监听主机的节点消息，当发现主服务器节点断连后，备服务器修改自己的状态，对外提供消息读取服务。</p>
+</li>
+<li><p>业务服务器如何写入消息</p>
+<p>消息队列系统提供 SDK 供各业务系统调用，SDK 从配置中读取所有消息队列系统的服务器信息，SDK 采取轮询算法发起消息写入请求给主服务器。</p>
+</li>
+<li><p>业务服务器如何读取消息？</p>
+<p>消息队列系统提供 SDK 供各业务系统调用，SDK 从配置中读取所有消息队列系统的服务器信息，轮流向所有服务器发起消息读取请求。</p>
+</li>
+<li><p>业务服务器和消息队列服务器之间的通信协议如何设计</p>
+<p>消息队列系统后续可能会对接多种不同编程语言编写的系统，为了提升兼容性，传输协议用 TCP，数据格式为 ProtocolBuffer。</p>
+</li>
+</ol>
+<p>架构设计对技术点掌握度要求：</p>
+<ol>
+<li>使用</li>
+<li>基本原理，关键设计</li>
+<li>优缺点</li>
+</ol>
+<p>确定选型后，要进行性能和可用性测试</p>
+<h2 id="4架构高级知识"><a href="#4架构高级知识" class="headerlink" title="4架构高级知识"></a>4架构高级知识</h2><h3 id="成熟架构模式"><a href="#成熟架构模式" class="headerlink" title="成熟架构模式"></a>成熟架构模式</h3><h4 id="高性能架构-读写分离"><a href="#高性能架构-读写分离" class="headerlink" title="高性能架构-读写分离"></a>高性能架构-读写分离</h4><p>目的：分散读压力。一般在优化慢查询，调整不合理的业务逻辑，引入缓存之后</p>
+<p>场景：单机并发无法支撑读请求。如：运营频繁查看大量统计数据。</p>
+<p>基本实现：</p>
+<ul>
+<li>数据库服务器搭建主从集群，一主一从、一主多从都可以。</li>
+<li>数据库主机负责读写操作，从机只负责读操作。</li>
+<li>数据库主机通过复制将数据同步到从机，每台数据库服务器都存储了所有的业务数据。</li>
+<li>业务服务器将写操作发给数据库主机，将读操作发给数据库从机。</li>
+</ul>
+<p>缺点：主从复制延时，业务写入后，读取从库读不到。</p>
+<p>解决：有一致性要求的指定主库。</p>
+<ol>
+<li>写操作后的读操作指定发给数据库主服务器。业务的侵入和影响较大</li>
+<li>读从机失败后再读一次主机。二次读取和业务无绑定，只需要对底层数据库访问的 API 进行封装即可，实现代价较小，不足之处在于如果有很多二次读取，将大大增加主机的读操作压力。黑客暴力破解账号，会导致大量的二次读取操作</li>
+<li>关键业务读写操作全部指向主机，非关键业务采用读写分离</li>
+</ol>
+<p>分配主机查询机制</p>
+<ol>
+<li><p>代码封装。</p>
+<p>优点：实现简单，而且可以根据业务做较多定制化的功能。</p>
+<p>缺点：故障情况下，如果主从发生切换，则可能需要所有系统都修改配置并重启。</p>
+<p>案例：淘宝的 TDDL,sharding-jdbc</p>
+</li>
+<li><p>中间件封装</p>
+<p>优点：数据库主从切换对业务服务器无感知</p>
+<p>缺点：所有的数据库操作请求都要经过中间件，中间件的性能要求也很高。实现比较复杂，细节特别多，很容易出现 bug，需要较长的时间才能稳定。</p>
+<p>案例：mysql官方MySQL Proxy，奇虎 360 公司数据库中间件 Atlas</p>
+</li>
+</ol>
+<h4 id="高性能架构-分库分表"><a href="#高性能架构-分库分表" class="headerlink" title="高性能架构-分库分表"></a>高性能架构-分库分表</h4><p>TiDB与mysql对比 todo</p>
+<p>目的：降低查询和写入压力。一般在提升硬件设备，优化慢查询，调整不合理的业务逻辑，引入缓存，读写分离，分库后再分表</p>
+<p>场景：单机并发无法支撑读和写请求。如：订单表每月10亿数据。</p>
+<p>小公司初创业务，一开始不适合拆分。业界成熟的大公司的预估规模大的业务，可以考虑一开始就拆分。</p>
+<p>关系型数据库优势：sql查询、join、事务</p>
+<h5 id="分库"><a href="#分库" class="headerlink" title="分库"></a>分库</h5><p>按业务拆分库到不同实例</p>
+<p>分库案例：</p>
+<p>因为电商业务数据库选择了主从分离。</p>
+<p>因大节促销防止供应链不受电商业务影响选择了实例分离。</p>
+<p>因运营查询数据量大的压力，运营数据，运营sql查询直接查询业务增加指定从库。</p>
+<p>主从分离使用阿里云RDS，在mapper中增加特定注释查询主库。</p>
+<h5 id="分表"><a href="#分表" class="headerlink" title="分表"></a>分表</h5><ul>
+<li>垂直切分<ul>
+<li>优点：关系性数据库不常用字段、大字段可以避免查询到内存中。</li>
+<li>缺点：<ul>
+<li>多一次查询</li>
+<li>事务无法使用，只能自己模拟。A库写成功，B库失败，需要人工介入。</li>
+<li>增加成本</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>水平切分<ul>
+<li>切分维度<ul>
+<li>范围</li>
+<li>hash<ul>
+<li>订单表可以按订单号分表，也可以按照买家id或者卖家id分表，还可以按照时间分表</li>
+</ul>
+</li>
+<li>配置表</li>
+</ul>
+</li>
+<li>实现：ShadingJdbc、mycat</li>
+<li>缺点：增加查询次数。如select、count、group by、order by、join</li>
+</ul>
+</li>
+</ul>
+<h4 id="高性能NoSQL"><a href="#高性能NoSQL" class="headerlink" title="高性能NoSQL"></a>高性能NoSQL</h4><p>关系数据库缺点：</p>
+<ol>
+<li>行记录，无法直接存储数据结构。</li>
+<li>schema 强约束导致扩展麻烦。操作不存在的列会报错，业务变化时扩充列也比较麻烦，需要执行 DDL</li>
+<li>关系数据库在大数据场景下 I/O 较高</li>
+<li>全文搜索功能比较弱。like查询效率低，多条件查询慢，消耗资源大。</li>
+</ol>
+<h5 id="K-V存储"><a href="#K-V存储" class="headerlink" title="K-V存储"></a>K-V存储</h5><h6 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h6><p>缺点：事务没有原子性和持久性。现在应该有?</p>
+<p>大部分业务也不需要严格遵循 ACID 原则</p>
+<h5 id="文档数据库"><a href="#文档数据库" class="headerlink" title="文档数据库"></a>文档数据库</h5><h6 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB"></a>MongoDB</h6><p>特点：no-schema，可以存储和读取任意的数据。</p>
+<p>用途：</p>
+<p>场景：</p>
+<ol>
+<li><p>电商的商品数据</p>
+<p>不同商品的属性差异很大。</p>
+</li>
+<li><p>游戏</p>
+</li>
+</ol>
+<p>缺点：无事务，不能join。2023现在应该可以了？实现事务不是完全没有代价的，要么性能降低，要么灵活性降低</p>
+<p>优点：</p>
+<ol>
+<li>新增字段简单，无需执行DDL</li>
+<li>历史数据不会出错，无字段返回空</li>
+<li>可以很容易存储复杂数据</li>
+</ol>
+<h5 id="列式数据库"><a href="#列式数据库" class="headerlink" title="列式数据库"></a>列式数据库</h5><h6 id="HBase"><a href="#HBase" class="headerlink" title="HBase"></a>HBase</h6><p>用途：离线海量数据分析统计。</p>
+<p>实现：一列的数据在磁盘上是连续的，不同列在磁盘分开存储。</p>
+<p>优点：</p>
+<ul>
+<li><p>列读取I/O低。不需要同关系型数据库需要读取其他列字段。</p>
+</li>
+<li><p>数据压缩率高，占用存储低。</p>
+<p>普通的行式数据库一般压缩率在 3:1 到 5:1 左右，而列式数据库的压缩率一般在 8:1 到 30:1 左右</p>
+</li>
+</ul>
+<p>缺点：修改多个列速度慢，多个列修改没有一致性</p>
+<h5 id="全文搜索引擎"><a href="#全文搜索引擎" class="headerlink" title="全文搜索引擎"></a>全文搜索引擎</h5><h6 id="ES"><a href="#ES" class="headerlink" title="ES"></a>ES</h6><p>正排索引：</p>
+<p>将某个字段作为1个索引，字段中的值对应n行</p>
+<p>倒排索引：</p>
+<p>一条数据是一个json；将全部json中的所有单词作为索引值，对应n条json</p>
+<p>Elastcisearch 是分布式的文档存储方式。它能存储和检索复杂的数据结构——序列化成为 JSON 文档——以实时的方式。</p>
+<p>在 Elasticsearch 中，每个字段的所有数据都是默认被索引的。即每个字段都有为了快速检索设置的专用倒排索引。</p>
+<h4 id="高性能架构-缓存架构"><a href="#高性能架构-缓存架构" class="headerlink" title="高性能架构-缓存架构"></a>高性能架构-缓存架构</h4><p>目的：降低查询压力。</p>
+<p>场景：能容忍短暂数据不一致的查多写少业务。微博、微信</p>
+<p>引入复杂度：</p>
+<ul>
+<li><p>缓存击穿</p>
+<ol>
+<li><p>数据不存在。</p>
+<p>解决：查询数据库也不存在时，缓存中添加空值</p>
+</li>
+<li><p>数据量大，分页缓存，爬虫访问所有信息，不常访问的数据把常访问的数据挤出去了</p>
+<p>监控缓存命中率。容器化动态增加服务器、限流、业务降级</p>
+<p>识别爬虫然后禁止访问，这可能会影响 SEO 和推广</p>
+</li>
+</ol>
+</li>
+<li><p>缓存雪崩</p>
+<ol>
+<li><p>单个缓存过期时，加载缓存期间大量请求发送到数据库，数据库扛不住，响应变慢或者直接宕机，影响到其他系统。</p>
+<p>解决：加载缓存时机器少，增加sychronized；机器多，增加分布式锁；</p>
+<p>缓存设置永久，后台定时任务更新缓存；业务线程发现缓存失效用定时消息通知后台线程更新缓存。</p>
+<p>后台定时任务更新还可用于缓存预热</p>
+</li>
+<li><p>大批量缓存同时过期。</p>
+<p>缓存设置固定时间+随机30-80毫秒</p>
+</li>
+</ol>
+</li>
+<li><p>缓存热点</p>
+<p>缓存数据集中在一个分区上。如：1000万粉丝的微博发重要消息</p>
+<p>解决：</p>
+<ol>
+<li>对缓存复制100份，设置不同过期时间，编号后分开存储到不同服务器上，随机读取。</li>
+<li>多级缓存。前端：CDN加local storage。后端：二级缓存</li>
+</ol>
+</li>
+</ul>
+<p>其他：</p>
+<ol>
+<li><p>同步刷新缓存：当更新了某些信息后，立刻让缓存失效。<br>这种做法的优点是用户体验好，缺点是修改一个数据可能需要让很多缓存失效</p>
+</li>
+<li><p>适当容忍不一致：例如某东的商品就是这样，查询的时候显示有货，详情提示没货了</p>
+</li>
+<li><p>关键信息不缓存：库存，价格等不缓存。这类信息查询简单，效率高</p>
+</li>
+</ol>
+<h4 id="单服务器高性能模式"><a href="#单服务器高性能模式" class="headerlink" title="单服务器高性能模式"></a>单服务器高性能模式</h4><h5 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h5><p>链接、请求</p>
+<ol>
+<li><p>海量连接（成千上万）海量请求：例如抢购，双十一等</p>
+</li>
+<li><p>常量连接（几十上百）海量请求：例如中间件,mysql，redis,mq</p>
+</li>
+<li><p>常量连接常量请求：例如内部运营系统，管理系统</p>
+</li>
+<li><p>PPC 多进程</p>
+<p>read -&gt; 业务处理 -&gt; write 。当前连接没有数据可以读，则进程就阻塞在 read 操作上</p>
+</li>
+<li><p>TPC 多线程</p>
+<p>示例：Mysql链接</p>
+</li>
+<li><p>Reactor同步非阻塞</p>
+<p>非阻塞：操作系统read 操作（数据加载到内核缓存）改为非阻塞，当连接上有数据的时候进程才去处理。</p>
+<p>同步：用户进程在执行 read（从内核加载到进程空间） 和 send 这类 I/O 操作的时候是同步。</p>
+<p>数据加载到内核缓存时间远大于从内核加载到进程空间。</p>
+<p>I/O 多路复用结合线程池。I/O 多路复用统一监听事件，收到事件后分配（Dispatch）给某个进程。</p>
+<ol>
+<li><p>单Reactor单进程/线程</p>
+<p>示例：单进程redis。不适合处理大value，会阻塞其他请求，可以使用MemaCache</p>
+</li>
+<li><p>单Reactor多线程</p>
+<p>示例：</p>
+<p>单 Reator 多线程方案能够充分利用多核多 CPU 的处理能力。</p>
+<p>缺点：</p>
+<ul>
+<li>多线程数据共享和访问比较复杂。</li>
+<li>Reactor 承担所有事件的监听和响应，只在主线程中运行，瞬间高并发时会成为性能瓶颈。</li>
+</ul>
+</li>
+<li><p>多Reactor多进程/线程</p>
+<p>示例：</p>
+<ul>
+<li>多Reactor多进程：Nginx</li>
+<li>多Reactor多线程：MemaCache、Netty</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Proactor异步非阻塞</p>
+</li>
+</ol>
+<p>bio：阻塞io，PPC和TPC属于这种<br>NIO：多路复用io，reactor就是基于这种技术<br>aio：异步io，Proactor就是基于这种技术</p>
+<p>TPC计算可支持的并发数：可以根据系统的总资源和每个线程所需的资源来估算。例如，如果系统有8GB内存和4个CPU核心，每个线程需要0.5GB内存和0.5个CPU核心，那么可支持的并发数可能是16个</p>
+<h4 id="高性能-负载均衡分类、架构、算法"><a href="#高性能-负载均衡分类、架构、算法" class="headerlink" title="高性能-负载均衡分类、架构、算法"></a>高性能-负载均衡分类、架构、算法</h4><p>负载均衡其实是任务分配，不是让不同服务器的负载达到均衡。</p>
+<h5 id="DNS负载均衡"><a href="#DNS负载均衡" class="headerlink" title="DNS负载均衡"></a>DNS负载均衡</h5><p>优点：简单</p>
+<p>缺点：</p>
+<ol>
+<li>扩展性差，掌控权在域名服务商手中</li>
+<li>实时性差</li>
+<li>功能简单，分配策略简单，不能根据服务器差异分配</li>
+</ol>
+<h5 id="硬件复杂均衡"><a href="#硬件复杂均衡" class="headerlink" title="硬件复杂均衡"></a>硬件复杂均衡</h5><p>设备：F5</p>
+<p>量级：百万，200万-800万</p>
+<p>优点：</p>
+<ol>
+<li>性能强，支持并发量大</li>
+<li>功能强，负载均衡策略丰富。还支持安全功能，防火墙、防DDos攻击</li>
+<li>稳定。商用，且经过严格测试和市场检验</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>贵</li>
+<li>扩展能力差，可以根据业务进行配置，但无法进行扩展和定制</li>
+</ol>
+<h5 id="软件复杂均衡"><a href="#软件复杂均衡" class="headerlink" title="软件复杂均衡"></a>软件复杂均衡</h5><h6 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h6><p>量级：万，5万左右</p>
+<p>优点：</p>
+<ol>
+<li>便宜，买linux服务器部署即可</li>
+<li>灵活，可以用插件实现业务的定制化功能</li>
+<li>简单：部署和维护简单</li>
+</ol>
+<p>支持7层协议，Http</p>
+<h6 id="LVS"><a href="#LVS" class="headerlink" title="LVS"></a>LVS</h6><p>量级：十万，20万左右。号称80万</p>
+<p>支持4层协议</p>
+<h5 id="多级负载均衡"><a href="#多级负载均衡" class="headerlink" title="多级负载均衡"></a>多级负载均衡</h5><p>DNS做南北地理负载均衡，F5做不同集群负载均衡，LVS、Nginx做不同机器负载均衡</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231201115627140.png" alt="image-20231201115627140"></p>
+<h5 id="论坛日活1000万用户负载均衡分析"><a href="#论坛日活1000万用户负载均衡分析" class="headerlink" title="论坛日活1000万用户负载均衡分析"></a>论坛日活1000万用户负载均衡分析</h5><p>1000万日活 *100pv(请求/每人) / （86400/每秒） * （3/峰值） = 3.6万 峰值QPS</p>
+<p>DNS + nginx足够</p>
+<h5 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h5><p>轮询、加权轮询、负载最低优先、响应最低优先、</p>
+<p>源地址hash：适合于存在事务、会话的业务。</p>
+<p>ID哈希：将某个 ID 标识的业务分配到同一个服务器中进行处理。</p>
+<h4 id="高可用-理论"><a href="#高可用-理论" class="headerlink" title="高可用-理论"></a>高可用-理论</h4><h5 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h5><p>互联和分享读写数据的分布式系统。如：mysql集群。不是memcache集群</p>
+<p>C：分布式同一条数据的一致性</p>
+<ul>
+<li>具体细节</li>
+</ul>
+<ol>
+<li><p>CAP针对的是分开存储的数据</p>
+<p>部分数据选择CP，部分数据选择AP，不是整个系统要设计成CP或AP</p>
+<p>如：库存需要CP。用户昵称、爱好需要AP</p>
+</li>
+<li><p>CAP没有考虑时延。</p>
+<p>同机房时延几毫秒，广州、北京机房时延几十毫秒</p>
+<p>分区一致性无法严格保证。但可以将不用一块访问的数据分区。比如：1-100的用户存在A实例，101-200存在B实例。</p>
+<p>双写一致的时候，A集群挂了，如何去掉双写一致，只让B集群写入，并正常提供服务，前边增加一个服务器又陷入单点故障了。</p>
+</li>
+<li><p>C没有的时候可以做一些事来方便后续补偿</p>
+<p>记录日志，挂调的节点起来后，用日志来同步数据</p>
+</li>
+</ol>
+<h5 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h5><p>针对数据库事务</p>
+<ul>
+<li><p>原子性：一系列操作共同成功，共同失败</p>
+</li>
+<li><p>一致性：事务开始之前和事务结束以后，数据的完整性没有被破坏。</p>
+</li>
+<li><p>隔离性：多个并发事务同时对数据进行读写和修改的能力。隔离级别：RU，RC，RR，串行化</p>
+</li>
+<li><p>持久性：对数据库的修改将永久保存，不因软件故障丢失数据。</p>
+</li>
+</ul>
+<p>原子性、隔离性、持久性是一致性的基础。</p>
+<p>涉及到跨多个数据源或多个操作的业务场景时，原子性、隔离性和持久性不足以保证数据的一致性。</p>
+<h5 id="Base理论"><a href="#Base理论" class="headerlink" title="Base理论"></a>Base理论</h5><ul>
+<li><p>基本可用</p>
+<p>分布式系统在出现故障时，允许损失部分可用性，即保证核心可用。</p>
+</li>
+<li><p>软状态</p>
+<p>允许数据不一致，但不能影响系统整理可用性</p>
+</li>
+<li><p>最终一致性</p>
+<p>所有数据副本经过一定时间后，最终能够达到一致的状态。</p>
+</li>
+</ul>
+<h5 id="高可用-FEMA分析系统可用性方法论"><a href="#高可用-FEMA分析系统可用性方法论" class="headerlink" title="高可用-FEMA分析系统可用性方法论"></a>高可用-FEMA分析系统可用性方法论</h5><p>通用分析方法</p>
+<ol>
+<li>功能点</li>
+<li>故障点</li>
+<li>故障影响</li>
+<li>严重程度</li>
+<li>故障原因</li>
+<li>发生概率</li>
+<li>风险程度</li>
+<li>已有措施<ol>
+<li>告警后人工干预、容错-备份、自恢复-主从自动切换</li>
+<li>非法访问白名单控制</li>
+<li>密码暴力破解的重试次数限制</li>
+<li>防止磁盘坏道，2年更换</li>
+</ol>
+</li>
+<li>后续规划<ol>
+<li>敏感数据加密</li>
+</ol>
+</li>
+</ol>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231206110320875.png" alt="image-20231206110320875"></p>
+<h4 id="高可用存储架构-双机架构"><a href="#高可用存储架构-双机架构" class="headerlink" title="高可用存储架构-双机架构"></a>高可用存储架构-双机架构</h4><ul>
+<li><p>主备</p>
+<p>备机只备份数据，主机出现问题时，可手动将服务端指向数据库的地址改为备用机。</p>
+<ul>
+<li><p>场景：内部后台管理系统。如：学生管理系统、员工管理系统</p>
+</li>
+<li><p>优点：简单</p>
+</li>
+<li><p>缺点：</p>
+<ol>
+<li>故障需人工干预</li>
+<li>1年1-2次的操作不熟练可能出错。</li>
+<li>备机没有读写浪费资源</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>主从</p>
+<ul>
+<li><p>场景：论坛，政府官网，门户</p>
+</li>
+<li><p>优点：</p>
+<ol>
+<li>主机挂了，读业务仍可用</li>
+<li>丛机负担读，不浪费资源</li>
+</ol>
+</li>
+<li><p>缺点：</p>
+<ol>
+<li>故障需人工干预</li>
+<li>客户端需感知主从关系，复杂度稍高</li>
+<li>主从延时出现的数据不一致可能导致业务问题</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>主备/主从自动切换</p>
+<ul>
+<li><p>实现</p>
+<ol>
+<li><p>状态判断</p>
+<ul>
+<li><p>通知渠道</p>
+<ol>
+<li><p>互连式</p>
+</li>
+<li><p>中介式</p>
+<p>优点：连接管理、状态决策简单</p>
+<p>缺点：本身需要高可用。如zookeeper多数选举</p>
+</li>
+<li><p>模拟式</p>
+<p>模拟成一个客户端。备/从写数据到主检查</p>
+<p>优点：实现简单</p>
+<p>缺点：检查状态少</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>检测内容：机器掉电、进程是否存在、响应是否缓慢</p>
+</li>
+<li><p>切换决策</p>
+<ul>
+<li>切换时机</li>
+<li>切换策略</li>
+<li>自动程度</li>
+</ul>
+</li>
+<li><p>数据冲突解决</p>
+<p>数据还没有复制到备机，此时发生切换。主备都有ID=100的数据</p>
+</li>
+</ol>
+</li>
+<li><p>优点：无需人工切换</p>
+</li>
+<li><p>缺点：</p>
+<ol>
+<li>复杂</li>
+<li>可能有数据冲突</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>主主</p>
+<p>适用场景少，需要数据能够双向复制。如：用户登录session数据，用户行为的日志数据，论坛草稿数据</p>
+</li>
+</ul>
+<h4 id="高可用存储架构-集群"><a href="#高可用存储架构-集群" class="headerlink" title="高可用存储架构-集群"></a>高可用存储架构-集群</h4><h5 id="数据集中集群"><a href="#数据集中集群" class="headerlink" title="数据集中集群"></a>数据集中集群</h5><ul>
+<li><p>介绍：一主多从，数据量单台服务器就可以承担</p>
+</li>
+<li><p>缺点：</p>
+<ol>
+<li>多从对主库复制压力大。</li>
+<li>多个从库数据不一致</li>
+<li>多个从对主状态判定可能不同</li>
+</ol>
+</li>
+<li><p>示例：zookeeper集群</p>
+</li>
+</ul>
+<h5 id="数据分散集群"><a href="#数据分散集群" class="headerlink" title="数据分散集群"></a>数据分散集群</h5><ul>
+<li><p>介绍：</p>
+<p>业务分实例，不同实例存储在不同地点，避免地理级别的灾害导致数据全部丢失。</p>
+<p>同城仍需做备份，或同城双活。</p>
+<ul>
+<li>复杂点<ul>
+<li>数据存储均衡性</li>
+<li>容错性，故障服务器数据处理</li>
+<li>可伸缩性，扩容服务器时数据处理</li>
+</ul>
+</li>
+<li>备份机制<ul>
+<li>互相备份<ul>
+<li>优点：成本低</li>
+<li>缺点：扩展性低，扩展需考虑备份迁移；设计复杂；各地区互相影响</li>
+</ul>
+</li>
+<li>集中备份<ul>
+<li>优点：设计简单；扩展容易；各地区互不影响</li>
+<li>缺点：成本较高</li>
+</ul>
+</li>
+<li>单独备份<ul>
+<li>优点：</li>
+<li>缺点：成本高</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>用途：成百上千台服务器</p>
+</li>
+<li><p>示例：</p>
+<ol>
+<li><p>大数据Hadoop集群</p>
+<p>使用独立主机分配</p>
+</li>
+<li><p>ES集群</p>
+<p>选举其中一台做数据分区分配</p>
+</li>
+<li><p>rocketMQ</p>
+<p>使用客户端轮询发送分配给不同的master</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="高可用架构"><a href="#高可用架构" class="headerlink" title="高可用架构"></a>高可用架构</h4><h5 id="主备"><a href="#主备" class="headerlink" title="主备"></a>主备</h5><ul>
+<li>冷备</li>
+<li>温备</li>
+</ul>
+<h5 id="主从"><a href="#主从" class="headerlink" title="主从"></a>主从</h5><h5 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h5><p>2个和2个以上</p>
+<p>状态检测，任务分配</p>
+<ul>
+<li><p>对称集群</p>
+<p>集群中每个节点可以处理所有类型的请求</p>
+</li>
+<li><p>非对称集群</p>
+<p>节点类型不同处理请求不同。</p>
+<p>如：zookeeper</p>
+</li>
+</ul>
+<h4 id="高可用-异地多活架构"><a href="#高可用-异地多活架构" class="headerlink" title="高可用-异地多活架构"></a>高可用-异地多活架构</h4><p>仍有分钟级的影响</p>
+<p>金融系统大部分使用主备架构，不算业余但也算不上先进。（2018 CIPS（人民币跨境支付系统）)</p>
+<p>oceanbase保证异地多个节点中大部分节点写成功。未写成功的节点异步恢复。未恢复前不可发生新的交易。???</p>
+<p>oceanbase采用了两阶段提交来实现跨区多机分布式事务。当协调器出现故障时，其通过查询所有参与者的状态来恢复分布式事务。当某个分区故障或网络中断时，事务会长时间挂起，直到故障修复，这段时间内部分其实是不可用的。虽然其声称强一致性和高可用，当发生故障和网络中断，依然会导致服务不可用。？？？</p>
+<p>缺点：</p>
+<ol>
+<li>增加系统复杂度</li>
+<li>成本高</li>
+</ol>
+<h5 id="同城异区"><a href="#同城异区" class="headerlink" title="同城异区"></a>同城异区</h5><ul>
+<li><p>用途：防止机房级别的故障。如：机房火灾、机房断电、空调故障</p>
+</li>
+<li><p>实现：搭建专用高速网络，两个机房科实现和同一个机房几乎一样的网络传输速度。逻辑上可以看成是一个机房</p>
+</li>
+<li><p>复杂度：</p>
+<p>切换前需要做流量限制，缓慢放量</p>
+</li>
+</ul>
+<h5 id="跨城异地"><a href="#跨城异地" class="headerlink" title="跨城异地"></a>跨城异地</h5><ul>
+<li><p>用途：部分业务应对极端灾难事件</p>
+</li>
+<li><p>时延：光纤中传输的速度大约是每秒 20 万千米，再加上传输中的各种网络设备的处理，实际还远远达不到理论上的速度。2000千米，不算网络设备需10毫秒。广州机房到北京机房，正常情况下 RTT 大约是 50 毫秒左右，遇到网络波动，回到500毫秒甚至1秒。</p>
+</li>
+<li><p>业务限制：可接受数据短时间不一致的情况。</p>
+<p>可跨城异地多活：用户登录、新闻类网站、微博</p>
+<p>不可跨城异地多活：银行存款余额、支付宝余额无法做异地多活。</p>
+</li>
+</ul>
+<h5 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h5><p>保证绝大多数用户核心业务异地多活。</p>
+<ol>
+<li><p>保证核心业务</p>
+<p>注册、修改用户信息、登录中只保证登录</p>
+</li>
+<li><p>核心数据最终一致性</p>
+<ol>
+<li>减小异地多活机房距离，搭建高速网络</li>
+<li>减少数据同步量。只同步核心业务相关数据</li>
+<li>保证最终一致性，不保证实时一致性<ol>
+<li>正常情况下5分钟同步至所有机房即可，异常可允许1小时或者1天</li>
+<li>根据不同的数据特征，进行差异化处理</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>数据多种方式同步</p>
+<ol>
+<li>数据库自带的同步</li>
+<li>消息队列</li>
+<li>查两次，A登录后，B再登录时，多去A查一次</li>
+<li>回源读取</li>
+<li>重新生成数据。如A挂了，在B需重新登录</li>
+</ol>
+</li>
+<li><p>只保证绝大部分用户</p>
+</li>
+<li><p>业务降级</p>
+<ol>
+<li>实时转账替换为转账申请，申请结果发短信通知用户</li>
+</ol>
+</li>
+</ol>
+<h5 id="设计步骤"><a href="#设计步骤" class="headerlink" title="设计步骤"></a>设计步骤</h5><ol>
+<li><p>业务分级</p>
+<p>维度：</p>
+<ol>
+<li>访问量大的业务</li>
+<li>核心业务</li>
+<li>产生大量收入</li>
+</ol>
+<p>如：QQ聊天对用户更重要，影响用户数量大；QQ空间对用户重要性低，但影响收入（插入了广告）；</p>
+<p>核心商业模式、公司阶段性目标、和公司具体业务有关，没有绝对的答案。</p>
+</li>
+<li><p>数据分类</p>
+<ol>
+<li><p>数据量</p>
+</li>
+<li><p>唯一性</p>
+<p>如果数据不需要唯一，那就说明两个地方都产生同类数据是可能的；如果数据要求必须唯一，要么只能一个中心点产生数据，要么需要设计一个数据唯一生成的算法</p>
+</li>
+<li><p>实时性</p>
+</li>
+<li><p>可丢失性</p>
+</li>
+<li><p>可恢复性</p>
+<p>微博可以重发。密码丢失可以重置。账号丢失，系统也无法恢复数据就真的丢失了</p>
+</li>
+</ol>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231207150949115.png" alt="image-20231207150949115"></p>
+</li>
+<li><p>数据同步方式</p>
+<ol>
+<li><p>消息队列</p>
+<p>适合不需要事务一致性、时间顺序一致的数据。如：适合注册用户，不适合修改密码</p>
+</li>
+<li><p>存储自带同步</p>
+<p>如：适合修改密码</p>
+</li>
+<li><p>查询</p>
+</li>
+</ol>
+<p>示例：</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231207151029154.png" alt="image-20231207151029154"></p>
+</li>
+<li><p>异常处理</p>
+<ol>
+<li><p>双同步</p>
+<p>适合可覆盖的数据。如：适合注册用户，不适合修改密码。</p>
+<p>不走同一网络。如：消息队列走公网。存储自同步走内网</p>
+</li>
+<li><p>同步+访问结合</p>
+<p>优先读取本地数据，读取不到时读取远程数据</p>
+</li>
+<li><p>日志记录</p>
+<p>每个关键操作前后都记录日志，故障恢复后，数据库数据和日志数据对比修复数据。</p>
+<p>存储位置：</p>
+<ol>
+<li>服务器。应对单台数据库服务器故障</li>
+<li>本地独立系统。应对业务服务器、数据库同时宕机。如：服务器和数据库在同一机架、同一电源线路。</li>
+<li>日志异地保存</li>
+</ol>
+</li>
+<li><p>用户补偿</p>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="高可用-接口级故障"><a href="#高可用-接口级故障" class="headerlink" title="高可用-接口级故障"></a>高可用-接口级故障</h4><p>系统并没有宕机，网络也没有中断，但业务却出现问题了。例如，业务响应缓慢、大量访问超时、大量访问出现异常（给用户弹出提示“无法连接数据库”），这类问题的主要原因在于系统压力太大、负载太高，导致无法快速处理业务请求，由此引发更多的后续问题。</p>
+<p>例如：数据库慢查询将数据库的服务器资源耗尽，导致读写超时。</p>
+<p>故障原因：</p>
+<ol>
+<li>程序bug</li>
+<li>黑客攻击</li>
+<li>促销、抢购人数超出预估10倍</li>
+<li>第三方系统大量请求，第三方系统响应缓慢</li>
+</ol>
+<h5 id="降级"><a href="#降级" class="headerlink" title="降级"></a>降级</h5><p>实现：通过关闭非核心业务，优先保证核心业务。如：注册，修改用户信息</p>
+<p>关闭方式：</p>
+<ol>
+<li><p>后门接口</p>
+<p>缺点：多个服务器需要多次调用；需要做安全性校验</p>
+</li>
+<li><p>同一系统如nacos</p>
+</li>
+</ol>
+<h5 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h5><p>问题：A服务调用B服务超时，导致A服务大量请求阻塞占用资源越来越多后，A服务也宕机</p>
+<p>实现：在统一的如网关处，统计到B服务1分钟30%的请求超过1秒后，所有调用B服务的请求立马返回失败。提示10分钟后再尝试</p>
+<p>用途：外部服务、第三方服务</p>
+<p>先根据分析确定阈值，然后上线观察效果，再进行调优。</p>
+<h5 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h5><ul>
+<li><p>用途：更适合简单系统，如：网关系统、负载均衡系统、抢购系统</p>
+</li>
+<li><p>方式</p>
+<ul>
+<li><p>请求限流</p>
+<ul>
+<li>总量。如：直播间只允许100万人</li>
+<li>时间量。如：每秒请求10万。</li>
+</ul>
+<p>分析后设定一个阈值，测试上线后，再观察调优。</p>
+<p>缺点：</p>
+<ol>
+<li>未测试到的接口调用情况。</li>
+<li>限流值不合理。限流6000，实际5000系统就扛不住了；或者限流6000，实际可以到1万</li>
+</ol>
+</li>
+<li><p>资源限流</p>
+<p>分析资源瓶颈，如连接数、文件句柄、线程数、请求队列、CPU、内存。如达到CPU70%时，后续请求都抛弃</p>
+<p>分析后设定一个阈值，测试上线后，再观察调优</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="排队"><a href="#排队" class="headerlink" title="排队"></a>排队</h5><p>排队实际上是限流的一个变种，限流是直接拒绝用户，排队是让用户等待一段时间。</p>
+<p>排队后如何返回客户端：</p>
+<ol>
+<li>轮询，2. Long polling，3. HTTP/2推送</li>
+</ol>
+<h4 id="可扩展架构模式基本思想和模式"><a href="#可扩展架构模式基本思想和模式" class="headerlink" title="可扩展架构模式基本思想和模式"></a>可扩展架构模式基本思想和模式</h4><p>思想：拆，将变化的部分单独放在一个地方。做到修改时不影响其他部分</p>
+<p>模式：</p>
+<ol>
+<li>按流程拆。横拆。如：分层架构、TCP/IP四层模型</li>
+<li>按功能拆。竖拆。如：登录微服务和注册微服务，规则引擎</li>
+</ol>
+<p>拆出来的部分，可以用设计模式、单独的服务</p>
+<h4 id="可扩展架构模式-分层架构-amp-SOA架构"><a href="#可扩展架构模式-分层架构-amp-SOA架构" class="headerlink" title="可扩展架构模式-分层架构&amp;SOA架构"></a>可扩展架构模式-分层架构&amp;SOA架构</h4><h5 id="分层架构"><a href="#分层架构" class="headerlink" title="分层架构"></a>分层架构</h5><p>介绍：两两调用，隔离解耦。</p>
+<p>分层方法：完全穷尽，互不相同</p>
+<p>示例：</p>
+<ol>
+<li>C/S架构。B/S架构将客户端和服务端隔离。</li>
+<li>操作系统文件接口单独一层隔离，屏蔽不同文件的差异。上层功能调用统一的VFS文件接口。VFS适配下层不同的文件接口。效果：新接入文件系统时，上层功能不需要修改</li>
+</ol>
+<p>优点：强制将分层依赖限定为两两依赖，降低了整体系统复杂度</p>
+<p>缺点：</p>
+<ol>
+<li>冗余。简单的查询功能也需要层层实现一次。</li>
+<li>性能。20世纪80年代是问题，现在不是了</li>
+</ol>
+<h5 id="SOA"><a href="#SOA" class="headerlink" title="SOA"></a>SOA</h5><p>介绍：为了解决多个相同功能不同协议已有系统与其他系统交互时的重复开发，是特定场景产生的架构。</p>
+<p>实现：所有系统都通过总线系统ESB转换为统一协议后，再和其他系统交互</p>
+<p>优点：已有大量不同协议系统要交互时，无法重新开发原有系统。</p>
+<p>缺点：ESB容易成为系统卡点。</p>
+<h4 id="可扩展架构-微服务"><a href="#可扩展架构-微服务" class="headerlink" title="可扩展架构-微服务"></a>可扩展架构-微服务</h4><p>SOA和微服务区别：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>微服务</th>
+<th>SOA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务粒度</td>
+<td>细</td>
+<td>粗</td>
+</tr>
+<tr>
+<td>服务通信</td>
+<td>轻量级。http rest、RPC</td>
+<td>重量级。由ESB统一路由、消息转换、消息传递</td>
+</tr>
+<tr>
+<td>服务交付</td>
+<td>理念是快速交付，相应的要求持续集成、持续部署、自动化测试等敏捷开发相关最佳实践。</td>
+<td>无特殊要求，主要考虑兼容已有系统</td>
+</tr>
+<tr>
+<td>应用场景</td>
+<td>更适合快速、轻量级、基于Web的互联网系统，没有历史包袱的企业数据化</td>
+<td>庞大、复杂、异构的企业级系统。系统已开发多年，无法完全推到重来或进行大规模的优化和重构。成本、相关影响太大</td>
+</tr>
+</tbody></table>
+<p>微服务陷阱：</p>
+<ol>
+<li><p>部署成本</p>
+<p>没有敏捷开发基础能力相关支撑，微服务数量一但变大（如：20个），部署成本呈指数上升。</p>
+</li>
+<li><p>系统复杂度</p>
+<p>服务划分过细，单个服务的复杂度确实下降了，但整个系统的复杂度却上升了，因为微服务将系统内的复杂度转移为系统间的复杂度了。</p>
+</li>
+<li><p>团队效率</p>
+<p>如：团队人员规模是 5 ~ 6 个人，拆分出 30 多个微服务，每个人平均维护 5 个以上的微服务。一个简单的需求开发就需要涉及多个微服务，光是微服务之间的接口就有 6 ~ 7 个，无论是设计、开发、测试、部署，都需要工程师不停地在不同的服务间切换。</p>
+</li>
+<li><p>性能</p>
+<p>调用链太长，性能下降。微服务之间都是通过 HTTP 或者 RPC 调用的，每次调用必须经过网络。一般线上的业务接口之间的调用，平均响应时间大约为 50 毫秒</p>
+</li>
+<li><p>问题定位困难</p>
+<p>一次用户请求需要多个微服务协同处理，任意微服务的故障都将导致整个业务失败。然而由于微服务数量较多，且故障存在扩散现象，快速定位到底是哪个微服务故障是一件复杂的事情。</p>
+</li>
+<li><p>无法快速交付</p>
+<p>如果没有相应的自动化系统进行支撑，都是靠人工去操作，那么微服务不但达不到快速交付的目的，甚至还不如一个大而全的系统效率高。自动化测试、自动化部署、自动化监控()、服务治理(nacos、gateway、sentinel)</p>
+</li>
+</ol>
+<h4 id="可扩展架构-微服务-实践方法"><a href="#可扩展架构-微服务-实践方法" class="headerlink" title="可扩展架构-微服务-实践方法"></a>可扩展架构-微服务-实践方法</h4><p>微服务：小、轻，需要自动化基础设施。</p>
+<h5 id="拆分方法"><a href="#拆分方法" class="headerlink" title="拆分方法"></a>拆分方法</h5><ol>
+<li>按业务拆分</li>
+<li>按人员拆分。每3个人可以拆一个微服务。6个人的团队，2个微服务。<ul>
+<li>系统规模：3个人开一个系统，系统复杂度刚好达到每个人全面理解整个系统。</li>
+<li>团队管理：3个人可以形成一个稳定的备份；1个人是单点，某些情况下很危险。</li>
+<li>技术提升：3个人能够形成有效的讨论。少了想法不够，容易陷入思维盲区；多了人员没有认真参与。</li>
+</ul>
+</li>
+<li>按可扩展拆分。稳定和变动</li>
+<li>按可靠性拆分。可靠性要求高和低</li>
+<li>按性能拆分</li>
+</ol>
+<h5 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h5><ol>
+<li><p>服务发现、服务路由、服务容错：这是最基本的微服务基础设施。</p>
+</li>
+<li><p>接口框架、API 网关：主要是为了提升开发效率，接口框架是提升内部服务的开发效率，API 网关是为了提升与外部服务对接的效率。</p>
+<p>接口框架：如约定http/rest 并且数据格式是json，数据封装是<code>Result&lt;T&gt;</code>，统一使用提供Jar包</p>
+</li>
+<li><p>自动化部署、自动化测试、配置中心：主要是为了提升测试和运维效率。</p>
+<p>自动化测试：如果每次更新都靠人工回归整个系统，则工作量大，效率低下，达不到“快速交付”的目的，因此必须通过自动化测试系统来完成绝大部分测试回归的工作。自动化测试涵盖的范围包括代码级的单元测试、单个系统级的集成测试、系统间的接口测试，理想情况是每类测试都自动化。如果因为团队规模和人力的原因无法全面覆盖，至少要做到接口测试自动化。</p>
+</li>
+<li><p>服务监控、服务跟踪、服务安全：主要是为了进一步提升运维效率。</p>
+</li>
+</ol>
+<p>3 和 4 两类基础设施，重要性会随着微服务节点数量增加而越来越重要，但在微服务节点数量较少的时候，可以通过人工的方式支撑。</p>
+<h4 id="可扩展架构-微内核架构"><a href="#可扩展架构-微内核架构" class="headerlink" title="可扩展架构-微内核架构"></a>可扩展架构-微内核架构</h4><p>微内核架构（<code>Microkernel Architecture</code>），也被称为插件化架构（<code>Plug-in Architecture</code>），是一种面向功能进行拆分的可扩展性架构。如：Eclipse、Idea、Unix操作系统，保险公司的保险核算逻辑系统，不同保险品种可以将逻辑封装成插件。</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221103117067.png" alt="image-20231221103117067"></p>
+<h5 id="设计关键点"><a href="#设计关键点" class="headerlink" title="设计关键点"></a>设计关键点</h5><ol>
+<li>插件管理</li>
+<li>插件连接</li>
+<li>插件通信</li>
+</ol>
+<h5 id="规则引擎"><a href="#规则引擎" class="headerlink" title="规则引擎"></a>规则引擎</h5><p>如：drools，需要将规则封装成下面的页面供用户使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import com.xiaoruiit.knowledge.point.rule.drools.Person</span><br><span class="line">dialect  &quot;mvel&quot;</span><br><span class="line"></span><br><span class="line">rule &quot;age&quot;</span><br><span class="line">    when</span><br><span class="line">        $person : Person(age &gt; 18)</span><br><span class="line">    then</span><br><span class="line">        System.out.println(&quot;年龄大于18岁的人是：&quot; + $person.getName());</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221103836731.png" alt="image-20231221103836731"></p>
+<h3 id="架构重构"><a href="#架构重构" class="headerlink" title="架构重构"></a>架构重构</h3><h4 id="什么时候重构（重构背景）"><a href="#什么时候重构（重构背景）" class="headerlink" title="什么时候重构（重构背景）"></a>什么时候重构（重构背景）</h4><p>因为各种历史原因和历史问题没有及时处理，遗留下来逐渐积累，然后到了一个临界点，各种问题开始互相作用，集中爆发。</p>
+<p>系统不断出现各种问题，轻微一点的如系统响应慢、数据错误、某些用户访问失败等，严重的可能是宕机、数据库瘫痪、数据丢失等，或者系统的开发效率很低。</p>
+<h4 id="是否需要重构"><a href="#是否需要重构" class="headerlink" title="是否需要重构"></a>是否需要重构</h4><p>假设我们现在需要从 0 开始设计当前系统，新架构和老架构是否类似？如果差异不大，说明采取系统优化即可；如果差异很大，那可能就要进行系统重构了。</p>
+<p>架构重构不能解决所有问题，架构师的首要任务是从一大堆纷繁复杂的问题中识别出真正要通过架构重构来解决的问题，集中力量快速解决。</p>
+<h4 id="系统架构问题分析-重构架构的案例"><a href="#系统架构问题分析-重构架构的案例" class="headerlink" title="系统架构问题分析+重构架构的案例"></a>系统架构问题分析+重构架构的案例</h4><h5 id="不合理耦合"><a href="#不合理耦合" class="headerlink" title="不合理耦合"></a>不合理耦合</h5><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164615535.png" alt="image-20231226164615535"></p>
+<p>重构方案：</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164656202.png" alt="image-20231226164656202"></p>
+<h5 id="全局单点的可用性问题"><a href="#全局单点的可用性问题" class="headerlink" title="全局单点的可用性问题"></a>全局单点的可用性问题</h5><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164814515.png" alt="image-20231226164814515"></p>
+<p>重构方案</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231226164837141.png" alt="image-20231226164837141"></p>
+<p>重构后系统的可用性从 3 个 9 提升到 4 个 9，重构前最夸张的一个月有 4 次较大的线上故障，重构后虽然也经历了机房交换机宕机、运营商线路故障、机柜断电等问题，但对业务都没有什么大的影响。</p>
+<h5 id="大系统问题"><a href="#大系统问题" class="headerlink" title="大系统问题"></a>大系统问题</h5><p>开发效率</p>
+<p>系统可扩展性不足。</p>
+<p>所有功能都在一个系统中，也可能导致一个功能出问题，整站不可用。</p>
+<p>比如说某个功能把数据库拖慢了，整站所有业务跟着都慢了。</p>
+<h5 id="多年复杂系统去O"><a href="#多年复杂系统去O" class="headerlink" title="多年复杂系统去O"></a>多年复杂系统去O</h5><p>一个运行18年的.net业务系统，业务一刻不能停止，大约2000张oracle表，大量的存储过程函数等实现的业务逻辑，现在要用java来重构，面临的问题就是好多大表都在Oracle中，想去o就涉及到很多表关联，做不到垂直拆分，业务耦合太紧。</p>
+<ol>
+<li><p>数据先不动，先拆分代码到多个子系统，然后再拆分数据。</p>
+<p>优点：风险小</p>
+<p>缺点：周期长</p>
+</li>
+<li><p>重写一套新的，然后做数据割接</p>
+<p>优点：周期短</p>
+<p>缺点：风险大</p>
+</li>
+</ol>
+<h4 id="重构步骤"><a href="#重构步骤" class="headerlink" title="重构步骤"></a>重构步骤</h4><ol>
+<li><p>收集问题</p>
+</li>
+<li><p>重构需要处理的问题</p>
+<ol>
+<li>分析架构重构可以解决的核心问题</li>
+<li>处理核心问题需要的前置条件</li>
+</ol>
+</li>
+<li><p>区分优先级，问题分类，划分难易程度，最多半年一个周期</p>
+</li>
+<li><p>相关方游说（shui4)(沟通协调)</p>
+</li>
+</ol>
+<h4 id="重构步骤案例"><a href="#重构步骤案例" class="headerlink" title="重构步骤案例"></a>重构步骤案例</h4><h5 id="大系统"><a href="#大系统" class="headerlink" title="大系统"></a>大系统</h5><ol>
+<li><p>收集系统目前存在的问题</p>
+<p>可用性、性能、安全、用户体验。每个细分十几二十个子项。</p>
+</li>
+<li><p>重构需要处理的问题</p>
+<ol>
+<li>庞大的系统继承了太多功能，可扩展性不足</li>
+<li>系统可用性不高，经常出线上问题，需要耗费大量人力处理</li>
+<li>重构需要系统处于一个比较稳定的状态，线上问题不频繁。<ol>
+<li>部分服务硬件资源不够用</li>
+<li>系统组件使用不合理</li>
+<li>架构上的问题</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>优先级、问题分类、难易划分、时间周期、效果衡量后的总策略</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20240115115114726.png" alt="image-20240115115114726"></p>
+</li>
+</ol>
+<h4 id="重构难点"><a href="#重构难点" class="headerlink" title="重构难点"></a>重构难点</h4><ol>
+<li>业务不能停，一边在开发新需求，一边完成架构调整</li>
+<li>关联方多，难以统一行动</li>
+<li>旧架构的约束</li>
+<li>大重构需要老板拍板</li>
+</ol>
+<p>架构重构对架构师的综合能力要求非常高，业务上要求架构师能够说服产品经理暂缓甚至暂停业务来进行架构重构；团队上需要架构师能够与其他团队达成一致的架构重构计划和步骤；技术上需要架构师给出让技术团队认可的架构重构方案。架构重构需要架构师既要说得动老板，也要镇得住同事；既要技术攻关，又要协调资源；既要保证业务正常发展，又要在指定时间内完成目标。</p>
+<h4 id="沟通协调"><a href="#沟通协调" class="headerlink" title="沟通协调"></a>沟通协调</h4><p>人员：产品经理、项目经理、运营人员、开发人员。</p>
+<p>跨领域沟通需要用通用语言；沟通需要用数据。</p>
+<p>沟通如：</p>
+<ol>
+<li>可扩展性”转换为“版本开发速度很慢，每次设计都要考虑是否对门户有影响，是否要考虑对其他业务有影响”，然后我们还收集了 1 个月里的版本情况，发现有几个版本设计阶段讨论 1 周甚至 2 周时间，但开发只有 2 天时间；而且一个月才做了 4 个版本，最极端的一个版本讨论 2 周，开发 2 天，然后等了 1 个月才和门户系统一起上线。</li>
+<li>可用性是几个 9转换为整理线上故障的次数、每次影响的时长，影响的用户，客服的反馈意见等，然后再拿其他系统的数据进行对比</li>
+</ol>
+<p>协调阻力：这对我有什么好处，这部分我这边不着急</p>
+<ol>
+<li>分析出对其他团队的好处</li>
+<li>公司或者部门有利，对某个小组不利的情况。协调更高层级的管理者推动</li>
+<li>有其他更重要的业务。<ol>
+<li>等待策略，但要明确正式启动的时间。</li>
+<li>先不做这个系统相关的重构。</li>
+</ol>
+</li>
+</ol>
+<h4 id="错误重构"><a href="#错误重构" class="headerlink" title="错误重构"></a>错误重构</h4><ol>
+<li><p>多模块聚合</p>
+<p>问题：版本开发和测试部署一样比较麻烦</p>
+<p>正确做法：应该将公共功能独立为服务。</p>
+</li>
+<li><p>没有区分问题的优先级，所有问题一视同仁，没有集中有限资源去解决最重要或者关键的问题。</p>
+<p>问题：做了大半年，好像做了很多事情，但没取得什么阶段性的成果。如同一直做业务完善的小需求和支撑新业务的大需求的区别</p>
+</li>
+<li><p>没有将问题分类</p>
+<p>问题：方案重复，浪费人力，效率低</p>
+</li>
+<li><p>迫于业务版本压力，挑容易做的实施</p>
+<p>问题：达不到重构目的。重构分析差不多白做了</p>
+</li>
+</ol>
+<h3 id="业务发展中的技术演进"><a href="#业务发展中的技术演进" class="headerlink" title="业务发展中的技术演进"></a>业务发展中的技术演进</h3><h4 id="架构实战-架构演进方向"><a href="#架构实战-架构演进方向" class="headerlink" title="架构实战-架构演进方向"></a>架构实战-架构演进方向</h4><h5 id="技术和业务"><a href="#技术和业务" class="headerlink" title="技术和业务"></a>技术和业务</h5><p>产品类业务，服务类业务</p>
+<p>创新技术能带来新的业务时，这一刻是技术驱动业务的。如：iPhone智能机、淘宝线上购物</p>
+<p>技术是由业务驱动的。</p>
+<h5 id="架构演进方向"><a href="#架构演进方向" class="headerlink" title="架构演进方向"></a>架构演进方向</h5><p>企业业务发展面对的复杂度就是架构演进的方向。</p>
+<p>淘宝是100分。小公司从20分开始演进，大公司可以从60分开始演进。</p>
+<p>按照企业当前的业务发展阶段衡量当前复杂度，逐步推演，设计合适的架构。<br>如果有对手系统可以参考，企业自身业务能够达到一个高度，老板给时间，就预见性的设计，为后续升级留出通路。</p>
+<p>业务的不断创新和改进，对技术会提出越来越高的要求，因此是业务驱动了技术发展。</p>
+<h4 id="架构实战-互联网业务发展过程中的技术演进"><a href="#架构实战-互联网业务发展过程中的技术演进" class="headerlink" title="架构实战-互联网业务发展过程中的技术演进"></a>架构实战-互联网业务发展过程中的技术演进</h4><h5 id="业务复杂性"><a href="#业务复杂性" class="headerlink" title="业务复杂性"></a>业务复杂性</h5><table>
+<thead>
+<tr>
+<th></th>
+<th>业务标志</th>
+<th></th>
+<th></th>
+<th>技术要求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初创期</td>
+<td>创新的业务点</td>
+<td>能买则买，能用开源就用开源</td>
+<td></td>
+<td>对技术就一个要求：“快”</td>
+</tr>
+<tr>
+<td>发展期</td>
+<td>业务推出后经过市场验证可行，业务就进入快速发展的时期。</td>
+<td>1. 堆功能期；</td>
+<td></td>
+<td>团队规模不大，业务需求很紧</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>2.优化期（换磁盘，增加机器，代码优化，增加缓存）；</td>
+<td>优点：对系统改动较小，优化可以比较快速地实施；缺点：过不了多久，系统又撑不住了。</td>
+<td>保证当下的竞争力是最主要的问题</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>3.架构期（开发速度慢，无法忍受了）。拆功能、拆数据库、拆服务器</td>
+<td>优点：一次调整可以支撑比较长期的业务发展；缺点：动作较大、耗时较长，对业务的发展影响比较大。</td>
+<td></td>
+</tr>
+<tr>
+<td>竞争期</td>
+<td>竞争对手开始加入行业来竞争. 内部问题：1.重复造轮子 2.系统交互一团乱麻</td>
+<td>解决：1.平台化（存储平台化，淘宝的TFS；数据库平台化，百度的DBProxy)。2.服务化（消息队列，RocketMQ，开源Kafka;服务框架，Facebook的thrift）</td>
+<td></td>
+<td>由于竞争的压力，对技术的要求更上一层楼</td>
+</tr>
+<tr>
+<td>成熟期</td>
+<td>行业的领头羊。业务创新的机会已经不大，竞争压力也没有那么激烈，此时求快求新已经没有很大空间，业务上开始转向为“求精”。响应时间是否比竞争对手快？我们的用户体验是否比竞争对手好？我们的成本是否比竞争对手低</td>
+<td>技术上能做的大动作其实也不多了，更多的是进行优化。这个时候的技术优化没有固定的套路，只能按照竞争的要求，找出自己的弱项，然后逐项优化。</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="用户规模"><a href="#用户规模" class="headerlink" title="用户规模"></a>用户规模</h5><p>性能、可用性</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221145041172.png" alt="image-20231221145041172"></p>
+<h4 id="架构实战-互联网架构图模板"><a href="#架构实战-互联网架构图模板" class="headerlink" title="架构实战-互联网架构图模板"></a>架构实战-互联网架构图模板</h4><p>存储层，开发层，服务层，网络层，用户层，业务层；平台层</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231221174906031.png" alt="image-20231221174906031"></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储层</td>
+<td>数据库，集群，封装集群后提供服务</td>
+<td></td>
+</tr>
+<tr>
+<td>开发层</td>
+<td>成熟框架，Web服务器（如：tomcat)，容器（K8s，Docker)</td>
+<td></td>
+</tr>
+<tr>
+<td>服务层</td>
+<td>服务治理(配置中心、服务注册、消息队列等)</td>
+<td></td>
+</tr>
+<tr>
+<td>网络层</td>
+<td>负载均衡、CDN、多机房</td>
+<td></td>
+</tr>
+<tr>
+<td>用户层</td>
+<td>单点登录CAS，授权登录Oauth2，存储云，图片云</td>
+<td></td>
+</tr>
+<tr>
+<td>业务层</td>
+<td>拆；合（服务太多，多个服务合并为一个域，通过网关对外提供服务）；DDD</td>
+<td></td>
+</tr>
+<tr>
+<td>平台层</td>
+<td>运维平台、测试平台、数据平台、管理平台</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="平台层"><a href="#平台层" class="headerlink" title="平台层"></a>平台层</h4><ul>
+<li><p>运维平台</p>
+<ul>
+<li><p>职责：</p>
+<ul>
+<li><p>配置</p>
+<p>主要负责资源的管理。例如，机器管理、IP 地址管理、虚拟机管理等。</p>
+</li>
+<li><p>部署</p>
+<p>要负责将系统发布到线上。例如，包管理、灰度发布管理、回滚等。</p>
+</li>
+<li><p>监控</p>
+<p>主要负责收集系统上线运行后的相关数据并进行监控，以便及时发现问题。</p>
+</li>
+<li><p>应急</p>
+<p>主要负责系统出故障后的处理。例如，停止程序、下线故障机器、切换 IP 等。</p>
+</li>
+</ul>
+</li>
+<li><p>要求：</p>
+<ul>
+<li><p>标准化</p>
+<p>规范配置管理、部署流程、监控指标、应急能力等</p>
+</li>
+<li><p>平台化</p>
+</li>
+<li><p>自动化</p>
+</li>
+<li><p>可视化</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>测试平台</p>
+<ul>
+<li><p>用例管理</p>
+<p>单元测试：代码</p>
+<p>接口测试：python</p>
+<p>可靠性测试：shell</p>
+<p>测试平台需要将用例管理起来，管理的维度包括业务、系统、测试类型、用例代码。例如，网购业务的订单系统的接口测试用例。</p>
+</li>
+<li><p>资源管理</p>
+</li>
+<li><p>任务管理。任务管理是测试平台设计的核心，它将测试平台的各个部分串联起来从而完成自动化测试。</p>
+</li>
+<li><p>数据管理</p>
+<p>测试任务执行完成后，需要记录各种相关的数据（例如，执行时间、执行结果、用例执行期间的 CPU、内存占用情况等）</p>
+</li>
+</ul>
+</li>
+<li><p>数据平台</p>
+<ul>
+<li><p>数据管理</p>
+<ul>
+<li><p>数据采集</p>
+<p>从业务系统搜集各类数据。例如，日志、用户行为、业务数据等</p>
+</li>
+<li><p>数据存储</p>
+</li>
+<li><p>数据访问</p>
+</li>
+<li><p>数据安全</p>
+<p>数据平台都是多个业务共享的，部分业务敏感数据需要加以保护</p>
+</li>
+</ul>
+</li>
+<li><p>数据分析</p>
+<ul>
+<li><p>数据统计</p>
+<p>根据原始数据统计出相关的总览数据。例如，PV、UV、交易额等</p>
+</li>
+<li><p>数据挖掘</p>
+<p>经典的数据挖掘案例就是沃尔玛的啤酒与尿布的关联关系的发现。</p>
+</li>
+<li><p>机器学习、深度学习</p>
+</li>
+</ul>
+</li>
+<li><p>数据应用</p>
+<p>例如，推荐、广告等属于在线应用，报表、欺诈检测、异常检测等属于离线应用。</p>
+</li>
+</ul>
+</li>
+<li><p>管理平台</p>
+<p>身份认证、权限控制</p>
+</li>
+</ul>
+<h3 id="如何选择开源项目做二次开发"><a href="#如何选择开源项目做二次开发" class="headerlink" title="如何选择开源项目做二次开发"></a>如何选择开源项目做二次开发</h3><h4 id="为什么选开源项目"><a href="#为什么选开源项目" class="headerlink" title="为什么选开源项目"></a>为什么选开源项目</h4><p>避免重复造轮子，提升效率</p>
+<h4 id="开源项目的问题"><a href="#开源项目的问题" class="headerlink" title="开源项目的问题"></a>开源项目的问题</h4><ol>
+<li><p>开源项目的质量是未知的。</p>
+<p>任何程序员写的项目都有bug。bug轻则造成半小时宕机，严重可能丢失部分数据，甚至丢失全部数据</p>
+</li>
+</ol>
+<h4 id="如何选择开源项目"><a href="#如何选择开源项目" class="headerlink" title="如何选择开源项目"></a>如何选择开源项目</h4><ol>
+<li><p>是否满足业务需求</p>
+<p>已有框架满足业务需求时，没必要引入新开源项目</p>
+<ol>
+<li>功能</li>
+<li>性能</li>
+</ol>
+</li>
+<li><p>成熟度</p>
+<ol>
+<li>使用的公司</li>
+<li>社区活跃度<ol>
+<li>发帖数</li>
+<li>回复数</li>
+<li>问题响应速度</li>
+</ol>
+</li>
+<li>版本号，尽量不选0.X的，至少1.X版本</li>
+</ol>
+</li>
+<li><p>是否有运维工具</p>
+<ol>
+<li>日志是否齐全。只有启动、停止几行的不好</li>
+<li>运行时查看。如命令行、管理控制台查看系统运行时情况</li>
+<li>故障检测和恢复能力。如：告警</li>
+</ol>
+</li>
+</ol>
+<h4 id="如何使用开源项目"><a href="#如何使用开源项目" class="headerlink" title="如何使用开源项目"></a>如何使用开源项目</h4><ol>
+<li><p>深入研究</p>
+<p>通过设计文档、白皮书了解设计原理；核对每个配置项的作用和影响，识别出关键配置项</p>
+</li>
+<li><p>仔细测试</p>
+<p>多场景测试。</p>
+<p>压力测试：连续跑几天，观察CPU、内存、磁盘I/O指标波动</p>
+<p>故障测试：kill、断电、拔网线、重启100次以上</p>
+</li>
+<li><p>灰度发布</p>
+<p>先在非核心业务上线</p>
+</li>
+<li><p>做好应急</p>
+<p>做好数据备份</p>
+</li>
+</ol>
+<h4 id="二次开发"><a href="#二次开发" class="headerlink" title="二次开发"></a>二次开发</h4><ol>
+<li><p>扩展而不修改</p>
+<p>增加一个 proxy 层来实现需要的新功能</p>
+<p>开发辅助系统：监控、报警、负载均衡、管理等</p>
+<p>不着急的时候给开源项目提需求或者bug</p>
+</li>
+<li><p>造轮子</p>
+<p>对于细分需求没有已有轮子时，自己造轮子。</p>
+</li>
+</ol>
+<h2 id="5架构设计案例"><a href="#5架构设计案例" class="headerlink" title="5架构设计案例"></a>5架构设计案例</h2><h3 id="淘宝"><a href="#淘宝" class="headerlink" title="淘宝"></a>淘宝</h3><ol>
+<li>2003年4月7日，为了快。买php+mysql，1个月后5月10日上线。</li>
+<li>2003年底，mysql扛不住，换成了Oracle</li>
+<li>PHP开源数据库连接池导致Oracle经常死锁，无法解决。请Sun公司专家热切换为Java1.0，使用EJB，Oracle。Java当时是很多主流网站使用的语言</li>
+<li>性能优化,节约成本。Java2.0，数据分库，切换为Spring，缓存、CDN，开源的JBoss。2005年，商品数量1600多万，PV8931万，会员1390万。已经不是靠“买”就能够解决问题了，此时必须从整个架构上去进行调整和优化。</li>
+<li>Java3.0，去IOE化，技术从商用转向自研。去IBM服务器，去Oracle数据库软件，去EMC存储设备</li>
+</ol>
+<h3 id="QQ"><a href="#QQ" class="headerlink" title="QQ"></a>QQ</h3><ol>
+<li><p>十万级用户</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095424645.png" alt="image-20231129095424645"></p>
+</li>
+<li><p>百万级用户</p>
+<p>内存瓶颈，2GB只能支撑1百万用户的在线状态。</p>
+<p>CPU/网卡包量/交换机流量瓶颈</p>
+<p>单台服务支撑不下所有在线用户</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095433482.png" alt="image-20231129095433482"></p>
+</li>
+<li><p>千万级用户</p>
+<ul>
+<li><p>状态服务器同步状态遇到单机瓶颈</p>
+</li>
+<li><p>单台状态同步服务器支撑不下所有在线用户。</p>
+</li>
+</ul>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231129095445189.png" alt="image-20231129095445189"></p>
+</li>
+<li><p>亿级用户</p>
+<p>2010年3月重新设计。</p>
+<ul>
+<li>灵活性很差，比如“昵称”长度增加一半，需要两个月；增加“故乡”字段，需要两个月；最大好友数从 500 变成 1000，需要三个月。</li>
+<li>无法支撑某些关键功能，比如好友数上万、隐私权限控制、PC QQ 与手机 QQ 不可互踢、微信与 QQ 互通、异地容灾。</li>
+<li>1.0-3.5都是原来基础上做改造升级，补丁打不动了</li>
+</ul>
+</li>
+</ol>
+<h3 id="微信红包架构"><a href="#微信红包架构" class="headerlink" title="微信红包架构"></a>微信红包架构</h3><p><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/2017hongbao-weixin/">https://www.infoq.cn/article/2017hongbao-weixin/</a>  资金安全系统解决方案</p>
+<p>2017 年 1 月 28 日，正月初一，用户在除夕当天收发微信红包的数量——142 亿个，收发峰值76 万每秒。</p>
+<p>类似业务秒杀：</p>
+<ol>
+<li>发红包相当于秒杀活动的商品上架</li>
+<li>抢红包相当于秒杀活动的查询库存</li>
+<li>拆红包相当于下单</li>
+</ol>
+<p>业务特点：</p>
+<ol>
+<li><p>并发量比普通秒杀业务更高。</p>
+<p>10万人同时发红包，10万个微信群同时抢红包</p>
+</li>
+<li><p>安全性要求更高</p>
+<p>秒杀允许超卖和少卖。拆红包严格不允许超发金额，未发的24小时后金额准确退回</p>
+</li>
+</ol>
+<p>技术难点：</p>
+<ol>
+<li>并发请求锁</li>
+<li>事务操作量级大</li>
+<li>事务性要求严格</li>
+</ol>
+<p>常用高并发方案：</p>
+<ol>
+<li><p>内存操作代替DB操作，异步持久化。</p>
+<p>优点：磁盘操作转为内存操作</p>
+<p>缺点：持久化不能保证</p>
+</li>
+<li><p>乐观锁代替悲观锁</p>
+<p>优点：</p>
+<p>缺点：</p>
+<ol>
+<li>增加资源消耗。并发量大时，产生大量无效请求</li>
+<li>用户体验低，抢红包不可接受。并发抢到相同版本号的拆红包请求中，只有一个能拆红包成功，其他的请求将事务回滚并返回失败，给用户报错。</li>
+<li>可能手慢后抢成功，用户体验不好。</li>
+</ol>
+</li>
+</ol>
+<p>主要技术点：</p>
+<ol>
+<li><p>根据红包ID做set分化，分而治之。全国抢一个红包会被分为10000个红包</p>
+<p>相同红包ID hash后，发送同同一组服务器、数据库中。解决了海量事务级操作。</p>
+</li>
+<li><p>请求FIFO队列</p>
+<p>服务器增加队列请求排队，写事务串行化访问DB；同一个红包ID路由到同一台机器</p>
+<p>增加memacache控制并发，用cas自增统计抢同一红包人数，超过一定值后降级，返回抢红包失败。</p>
+</li>
+<li><p>数据库双维度分库分表</p>
+<p>分库表规则像 db_xx.t_y_dd 设计，其中，xx/y 是红包 ID 的 hash 值后三位，dd 的取值范围在 01~31，代表一个月天数最多 31 天。</p>
+</li>
+</ol>
+<p>结果：</p>
+<ol>
+<li>单库提升8倍性能。</li>
+<li>2017每秒76万并发</li>
+<li>2015、2016、2017无故障</li>
+</ol>
+<h3 id="移动端架构演进"><a href="#移动端架构演进" class="headerlink" title="移动端架构演进"></a>移动端架构演进</h3><ol>
+<li><p>2010年前后，受限于设备、网络速度，PC互联网是主流。移动端一开始在Web业务上包装一个APP的壳，即WebApp。</p>
+</li>
+<li><p>2013年前后用户体验差据越来越大，原生APP（Android、IOS、windows Phone）成为主流。</p>
+<p>用户体验差距：</p>
+<ol>
+<li>移动设备的发展速度远远超过 Web 技术的发展速度</li>
+<li>App 承载的业务逻辑越来越复杂</li>
+<li>移动设备在用户体验方面有很多优化和改进，而 Web App 无法利用这些技术优势</li>
+</ol>
+</li>
+<li><p>在移动互联网更具竞争力又开始需要开发速度，出现Hybrid App</p>
+</li>
+<li><p>组件化、容器化</p>
+</li>
+<li><p>WebApp</p>
+<p>原理：基于 web 技术（HTML、CSS、JavaScript）开发的应用。</p>
+<p>优点：开发快，跨平台，成本低</p>
+<p>缺点：体验差</p>
+</li>
+<li><p>原生App</p>
+<p>原理：使用特定平台（如iOS、Android）的原生编程语言</p>
+<p>优点：体验好</p>
+<p>缺点：开发慢，不同平台需要重复开发</p>
+</li>
+<li><p>Hybrid App</p>
+<p>原理：使用 web 技术（HTML、CSS、JavaScript）开发应用的一部分，并使用桥接技术将其集成到原生应用中。</p>
+<p>优点：可以在体验和开发速度上均衡</p>
+<p>缺点：开发速度WebApp慢，体验比原生APP差</p>
+</li>
+</ol>
+<h2 id="开源项目的学习"><a href="#开源项目的学习" class="headerlink" title="开源项目的学习"></a>开源项目的学习</h2><p>1,2,3步骤，在研究开源项目的时候必不可少。</p>
+<ol>
+<li><p>安装</p>
+<ul>
+<li><p>获取依赖组件</p>
+<p>依赖组件是系统设计和实现的基础。nginx依赖的库有pcre、pcre-devel、openssl、openssl-devel、zlib；openssl与https有关，zlib与压缩有关。</p>
+</li>
+<li><p>安装后的目录</p>
+<p>conf会存放配置文件，logs会存放日志，sbin存放运行程序；</p>
+<p>redis的redis-benchmark、redis-check-aof，这些工具在后面故障定位和处理、性能测试等场景可能非常方便。</p>
+</li>
+</ul>
+</li>
+<li><p>运行</p>
+<p>通过命令行和配置文件了解系统具备的能力和如何运行。</p>
+<p>了解配置项的原理、作用、影响，并且尝试去修改配置项然后看看系统会有什么变化。</p>
+<p>每个命令行参数和配置项的作用和原理都全部掌握清楚时，对系统已经很熟悉了。</p>
+</li>
+<li><p>原理研究</p>
+<p>研究命令行和配置项的时候已经涉及一部分原理。</p>
+<p>接下来针对原理进行系统性的研究。</p>
+<ul>
+<li><p>关键特性实现原理</p>
+<p>白皮书，设计文档；为了学习只需要看设计相关的；</p>
+<p>网上已有的分析文档，可以站在前人的基础上，避免大量的重复投入；但需要多篇文章做对比；</p>
+<p>Demo验证；</p>
+</li>
+<li><p>优缺点分析</p>
+<p>掌握了技术方案的优缺点后才能在架构设计的时候做出合理的选择。</p>
+<p>将两个类似的系统进行对比，实现差异，以及不同的实现优缺点都是什么；</p>
+</li>
+</ul>
+</li>
+<li><p>测试</p>
+<p>需要在掌握参数配置，关键原理之后进行测试。</p>
+<p>根据业务特点，掌握的原理，编写测试用例。</p>
+<p>可以在准备在生产项目中使用时，再进行测试。</p>
+</li>
+<li><p>源码研究</p>
+<p>带着明确目的去研究源码。学习关键特性的代码实现。</p>
+<p>写demo，调试查看调用栈理解基础库的处理逻辑和过程，这比单纯看代码去理解逻辑要高效一些。</p>
+<p>可以在有时间精力时再做。</p>
+</li>
+</ol>
+<h2 id="架构师内功"><a href="#架构师内功" class="headerlink" title="架构师内功"></a>架构师内功</h2><p>内功内容：</p>
+<ol>
+<li><p>找出问题</p>
+<p>项目架构上指的是找出复杂度在哪</p>
+</li>
+<li><p>解决问题</p>
+<p>第一种：作出合适的方案解决已有复杂度问题</p>
+<p>第二种：作出创新的方案解决复杂度</p>
+</li>
+</ol>
+<p>内功来源：</p>
+<ol>
+<li><p>经历</p>
+<p>设计过的系统越多、系统越复杂，架构师的内功也就越强，不管是成功的架构，还是失败的架构，不管是踩坑的经验，还是填坑的经验，都将成为架构师内功的一部分。</p>
+</li>
+<li><p>技能</p>
+<p>掌握的技能越多，技能越深，内功越强。</p>
+</li>
+<li><p>思考</p>
+<p>经历需要经过思考转化为经验。技能需要思考后为我所用。</p>
+<p>将经历和技能中的模式、判断、选择、技巧等提炼出来为我所用。</p>
+</li>
+</ol>
+<h2 id="架构师岗位成长"><a href="#架构师岗位成长" class="headerlink" title="架构师岗位成长"></a>架构师岗位成长</h2><p>不同阶段有不同的针对性方法</p>
+<ol>
+<li><p>工程师</p>
+<ul>
+<li><p>特征：基础技能积累</p>
+</li>
+<li><p>技能经验</p>
+<ul>
+<li><p>Java语法</p>
+</li>
+<li><p>开发工具</p>
+</li>
+<li><p>数据库CRUD、缓存使用</p>
+</li>
+<li><p>业务系统基本流程</p>
+</li>
+</ul>
+</li>
+<li><p>学习方法：书籍</p>
+</li>
+<li><p>学习内容：经典书籍，《Java编程思想》、《Java核心技术》、《TCP/IP协议》</p>
+</li>
+</ul>
+</li>
+<li><p>高级工程师</p>
+<ul>
+<li>时间：2-5年</li>
+<li>特征：已有架构下独立完成开发</li>
+<li>技能经验<ul>
+<li>设计理论：数据库表设计3范式、面对对象设计模式、SOLID设计原则、缓存设计理论</li>
+<li>技术原理：如：Java数据结构实现原理</li>
+<li>需求分析，设计方案（表设计，2个表还是3个表），编码实现</li>
+<li>积累表、缓存、业务流程、接口设计经验。根据设计理论、技术原理设计</li>
+</ul>
+</li>
+<li>学习方法：书籍、源码</li>
+<li>学习内容：《深入理解Java虚拟机》、《MySQL技术内幕：InnoDB存储引擎》、HashMap源码</li>
+</ul>
+</li>
+<li><p>技术专家</p>
+<ul>
+<li>时间：4-8年</li>
+<li>特征：某个领域的专家，根据需要修改、扩展、优化架构。如Java开发专家、前端开发专家；高级工程师关注优化MySQL性能，技术专家会考虑引入ES</li>
+<li><h2 id="技能经验"><a href="#技能经验" class="headerlink" title="技能经验"></a>技能经验</h2></li>
+<li>学习方法</li>
+<li>学习内容</li>
+</ul>
+<p>领域内</p>
+</li>
+<li><p>初级架构师</p>
+<p>分系统架构、简单系统架构</p>
+</li>
+<li><p>中级架构师</p>
+<p>大型分布式系统架构，架构可以支撑100人团队干活</p>
+</li>
+<li><p>高级架构师</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="复杂度与解决整理"><a href="#复杂度与解决整理" class="headerlink" title="复杂度与解决整理"></a>复杂度与解决整理</h3><p>性能-写请求扛不住：</p>
+<ol>
+<li>分库分表，读扛不住读写分离+缓存就够了。</li>
+<li>瞬时流量：分区顺序MQ，异步通知结果</li>
+</ol>
+<p>扩展性-解耦：</p>
+<ol>
+<li>微服务</li>
+<li>消息队列</li>
+<li>DDD</li>
+</ol>
+<p>可扩展：</p>
+<ol>
+<li>微服务</li>
+<li>分层</li>
+<li>消息队列</li>
+<li>设计模式-策略模式、观察者模式等</li>
+<li>规则引擎</li>
+<li>工作流引擎</li>
+</ol>
+<p>日志占了百分之二十的cpu：</p>
+<ol>
+<li>日志压缩，采样，隔离</li>
+</ol>
+<h3 id="架构升级"><a href="#架构升级" class="headerlink" title="架构升级"></a>架构升级</h3><p>单机→集群:对单机进行性能测试，获得单机性能的极限数据，当业务实际性能达到极限的80%时，开始考虑扩容。</p>
+<h3 id="常见性能"><a href="#常见性能" class="headerlink" title="常见性能"></a>常见性能</h3><ul>
+<li>nginx：3万</li>
+<li>kafaka:百万</li>
+<li>redis：10万</li>
+<li>http：2万</li>
+<li>zookeeper：写入读取2万以上</li>
+<li>业务系统：有的会是500</li>
+</ul>
+<p>画好架构图的方法：4+1视图</p>
+<p>架构师需要五项全能：技术，沟通，推动，管理，撕逼</p>
+<p>一分析二讨论三开会四汇报五审批</p>
+<h3 id="数据聚合位置"><a href="#数据聚合位置" class="headerlink" title="数据聚合位置"></a>数据聚合位置</h3><p>首页有多个资源聚合，是应该app端去请求多个资源服务，然后聚合出来展示；还是有个后台服务去聚合后端的各个基础服务，然后只提供一个接口给app访问？</p>
+<p>访问量大的，核心业务用服务器聚合，性能好；<br>访问量小的，非核心业务用app聚合，可扩展性好；</p>
+<h3 id="书"><a href="#书" class="headerlink" title="书"></a>书</h3><p>《伟大的计算原理》《人月神话》《淘宝技术这十年》</p>
+<p>《UNIX编程艺术》</p>
+<p>《异类》：个人成长</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/" title="架构">http://blog.xiaoruiit.com/2024/02/10/215架构/从0开始学架构-架构/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%AB%98%E6%80%A7%E8%83%BD/" rel="tag"># 高性能</a>
+              <a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" rel="tag"># 高可用</a>
+              <a href="/tags/%E5%8F%AF%E6%89%A9%E5%B1%95/" rel="tag"># 可扩展</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/02/09/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E6%9D%BF/" rel="prev" title="架构设计模板">
+      <i class="fa fa-chevron-left"></i> 架构设计模板
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%9E%B6%E6%9E%84%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">对架构的一些看法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E6%BC%94%E8%BF%9B-amp-%E8%BD%AF%E4%BB%B6%E5%A4%9A%E6%AC%A1%E5%8D%B1%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">语言演进&amp;软件多次危机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">1.3.</span> <span class="nav-text">2架构设计的目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E6%9E%B6%E6%9E%84%E7%9F%A5%E8%AF%86"><span class="nav-number">1.4.</span> <span class="nav-text">3架构知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">软件复杂度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E7%A7%8D%E7%B1%BB"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">复杂度种类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">复杂度分析案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-%E9%AB%98%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">复杂度-高性能</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%86%85%E9%AB%98%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.1.3.1.</span> <span class="nav-text">单机内高性能</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E9%AB%98%E6%80%A7%E8%83%BD"><span class="nav-number">1.4.1.3.2.</span> <span class="nav-text">集群高性能</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">复杂度-高可用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">复杂度-可扩展性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6-%E5%85%B6%E4%BB%96%EF%BC%9A%E6%88%90%E6%9C%AC%E3%80%81%E5%AE%89%E5%85%A8%E3%80%81%E8%A7%84%E6%A8%A1"><span class="nav-number">1.4.1.6.</span> <span class="nav-text">复杂度-其他：成本、安全、规模</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%88%90%E6%9C%AC"><span class="nav-number">1.4.1.6.1.</span> <span class="nav-text">成本</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E5%85%A8"><span class="nav-number">1.4.1.6.2.</span> <span class="nav-text">安全</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%84%E6%A8%A1"><span class="nav-number">1.4.1.6.3.</span> <span class="nav-text">规模</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">1.4.2.</span> <span class="nav-text">架构设计原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E5%BD%93%E4%B8%8B%E4%B8%8D%E8%BF%87%E5%BA%A6"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">满足当下不过度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BC%94%E8%BF%9B"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">演进</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">1.4.3.</span> <span class="nav-text">软件架构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%86%E5%88%AB%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">识别复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">设计备选方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E5%92%8C%E9%80%89%E6%8B%A9%E5%A4%87%E9%80%89%E6%96%B9%E6%A1%88"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">评估和选择备选方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.4.3.4.</span> <span class="nav-text">详细方案设计</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E6%9E%B6%E6%9E%84%E9%AB%98%E7%BA%A7%E7%9F%A5%E8%AF%86"><span class="nav-number">1.5.</span> <span class="nav-text">4架构高级知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E7%86%9F%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.1.</span> <span class="nav-text">成熟架构模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">高性能架构-读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">高性能架构-分库分表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%BA%93"><span class="nav-number">1.5.1.2.1.</span> <span class="nav-text">分库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E8%A1%A8"><span class="nav-number">1.5.1.2.2.</span> <span class="nav-text">分表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BDNoSQL"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">高性能NoSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#K-V%E5%AD%98%E5%82%A8"><span class="nav-number">1.5.1.3.1.</span> <span class="nav-text">K-V存储</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#redis"><span class="nav-number">1.5.1.3.1.1.</span> <span class="nav-text">redis</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.5.1.3.2.</span> <span class="nav-text">文档数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#MongoDB"><span class="nav-number">1.5.1.3.2.1.</span> <span class="nav-text">MongoDB</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%97%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.5.1.3.3.</span> <span class="nav-text">列式数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#HBase"><span class="nav-number">1.5.1.3.3.1.</span> <span class="nav-text">HBase</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%A8%E6%96%87%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="nav-number">1.5.1.3.4.</span> <span class="nav-text">全文搜索引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ES"><span class="nav-number">1.5.1.3.4.1.</span> <span class="nav-text">ES</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84-%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">高性能架构-缓存架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%AB%98%E6%80%A7%E8%83%BD%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.1.5.</span> <span class="nav-text">单服务器高性能模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.1.5.1.</span> <span class="nav-text">并发模型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%88%86%E7%B1%BB%E3%80%81%E6%9E%B6%E6%9E%84%E3%80%81%E7%AE%97%E6%B3%95"><span class="nav-number">1.5.1.6.</span> <span class="nav-text">高性能-负载均衡分类、架构、算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DNS%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.1.6.1.</span> <span class="nav-text">DNS负载均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E5%A4%8D%E6%9D%82%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.1.6.2.</span> <span class="nav-text">硬件复杂均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%A4%8D%E6%9D%82%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.1.6.3.</span> <span class="nav-text">软件复杂均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#nginx"><span class="nav-number">1.5.1.6.3.1.</span> <span class="nav-text">nginx</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#LVS"><span class="nav-number">1.5.1.6.3.2.</span> <span class="nav-text">LVS</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.1.6.4.</span> <span class="nav-text">多级负载均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%BA%E5%9D%9B%E6%97%A5%E6%B4%BB1000%E4%B8%87%E7%94%A8%E6%88%B7%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%88%86%E6%9E%90"><span class="nav-number">1.5.1.6.5.</span> <span class="nav-text">论坛日活1000万用户负载均衡分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="nav-number">1.5.1.6.6.</span> <span class="nav-text">负载均衡算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8-%E7%90%86%E8%AE%BA"><span class="nav-number">1.5.1.7.</span> <span class="nav-text">高可用-理论</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CAP"><span class="nav-number">1.5.1.7.1.</span> <span class="nav-text">CAP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ACID"><span class="nav-number">1.5.1.7.2.</span> <span class="nav-text">ACID</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Base%E7%90%86%E8%AE%BA"><span class="nav-number">1.5.1.7.3.</span> <span class="nav-text">Base理论</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8-FEMA%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F%E5%8F%AF%E7%94%A8%E6%80%A7%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">1.5.1.7.4.</span> <span class="nav-text">高可用-FEMA分析系统可用性方法论</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E5%AD%98%E5%82%A8%E6%9E%B6%E6%9E%84-%E5%8F%8C%E6%9C%BA%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.8.</span> <span class="nav-text">高可用存储架构-双机架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E5%AD%98%E5%82%A8%E6%9E%B6%E6%9E%84-%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.1.9.</span> <span class="nav-text">高可用存储架构-集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E4%B8%AD%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.1.9.1.</span> <span class="nav-text">数据集中集群</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E6%95%A3%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.1.9.2.</span> <span class="nav-text">数据分散集群</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.10.</span> <span class="nav-text">高可用架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E5%A4%87"><span class="nav-number">1.5.1.10.1.</span> <span class="nav-text">主备</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E"><span class="nav-number">1.5.1.10.2.</span> <span class="nav-text">主从</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">1.5.1.10.3.</span> <span class="nav-text">集群</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8-%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.11.</span> <span class="nav-text">高可用-异地多活架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E5%9F%8E%E5%BC%82%E5%8C%BA"><span class="nav-number">1.5.1.11.1.</span> <span class="nav-text">同城异区</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B7%A8%E5%9F%8E%E5%BC%82%E5%9C%B0"><span class="nav-number">1.5.1.11.2.</span> <span class="nav-text">跨城异地</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.5.1.11.3.</span> <span class="nav-text">设计</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.5.1.11.4.</span> <span class="nav-text">设计步骤</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8-%E6%8E%A5%E5%8F%A3%E7%BA%A7%E6%95%85%E9%9A%9C"><span class="nav-number">1.5.1.12.</span> <span class="nav-text">高可用-接口级故障</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%99%8D%E7%BA%A7"><span class="nav-number">1.5.1.12.1.</span> <span class="nav-text">降级</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%86%94%E6%96%AD"><span class="nav-number">1.5.1.12.2.</span> <span class="nav-text">熔断</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-number">1.5.1.12.3.</span> <span class="nav-text">限流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%92%E9%98%9F"><span class="nav-number">1.5.1.12.4.</span> <span class="nav-text">排队</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3%E5%92%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.1.13.</span> <span class="nav-text">可扩展架构模式基本思想和模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F-%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84-amp-SOA%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.14.</span> <span class="nav-text">可扩展架构模式-分层架构&amp;SOA架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.14.1.</span> <span class="nav-text">分层架构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SOA"><span class="nav-number">1.5.1.14.2.</span> <span class="nav-text">SOA</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84-%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.5.1.15.</span> <span class="nav-text">可扩展架构-微服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84-%E5%BE%AE%E6%9C%8D%E5%8A%A1-%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.1.16.</span> <span class="nav-text">可扩展架构-微服务-实践方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%86%E5%88%86%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.1.16.1.</span> <span class="nav-text">拆分方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="nav-number">1.5.1.16.2.</span> <span class="nav-text">基础设施</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84-%E5%BE%AE%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.1.17.</span> <span class="nav-text">可扩展架构-微内核架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">1.5.1.17.1.</span> <span class="nav-text">设计关键点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E"><span class="nav-number">1.5.1.17.2.</span> <span class="nav-text">规则引擎</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E9%87%8D%E6%9E%84"><span class="nav-number">1.5.2.</span> <span class="nav-text">架构重构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%87%8D%E6%9E%84%EF%BC%88%E9%87%8D%E6%9E%84%E8%83%8C%E6%99%AF%EF%BC%89"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">什么时候重构（重构背景）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E9%87%8D%E6%9E%84"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">是否需要重构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90-%E9%87%8D%E6%9E%84%E6%9E%B6%E6%9E%84%E7%9A%84%E6%A1%88%E4%BE%8B"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">系统架构问题分析+重构架构的案例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E5%90%88%E7%90%86%E8%80%A6%E5%90%88"><span class="nav-number">1.5.2.3.1.</span> <span class="nav-text">不合理耦合</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%8D%95%E7%82%B9%E7%9A%84%E5%8F%AF%E7%94%A8%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.2.3.2.</span> <span class="nav-text">全局单点的可用性问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%A7%E7%B3%BB%E7%BB%9F%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.2.3.3.</span> <span class="nav-text">大系统问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%9A%E5%B9%B4%E5%A4%8D%E6%9D%82%E7%B3%BB%E7%BB%9F%E5%8E%BBO"><span class="nav-number">1.5.2.3.4.</span> <span class="nav-text">多年复杂系统去O</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E6%9E%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">重构步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E6%9E%84%E6%AD%A5%E9%AA%A4%E6%A1%88%E4%BE%8B"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">重构步骤案例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%A7%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.2.5.1.</span> <span class="nav-text">大系统</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E6%9E%84%E9%9A%BE%E7%82%B9"><span class="nav-number">1.5.2.6.</span> <span class="nav-text">重构难点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B2%9F%E9%80%9A%E5%8D%8F%E8%B0%83"><span class="nav-number">1.5.2.7.</span> <span class="nav-text">沟通协调</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E9%87%8D%E6%9E%84"><span class="nav-number">1.5.2.8.</span> <span class="nav-text">错误重构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95%E4%B8%AD%E7%9A%84%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B"><span class="nav-number">1.5.3.</span> <span class="nav-text">业务发展中的技术演进</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98-%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">架构实战-架构演进方向</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E5%92%8C%E4%B8%9A%E5%8A%A1"><span class="nav-number">1.5.3.1.1.</span> <span class="nav-text">技术和业务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E6%96%B9%E5%90%91"><span class="nav-number">1.5.3.1.2.</span> <span class="nav-text">架构演进方向</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98-%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E5%8F%91%E5%B1%95%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B"><span class="nav-number">1.5.3.2.</span> <span class="nav-text">架构实战-互联网业务发展过程中的技术演进</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">1.5.3.2.1.</span> <span class="nav-text">业务复杂性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E8%A7%84%E6%A8%A1"><span class="nav-number">1.5.3.2.2.</span> <span class="nav-text">用户规模</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98-%E4%BA%92%E8%81%94%E7%BD%91%E6%9E%B6%E6%9E%84%E5%9B%BE%E6%A8%A1%E6%9D%BF"><span class="nav-number">1.5.3.3.</span> <span class="nav-text">架构实战-互联网架构图模板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0%E5%B1%82"><span class="nav-number">1.5.3.4.</span> <span class="nav-text">平台层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%81%9A%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91"><span class="nav-number">1.5.4.</span> <span class="nav-text">如何选择开源项目做二次开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.5.4.1.</span> <span class="nav-text">为什么选开源项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.4.2.</span> <span class="nav-text">开源项目的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.5.4.3.</span> <span class="nav-text">如何选择开源项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.5.4.4.</span> <span class="nav-text">如何使用开源项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91"><span class="nav-number">1.5.4.5.</span> <span class="nav-text">二次开发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A1%88%E4%BE%8B"><span class="nav-number">1.6.</span> <span class="nav-text">5架构设计案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%98%E5%AE%9D"><span class="nav-number">1.6.1.</span> <span class="nav-text">淘宝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QQ"><span class="nav-number">1.6.2.</span> <span class="nav-text">QQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E7%BA%A2%E5%8C%85%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.3.</span> <span class="nav-text">微信红包架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B"><span class="nav-number">1.6.4.</span> <span class="nav-text">移动端架构演进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.7.</span> <span class="nav-text">开源项目的学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88%E5%86%85%E5%8A%9F"><span class="nav-number">1.8.</span> <span class="nav-text">架构师内功</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B2%97%E4%BD%8D%E6%88%90%E9%95%BF"><span class="nav-number">1.9.</span> <span class="nav-text">架构师岗位成长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E8%83%BD%E7%BB%8F%E9%AA%8C"><span class="nav-number">1.10.</span> <span class="nav-text">技能经验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.11.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%95%B4%E7%90%86"><span class="nav-number">1.11.1.</span> <span class="nav-text">复杂度与解决整理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%8D%87%E7%BA%A7"><span class="nav-number">1.11.2.</span> <span class="nav-text">架构升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%80%A7%E8%83%BD"><span class="nav-number">1.11.3.</span> <span class="nav-text">常见性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%81%9A%E5%90%88%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.11.4.</span> <span class="nav-text">数据聚合位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%A6"><span class="nav-number">1.11.5.</span> <span class="nav-text">书</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

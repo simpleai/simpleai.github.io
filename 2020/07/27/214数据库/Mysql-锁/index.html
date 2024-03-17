@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="MySQL锁介绍锁分类乐观锁程序实现。使用版本号或者时间戳。 mysql实现效率并不好，redis实现更好。 表锁MySQLLayer层 MySQL 实现的表级锁定的争用状态变量： 表锁可查询。 1mysql&gt; show status like &amp;#x27;table%&amp;#x27;;  123456Variable_name				ValueTable_locks_immediate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql-锁">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="MySQL锁介绍锁分类乐观锁程序实现。使用版本号或者时间戳。 mysql实现效率并不好，redis实现更好。 表锁MySQLLayer层 MySQL 实现的表级锁定的争用状态变量： 表锁可查询。 1mysql&gt; show status like &amp;#x27;table%&amp;#x27;;  123456Variable_name				ValueTable_locks_immediate">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/mBG6OTNK25ePEsb.png">
+<meta property="article:published_time" content="2020-07-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-03-28T14:37:54.270Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="锁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/mBG6OTNK25ePEsb.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mysql-锁 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql-锁
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-27 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-27T00:00:00+08:00">2020-07-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-28 22:37:54" itemprop="dateModified" datetime="2023-03-28T22:37:54+08:00">2023-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/" class="post-meta-item leancloud_visitors" data-flag-title="Mysql-锁" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <span id="more"></span>
+
+<h1 id="MySQL锁"><a href="#MySQL锁" class="headerlink" title="MySQL锁"></a>MySQL锁</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h2 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h2><h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p>程序实现。使用版本号或者时间戳。</p>
+<p>mysql实现效率并不好，redis实现更好。</p>
+<h3 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h3><p>MySQLLayer层</p>
+<p>MySQL 实现的表级锁定的争用状态变量：</p>
+<p>表锁可查询。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show status like &#x27;table%&#x27;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Variable_name				Value</span><br><span class="line">Table_locks_immediate		76</span><br><span class="line">Table_locks_waited			0</span><br><span class="line">Table_open_cache_hits		0</span><br><span class="line">Table_open_cache_misses		0</span><br><span class="line">Table_open_cache_overflows	0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- table_locks_immediate：产生表级锁定的次数(包括意向锁)； </span><br><span class="line">- table_locks_waited：出现表级锁定争用而发生等待的次数；</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>行锁升级为表锁的原因：update语句的条件没有使用索引。update where name = “han”，name没有使用索引。</li>
+</ul>
+<h3 id="元数据锁"><a href="#元数据锁" class="headerlink" title="元数据锁"></a>元数据锁</h3><p>MySQLLayer层</p>
+<h3 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h3><p>用处：显著提高对整个表修改时的性能</p>
+<p>意向锁：</p>
+<ul>
+<li>InnoDB内部使用。</li>
+<li>有两种：共享读锁，排他写锁。</li>
+<li>意向锁不是真正的锁，只是一个标记。</li>
+<li>获得行锁中的共享读锁之前会先获得意向读锁，获得行锁中的排他写锁之前会先获得意向写锁。</li>
+</ul>
+<p>原理：做整个表的update操作时，不用一行行看有没有行锁中的排他写锁。只需要看一次有没有意向写锁即可。</p>
+<h3 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h3><p>InnoDB内部，行锁是通过锁住索引上的索引项来实现的。</p>
+<h4 id="记录锁"><a href="#记录锁" class="headerlink" title="记录锁"></a>记录锁</h4><h5 id="读锁"><a href="#读锁" class="headerlink" title="读锁"></a>读锁</h5><p>共享读：lock in share mode</p>
+<h5 id="写锁"><a href="#写锁" class="headerlink" title="写锁"></a>写锁</h5><p>排它写：</p>
+<ul>
+<li>手动：for update</li>
+<li>自动：DML(insert、update、delete语句),select … for update</li>
+<li>行锁升级为表锁的原因：update语句的条件没有使用索引。update where name = “han”，name没有使用索引。</li>
+</ul>
+<p>可能发生锁等待情况：</p>
+<ul>
+<li>行锁升级为表锁</li>
+<li>update 长事务</li>
+</ul>
+<h4 id="间隙锁"><a href="#间隙锁" class="headerlink" title="间隙锁"></a>间隙锁</h4><p>mysql默认的RR隔离级别+一些条件产生间隙锁，可防止幻读。RC隔离级别不产生。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>7</td>
+</tr>
+</tbody></table>
+<p>id 主键，name 普通索引</p>
+<p>在update gap set  name = 2 where name = 5时，间隙锁锁住相邻数据。</p>
+<p>相邻数据：where 条件 name = 5 对应的id =5，相邻数据为id=3和id=7的记录。</p>
+<p>​    具体锁住的数据：id=任意 &amp;&amp;name = [3,6]和 name = 7 &amp;&amp; id= [3,7]。</p>
+<p>​    name = 7,id&lt;3 || id&gt;7,不锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#session1:</span><br><span class="line">begin;</span><br><span class="line">update gap g SET g.name = 2 where g.name = 5; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#session2:</span><br><span class="line">insert into gap values(8,7);#可执行成功。</span><br></pre></td></tr></table></figure>
+
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>发生的原因：两个(或以上)的Session【加锁的顺序】不一致。</p>
+<p>记录锁产生死锁：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">session1: begin;--开启事务未提交 --手动加行写锁 id=1 ，使用索引 update mylock set name=&#x27;m&#x27; where id=1; </span><br><span class="line">session2：begin;--开启事务未提交 --手动加行写锁 id=2 ，使用索引 update mylock set name=&#x27;m&#x27; where id=2; </span><br><span class="line">session1: update mylock set name=&#x27;nn&#x27; where id=2; -- 加写锁被阻塞 </span><br><span class="line">session2：update mylock set name=&#x27;nn&#x27; where id=1; -- 加写锁会死锁，不允许操作 </span><br><span class="line">ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+<p>间隙锁产生死锁：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">session1：start transaction ; select * from news where number=6 for update--产生间隙锁 </span><br><span class="line">session2：start transaction ; select * from news where number=7 for update--产生间隙锁 </span><br><span class="line">session1：insert into news values(9,7);--阻塞 </span><br><span class="line">session2：insert into news values(9,7); </span><br><span class="line">ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+<p>查看死锁情况：<code>show engine innodb status</code></p>
+<p>如何避免死锁：</p>
+<ul>
+<li>注意程序的逻辑，不要交叉更新。如trx1:更新表A，更新表B，trx2：更新表B，更新表A。</li>
+<li>保持事务轻量，占用少的锁资源。</li>
+<li>提供运行速度，尽量避免子查询，尽量使用主键</li>
+<li>尽快提交事务。</li>
+<li>RR隔离级有Gap锁，RC隔离级无Gap锁，RC隔离级更不容易产生死锁。</li>
+</ul>
+<h2 id="SQL加锁分析"><a href="#SQL加锁分析" class="headerlink" title="SQL加锁分析"></a>SQL加锁分析</h2><p>加锁的条件：</p>
+<p>1.系统的隔离级别？</p>
+<p>2.where 条件 中的字段是否有索引？</p>
+<h3 id="简单SQL"><a href="#简单SQL" class="headerlink" title="简单SQL"></a>简单SQL</h3><h4 id="RC隔离级"><a href="#RC隔离级" class="headerlink" title="RC隔离级"></a>RC隔离级</h4><ul>
+<li><p>字段为主键</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from user where id = 1;// id = 1的记录加x锁（记录锁）</span><br></pre></td></tr></table></figure></li>
+<li><p>唯一索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from user where username = &#x27;zs&#x27;; //1.在唯一索引树的username=&#x27;zs&#x27;的记录加记录锁；2.通过唯一索引找到主键id = 1,在主键索引树上id=1的记录加记录锁</span><br></pre></td></tr></table></figure></li>
+<li><p>普通索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from user where name = &#x27;张三&#x27;; //1.在普通索引树的name = &#x27;张三&#x27;的记录加记录锁（可能多条）；2.通过普通索引找到主键id = 10 和id =11,在主键索引树上id=10 和 id =11的记录加记录锁</span><br></pre></td></tr></table></figure></li>
+<li><p>无索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from user where age = 80; //锁表 可查询</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="RR隔离级"><a href="#RR隔离级" class="headerlink" title="RR隔离级"></a>RR隔离级</h4><ul>
+<li><p>字段为主键</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from user where id = 3; // x锁+Gap锁（Next key Lock算法） 间隙锁</span><br></pre></td></tr></table></figure></li>
+<li><p>唯一索引 唯一索引树X锁+Gap锁，主键索引树X锁+Gap锁</p>
+</li>
+<li><p>普通索引 普通索引树匹配的多条记录X锁+Gap锁，主键索引树X锁+Gap锁</p>
+</li>
+<li><p>无索引 锁表</p>
+</li>
+</ul>
+<h4 id="Serializable-LBCC"><a href="#Serializable-LBCC" class="headerlink" title="Serializable(LBCC)"></a>Serializable(LBCC)</h4><p>每一条SQL都加锁，包括select</p>
+<h3 id="复杂SQL"><a href="#复杂SQL" class="headerlink" title="复杂SQL"></a>复杂SQL</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 准备环境</span><br><span class="line">CREATE TABLE `blog` (</span><br><span class="line">  `id` int(11) NOT NULL,</span><br><span class="line">  `userid` int(11) DEFAULT NULL,</span><br><span class="line">  `blogid` int(11) DEFAULT NULL,</span><br><span class="line">  `pub` int(11) DEFAULT NULL,</span><br><span class="line">  `comment` varchar(255) DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `index_pub_userid` (`pub`,`userid`) USING BTREE</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=latin1;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/mBG6OTNK25ePEsb.png" alt="image-20200809184056603"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from blog where pub &gt; 1 and pub &lt; 15 and userid = 1 and comment is not NULL;</span><br></pre></td></tr></table></figure>
+
+<p>数据库版本：5.6（包括5.6）</p>
+<p>首先判断pub&gt;1 and pub &lt;15,将组合索引树的 pub = {3，5，10}加X锁，[1,20)加Gap锁（Mysql5.1，范围索引没有下推，5.6有索引下推，减少使用普通索引的回表次数）<br>然后 userid = 1，对组合索引树的pub = {5,10}加记录锁，通过ICP索引下推，不加Gap锁<br>comment is not null 无索引。将存储引擎的数据取到server层，对取出来的数据加X锁和Gap锁。</p>
+<p><strong>Index key</strong>：pubtime &gt; 1 and puptime &lt; 20。此条件，用于确定SQL在idx_t1_pu索引上的查询范围。</p>
+<p><strong>Index Filter</strong>：userid = ‘hdc’ 。此条件，可以在index_pub_userid索引上进行过滤，但不属于Index Key。 </p>
+<p><strong>Table Filter</strong>：comment is not NULL。此条件，在index_pub_userid索引上无法过滤，只能在聚簇索引上过滤。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/" title="Mysql-锁">http://blog.xiaoruiit.com/2020/07/27/214数据库/Mysql-锁/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+              <a href="/tags/%E9%94%81/" rel="tag"># 锁</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/27/%E5%89%8D%E7%AB%AF/Bootstrap-table-%E6%A0%91/" rel="prev" title="BootStrap-Table-树">
+      <i class="fa fa-chevron-left"></i> BootStrap-Table-树
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/" rel="next" title="Mysql-事务">
+      Mysql-事务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">MySQL锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%81%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.</span> <span class="nav-text">锁分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">乐观锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E9%94%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">表锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E9%94%81"><span class="nav-number">1.2.3.</span> <span class="nav-text">元数据锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%8F%E5%90%91%E9%94%81"><span class="nav-number">1.2.4.</span> <span class="nav-text">意向锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E9%94%81"><span class="nav-number">1.2.5.</span> <span class="nav-text">行锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E9%94%81"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">记录锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AF%BB%E9%94%81"><span class="nav-number">1.2.5.1.1.</span> <span class="nav-text">读锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%86%99%E9%94%81"><span class="nav-number">1.2.5.1.2.</span> <span class="nav-text">写锁</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%B4%E9%9A%99%E9%94%81"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">间隙锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E9%94%81"><span class="nav-number">1.2.6.</span> <span class="nav-text">死锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%E5%8A%A0%E9%94%81%E5%88%86%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">SQL加锁分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95SQL"><span class="nav-number">1.3.1.</span> <span class="nav-text">简单SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RC%E9%9A%94%E7%A6%BB%E7%BA%A7"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">RC隔离级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR%E9%9A%94%E7%A6%BB%E7%BA%A7"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">RR隔离级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Serializable-LBCC"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">Serializable(LBCC)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82SQL"><span class="nav-number">1.3.2.</span> <span class="nav-text">复杂SQL</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

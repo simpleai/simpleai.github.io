@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="IDEA-EasyCode使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA-EasyCode使用">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2021/06/10/%E5%B7%A5%E5%85%B7/IDEA-EasyCode/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="IDEA-EasyCode使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/tQeLBPh9gC8jb2U.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/WoSlC9bfeBxE4wp.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/XzNDSKAaQtl7Hrf.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/VvLzBsEH7rxlZOo.png">
+<meta property="article:published_time" content="2021-06-10T14:20:15.394Z">
+<meta property="article:modified_time" content="2023-03-28T14:02:54.270Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="IDEA">
+<meta property="article:tag" content="EasyCode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/tQeLBPh9gC8jb2U.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2021/06/10/%E5%B7%A5%E5%85%B7/IDEA-EasyCode/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>IDEA-EasyCode使用 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2021/06/10/%E5%B7%A5%E5%85%B7/IDEA-EasyCode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IDEA-EasyCode使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-10 22:20:15" itemprop="dateCreated datePublished" datetime="2021-06-10T22:20:15+08:00">2021-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-28 22:02:54" itemprop="dateModified" datetime="2023-03-28T22:02:54+08:00">2023-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/IDEA/" itemprop="url" rel="index"><span itemprop="name">IDEA</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/06/10/%E5%B7%A5%E5%85%B7/IDEA-EasyCode/" class="post-meta-item leancloud_visitors" data-flag-title="IDEA-EasyCode使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>12 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>IDEA-EasyCode使用</p>
+<span id="more"></span>
+<h1 id="IDEA-EasyCode使用"><a href="#IDEA-EasyCode使用" class="headerlink" title="IDEA-EasyCode使用"></a>IDEA-EasyCode使用</h1><p>一键生成单表后端代码，包括entity,controller,service,serviceImpl,dao,mapper</p>
+<h2 id="1-安装idea插件"><a href="#1-安装idea插件" class="headerlink" title="1.安装idea插件"></a>1.安装idea插件</h2><ol>
+<li>打开设置中的<code>plugins</code></li>
+<li>搜索安装<code>EasyCode</code><ul>
+<li>版本： <code>v1.2.3-RELEASE</code></li>
+</ul>
+</li>
+<li>搜索安装<code>lombok</code></li>
+<li>重启<code>idea</code></li>
+</ol>
+<h2 id="2-使用Database连接数据库"><a href="#2-使用Database连接数据库" class="headerlink" title="2.使用Database连接数据库"></a>2.使用Database连接数据库</h2><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/tQeLBPh9gC8jb2U.png" alt="image-20201219135638858"></p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li>连接中多个数据库的，在Database中指定数据库</li>
+<li>修改数据库字段后，需同步表。右击表，点击<code>synchronize</code></li>
+</ul>
+<h2 id="3-EasyCode生成代码"><a href="#3-EasyCode生成代码" class="headerlink" title="3.EasyCode生成代码"></a>3.EasyCode生成代码</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/WoSlC9bfeBxE4wp.png" alt="image-20201219135505403"></p>
+<h3 id="自定义模板配置"><a href="#自定义模板配置" class="headerlink" title="自定义模板配置"></a>自定义模板配置</h3><h4 id="Type-Mapper"><a href="#Type-Mapper" class="headerlink" title="Type Mapper"></a>Type Mapper</h4><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/XzNDSKAaQtl7Hrf.png" alt="image-20201219141100298"></p>
+<h4 id="Template-Setting"><a href="#Template-Setting" class="headerlink" title="Template Setting"></a>Template Setting</h4><h4 id="Table-Editor-Config"><a href="#Table-Editor-Config" class="headerlink" title="Table Editor Config"></a>Table Editor Config</h4><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/VvLzBsEH7rxlZOo.png" alt="image-20201219143546075"></p>
+<h5 id="entity-java"><a href="#entity-java" class="headerlink" title="entity.java"></a>entity.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##使用宏定义设置回调（保存位置与文件后缀）</span><br><span class="line">#save(&quot;/entity&quot;, &quot;.java&quot;)</span><br><span class="line"></span><br><span class="line">##使用宏定义设置包后缀</span><br><span class="line">#setPackageSuffix(&quot;entity&quot;)</span><br><span class="line"></span><br><span class="line">##使用全局变量实现默认包导入</span><br><span class="line">$!autoImport</span><br><span class="line">import java.io.Serializable;</span><br><span class="line">import lombok.Data;</span><br><span class="line">import io.swagger.annotations.ApiModel;</span><br><span class="line">import io.swagger.annotations.ApiModelProperty;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;实体类&quot;)</span><br><span class="line">@Data</span><br><span class="line">@ApiModel</span><br><span class="line">public class $!&#123;tableInfo.name&#125; implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = $!tool.serial();</span><br><span class="line">#foreach($column in $tableInfo.fullColumn)</span><br><span class="line"></span><br><span class="line">    #if($&#123;column.comment&#125;)@ApiModelProperty(value = &quot;$&#123;column.comment&#125;&quot;)</span><br><span class="line">    #end</span><br><span class="line">private $!&#123;tool.getClsNameByFullName($column.type)&#125; $!&#123;column.name&#125;;</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">#*#foreach($column in $tableInfo.fullColumn)</span><br><span class="line">##使用宏定义实现get,set方法</span><br><span class="line">#getSetMethod($column)</span><br><span class="line">#end*#</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="dao-java"><a href="#dao-java" class="headerlink" title="dao.java"></a>dao.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##定义初始变量</span><br><span class="line">#set($tableName = $tool.append($tableInfo.name, &quot;Dao&quot;))</span><br><span class="line">##设置回调</span><br><span class="line">$!callback.setFileName($tool.append($tableName, &quot;.java&quot;))</span><br><span class="line">$!callback.setSavePath($tool.append($tableInfo.savePath, &quot;/dao&quot;))</span><br><span class="line"></span><br><span class="line">##拿到主键</span><br><span class="line">#if(!$tableInfo.pkColumn.isEmpty())</span><br><span class="line">    #set($pk = $tableInfo.pkColumn.get(0))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">#if($tableInfo.savePackageName)package $!&#123;tableInfo.savePackageName&#125;.#&#123;end&#125;dao;</span><br><span class="line"></span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.entity.$!&#123;tableInfo.name&#125;;</span><br><span class="line">import org.apache.ibatis.annotations.Param;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;表数据库访问层&quot;)</span><br><span class="line">public interface $!&#123;tableName&#125; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过ID查询单条数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    $!&#123;tableInfo.name&#125; queryById($!pk.shortType $!pk.name);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过实体作为筛选条件查询</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 对象列表</span><br><span class="line">     */</span><br><span class="line">    List&lt;$!&#123;tableInfo.name&#125;&gt; queryAll($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新增数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 影响行数</span><br><span class="line">     */</span><br><span class="line">    int insert($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 修改数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 影响行数</span><br><span class="line">     */</span><br><span class="line">    int update($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过主键删除数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 影响行数</span><br><span class="line">     */</span><br><span class="line">    int deleteById($!pk.shortType $!pk.name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="service-java"><a href="#service-java" class="headerlink" title="service.java"></a>service.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##定义初始变量</span><br><span class="line">#set($tableName = $tool.append($tableInfo.name, &quot;Service&quot;))</span><br><span class="line">##设置回调</span><br><span class="line">$!callback.setFileName($tool.append($tableName, &quot;.java&quot;))</span><br><span class="line">$!callback.setSavePath($tool.append($tableInfo.savePath, &quot;/service&quot;))</span><br><span class="line"></span><br><span class="line">##拿到主键</span><br><span class="line">#if(!$tableInfo.pkColumn.isEmpty())</span><br><span class="line">    #set($pk = $tableInfo.pkColumn.get(0))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">#if($tableInfo.savePackageName)package $!&#123;tableInfo.savePackageName&#125;.#&#123;end&#125;service;</span><br><span class="line"></span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.entity.$!&#123;tableInfo.name&#125;;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;表服务接口&quot;)</span><br><span class="line">public interface $!&#123;tableName&#125; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过ID查询单条数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    $!&#123;tableInfo.name&#125; queryById($!pk.shortType $!pk.name);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新增数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    $!&#123;tableInfo.name&#125; insert($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 修改数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    $!&#123;tableInfo.name&#125; update($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过主键删除数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 是否成功</span><br><span class="line">     */</span><br><span class="line">    boolean deleteById($!pk.shortType $!pk.name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="serviceImpl-java"><a href="#serviceImpl-java" class="headerlink" title="serviceImpl.java"></a>serviceImpl.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##定义初始变量</span><br><span class="line">#set($tableName = $tool.append($tableInfo.name, &quot;ServiceImpl&quot;))</span><br><span class="line">##设置回调</span><br><span class="line">$!callback.setFileName($tool.append($tableName, &quot;.java&quot;))</span><br><span class="line">$!callback.setSavePath($tool.append($tableInfo.savePath, &quot;/service/impl&quot;))</span><br><span class="line"></span><br><span class="line">##拿到主键</span><br><span class="line">#if(!$tableInfo.pkColumn.isEmpty())</span><br><span class="line">    #set($pk = $tableInfo.pkColumn.get(0))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">#if($tableInfo.savePackageName)package $!&#123;tableInfo.savePackageName&#125;.#&#123;end&#125;service.impl;</span><br><span class="line"></span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.entity.$!&#123;tableInfo.name&#125;;</span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.dao.$!&#123;tableInfo.name&#125;Dao;</span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.service.$!&#123;tableInfo.name&#125;Service;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line">import javax.annotation.Resource;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;表服务实现类&quot;)</span><br><span class="line">@Service(&quot;$!tool.firstLowerCase($!&#123;tableInfo.name&#125;)Service&quot;)</span><br><span class="line">public class $!&#123;tableName&#125; implements $!&#123;tableInfo.name&#125;Service &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    private $!&#123;tableInfo.name&#125;Dao $!tool.firstLowerCase($!&#123;tableInfo.name&#125;)Dao;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过ID查询单条数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public $!&#123;tableInfo.name&#125; queryById($!pk.shortType $!pk.name) &#123;</span><br><span class="line">        return this.$!&#123;tool.firstLowerCase($!&#123;tableInfo.name&#125;)&#125;Dao.queryById($!pk.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新增数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public $!&#123;tableInfo.name&#125; insert($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;)) &#123;</span><br><span class="line">        this.$!&#123;tool.firstLowerCase($!&#123;tableInfo.name&#125;)&#125;Dao.insert($!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line">        return $!tool.firstLowerCase($!&#123;tableInfo.name&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 修改数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!tool.firstLowerCase($!&#123;tableInfo.name&#125;) 实例对象</span><br><span class="line">     * @return 实例对象</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public $!&#123;tableInfo.name&#125; update($!&#123;tableInfo.name&#125; $!tool.firstLowerCase($!&#123;tableInfo.name&#125;)) &#123;</span><br><span class="line">        this.$!&#123;tool.firstLowerCase($!&#123;tableInfo.name&#125;)&#125;Dao.update($!tool.firstLowerCase($!&#123;tableInfo.name&#125;));</span><br><span class="line">        return this.queryById($!&#123;tool.firstLowerCase($!&#123;tableInfo.name&#125;)&#125;.get$!tool.firstUpperCase($pk.name)());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过主键删除数据</span><br><span class="line">     *</span><br><span class="line">     * @param $!pk.name 主键</span><br><span class="line">     * @return 是否成功</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public boolean deleteById($!pk.shortType $!pk.name) &#123;</span><br><span class="line">        return this.$!&#123;tool.firstLowerCase($!&#123;tableInfo.name&#125;)&#125;Dao.deleteById($!pk.name) &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="controller-java"><a href="#controller-java" class="headerlink" title="controller.java"></a>controller.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##定义初始变量</span><br><span class="line">#set($tableName = $tool.append($tableInfo.name, &quot;Controller&quot;))</span><br><span class="line">##设置回调</span><br><span class="line">$!callback.setFileName($tool.append($tableName, &quot;.java&quot;))</span><br><span class="line">$!callback.setSavePath($tool.append($tableInfo.savePath, &quot;/controller&quot;))</span><br><span class="line">##拿到主键</span><br><span class="line">#if(!$tableInfo.pkColumn.isEmpty())</span><br><span class="line">    #set($pk = $tableInfo.pkColumn.get(0))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">#if($tableInfo.savePackageName)package $!&#123;tableInfo.savePackageName&#125;.#&#123;end&#125;controller;</span><br><span class="line"></span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.entity.$!&#123;tableInfo.name&#125;;</span><br><span class="line">import $!&#123;tableInfo.savePackageName&#125;.service.$!&#123;tableInfo.name&#125;Service;</span><br><span class="line">import org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line">import javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;表控制层&quot;)</span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;$!tool.firstLowerCase($tableInfo.name)&quot;)</span><br><span class="line">public class $!&#123;tableName&#125; &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 服务对象</span><br><span class="line">     */</span><br><span class="line">    @Resource</span><br><span class="line">    private $!&#123;tableInfo.name&#125;Service $!tool.firstLowerCase($tableInfo.name)Service;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通过主键查询单条数据</span><br><span class="line">     *</span><br><span class="line">     * @param id 主键</span><br><span class="line">     * @return 单条数据</span><br><span class="line">     */</span><br><span class="line">    @GetMapping(&quot;selectOne&quot;)</span><br><span class="line">    public $!&#123;tableInfo.name&#125; selectOne($!pk.shortType id) &#123;</span><br><span class="line">        return this.$!&#123;tool.firstLowerCase($tableInfo.name)&#125;Service.queryById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="mapper-xml"><a href="#mapper-xml" class="headerlink" title="mapper.xml"></a>mapper.xml</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">##引入mybatis支持</span><br><span class="line">$!mybatisSupport</span><br><span class="line"></span><br><span class="line">##设置保存名称与保存位置</span><br><span class="line">$!callback.setFileName($tool.append($!&#123;tableInfo.name&#125;, &quot;Dao.xml&quot;))</span><br><span class="line">$!callback.setSavePath($tool.append($modulePath, &quot;/src/main/resources/mapper&quot;))</span><br><span class="line"></span><br><span class="line">##拿到主键</span><br><span class="line">#if(!$tableInfo.pkColumn.isEmpty())</span><br><span class="line">    #set($pk = $tableInfo.pkColumn.get(0))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line">&lt;mapper namespace=&quot;$!&#123;tableInfo.savePackageName&#125;.dao.$!&#123;tableInfo.name&#125;Dao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;resultMap id=&quot;BaseResultMap&quot; type=&quot;$!&#123;tableInfo.savePackageName&#125;.entity.$!&#123;tableInfo.name&#125;&quot;&gt;</span><br><span class="line">        &lt;!--@Table $!&#123;tableInfo.originTableName&#125;--&gt;</span><br><span class="line">#foreach($column in $tableInfo.fullColumn)</span><br><span class="line">        &lt;result property=&quot;$!column.name&quot; column=&quot;$!column.obj.name&quot; jdbcType=&quot;$!column.ext.jdbcType&quot;/&gt;</span><br><span class="line">#end</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--查询单个--&gt;</span><br><span class="line">    &lt;select id=&quot;queryById&quot; resultMap=&quot;BaseResultMap&quot;&gt;</span><br><span class="line">        select</span><br><span class="line">          #allSqlColumn()</span><br><span class="line"></span><br><span class="line">        from $!&#123;tableInfo.obj.parent.name&#125;.$!tableInfo.obj.name</span><br><span class="line">        where $!pk.obj.name = #&#123;$!pk.name&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--通过实体作为筛选条件查询--&gt;</span><br><span class="line">    &lt;select id=&quot;queryAll&quot; resultMap=&quot;BaseResultMap&quot;&gt;</span><br><span class="line">        select</span><br><span class="line">          #allSqlColumn()</span><br><span class="line"></span><br><span class="line">        from $!&#123;tableInfo.obj.parent.name&#125;.$!tableInfo.obj.name</span><br><span class="line">        &lt;where&gt;</span><br><span class="line">#foreach($column in $tableInfo.fullColumn)</span><br><span class="line">            &lt;if test=&quot;$!column.name != null#if($column.type.equals(&quot;java.lang.String&quot;)) and $!column.name != &#x27;&#x27;#end&quot;&gt;</span><br><span class="line">                and $!column.obj.name = #&#123;$!column.name&#125;</span><br><span class="line">            &lt;/if&gt;</span><br><span class="line">#end</span><br><span class="line">        &lt;/where&gt;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--新增所有列--&gt;</span><br><span class="line">    &lt;insert id=&quot;insert&quot; keyProperty=&quot;$!pk.name&quot; useGeneratedKeys=&quot;true&quot;&gt;</span><br><span class="line">        insert into $!&#123;tableInfo.obj.parent.name&#125;.$!&#123;tableInfo.obj.name&#125;(#foreach($column in $tableInfo.otherColumn)$!column.obj.name#if($velocityHasNext), #end#end)</span><br><span class="line">        values (#foreach($column in $tableInfo.otherColumn)#&#123;$!&#123;column.name&#125;&#125;#if($velocityHasNext), #end#end)</span><br><span class="line">    &lt;/insert&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--通过主键修改数据--&gt;</span><br><span class="line">    &lt;update id=&quot;update&quot;&gt;</span><br><span class="line">        update $!&#123;tableInfo.obj.parent.name&#125;.$!&#123;tableInfo.obj.name&#125;</span><br><span class="line">        &lt;set&gt;</span><br><span class="line">#foreach($column in $tableInfo.otherColumn)</span><br><span class="line">            &lt;if test=&quot;$!column.name != null#if($column.type.equals(&quot;java.lang.String&quot;)) and $!column.name != &#x27;&#x27;#end&quot;&gt;</span><br><span class="line">                $!column.obj.name = #&#123;$!column.name&#125;,</span><br><span class="line">            &lt;/if&gt;</span><br><span class="line">#end</span><br><span class="line">        &lt;/set&gt;</span><br><span class="line">        where $!pk.obj.name = #&#123;$!pk.name&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--通过主键删除--&gt;</span><br><span class="line">    &lt;delete id=&quot;deleteById&quot;&gt;</span><br><span class="line">        delete from $!&#123;tableInfo.obj.parent.name&#125;.$!&#123;tableInfo.obj.name&#125; where $!pk.obj.name = #&#123;$!pk.name&#125;</span><br><span class="line">    &lt;/delete&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="RespVO-java"><a href="#RespVO-java" class="headerlink" title="RespVO.java"></a>RespVO.java</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">##引入宏定义</span><br><span class="line">$!define</span><br><span class="line"></span><br><span class="line">##使用宏定义设置回调（保存位置与文件后缀）</span><br><span class="line">#save(&quot;/entity/vo&quot;, &quot;RespVO.java&quot;)</span><br><span class="line"></span><br><span class="line">##使用宏定义设置包后缀</span><br><span class="line">#setPackageSuffix(&quot;entity.vo&quot;)</span><br><span class="line"></span><br><span class="line">##使用全局变量实现默认包导入</span><br><span class="line">$!autoImport</span><br><span class="line">import java.io.Serializable;</span><br><span class="line">import lombok.Data;</span><br><span class="line">import io.swagger.annotations.ApiModel;</span><br><span class="line">import io.swagger.annotations.ApiModelProperty;</span><br><span class="line"></span><br><span class="line">##使用宏定义实现类注释信息</span><br><span class="line">#tableComment(&quot;返回传输类&quot;)</span><br><span class="line">@Data</span><br><span class="line">@ApiModel</span><br><span class="line">public class $!&#123;tableInfo.name&#125;RespVO implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = $!tool.serial();</span><br><span class="line">#foreach($column in $tableInfo.fullColumn)</span><br><span class="line"></span><br><span class="line">    #if($&#123;column.name&#125; != &quot;isDel&quot; &amp;&amp; $&#123;column.name&#125; != &quot;creator&quot; &amp;&amp; $&#123;column.name&#125; != &quot;createTime&quot; &amp;&amp; $&#123;column.name&#125; != &quot;modifier&quot; &amp;&amp; $&#123;column.name&#125; != &quot;modifiTime&quot;)</span><br><span class="line">    #if($&#123;column.comment&#125;)@ApiModelProperty(value = &quot;$&#123;column.comment&#125;&quot;)</span><br><span class="line">    #end</span><br><span class="line">    private $!&#123;tool.getClsNameByFullName($column.type)&#125; $!&#123;column.name&#125;;</span><br><span class="line">    #end</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Global-Config"><a href="#Global-Config" class="headerlink" title="Global Config"></a>Global Config</h4><h5 id="mybatisSupport"><a href="#mybatisSupport" class="headerlink" title="mybatisSupport"></a>mybatisSupport</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">##针对Mybatis 进行支持，主要用于生成xml文件</span><br><span class="line">#foreach($column in $tableInfo.fullColumn)</span><br><span class="line">    ##储存列类型</span><br><span class="line">    $tool.call($column.ext.put(&quot;sqlType&quot;, $tool.getField($column.obj.dataType, &quot;typeName&quot;)))</span><br><span class="line">    #if($tool.newHashSet(&quot;java.lang.String&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;VARCHAR&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.lang.Boolean&quot;, &quot;boolean&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;BOOLEAN&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.lang.Byte&quot;, &quot;byte&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;TINYINT&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.lang.Integer&quot;, &quot;int&quot;, &quot;java.lang.Short&quot;, &quot;short&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;INTEGER&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.lang.Long&quot;, &quot;long&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;BIGINT&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.lang.Float&quot;, &quot;float&quot;, &quot;java.lang.Double&quot;, &quot;double&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;NUMERIC&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.sql.Date&quot;, &quot;java.time.LocalDateTime&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;TIMESTAMP&quot;)</span><br><span class="line">    #elseif($tool.newHashSet(&quot;java.math.BigDecimal&quot;).contains($column.type))</span><br><span class="line">        #set($jdbcType=&quot;DECIMAL&quot;)</span><br><span class="line">    #else</span><br><span class="line">        ##其他类型</span><br><span class="line">        #set($jdbcType=&quot;OTHER&quot;)</span><br><span class="line">    #end</span><br><span class="line">    $tool.call($column.ext.put(&quot;jdbcType&quot;, $jdbcType))</span><br><span class="line">#end</span><br><span class="line"></span><br><span class="line">##定义宏，查询所有列</span><br><span class="line">#macro(allSqlColumn)#foreach($column in $tableInfo.fullColumn)$column.obj.name#if($velocityHasNext), #end#end#end</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2021/06/10/%E5%B7%A5%E5%85%B7/IDEA-EasyCode/" title="IDEA-EasyCode使用">http://blog.xiaoruiit.com/2021/06/10/工具/IDEA-EasyCode/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IDEA/" rel="tag"># IDEA</a>
+              <a href="/tags/EasyCode/" rel="tag"># EasyCode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/10/213Java%E6%A1%86%E6%9E%B6/BigDecimal%E7%B2%BE%E5%BA%A6/" rel="prev" title="BigDecimal精度">
+      <i class="fa fa-chevron-left"></i> BigDecimal精度
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/10/kettle-%E5%85%A5%E9%97%A8/" rel="next" title="kettle-入门">
+      kettle-入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA-EasyCode%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">IDEA-EasyCode使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85idea%E6%8F%92%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">1.安装idea插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8Database%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.2.</span> <span class="nav-text">2.使用Database连接数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-EasyCode%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">3.EasyCode生成代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E6%9D%BF%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">自定义模板配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Type-Mapper"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">Type Mapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Template-Setting"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">Template Setting</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Table-Editor-Config"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">Table Editor Config</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#entity-java"><span class="nav-number">1.3.2.3.1.</span> <span class="nav-text">entity.java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dao-java"><span class="nav-number">1.3.2.3.2.</span> <span class="nav-text">dao.java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#service-java"><span class="nav-number">1.3.2.3.3.</span> <span class="nav-text">service.java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#serviceImpl-java"><span class="nav-number">1.3.2.3.4.</span> <span class="nav-text">serviceImpl.java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#controller-java"><span class="nav-number">1.3.2.3.5.</span> <span class="nav-text">controller.java</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mapper-xml"><span class="nav-number">1.3.2.3.6.</span> <span class="nav-text">mapper.xml</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RespVO-java"><span class="nav-number">1.3.2.3.7.</span> <span class="nav-text">RespVO.java</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Global-Config"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">Global Config</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mybatisSupport"><span class="nav-number">1.3.2.4.1.</span> <span class="nav-text">mybatisSupport</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

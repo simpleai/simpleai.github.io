@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="MySQL中的InnoDB引擎实现了事务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql-事务">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="MySQL中的InnoDB引擎实现了事务。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/aV1sTqgQmh5Eowr.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/zxQ1Ppv59iWeyRC.png">
+<meta property="article:published_time" content="2020-07-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-03-28T14:37:45.270Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="事务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/aV1sTqgQmh5Eowr.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mysql-事务 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql-事务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-29 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-29T00:00:00+08:00">2020-07-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-28 22:37:45" itemprop="dateModified" datetime="2023-03-28T22:37:45+08:00">2023-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/" class="post-meta-item leancloud_visitors" data-flag-title="Mysql-事务" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>MySQL中的InnoDB引擎实现了事务。</p>
+<span id="more"></span>
+
+<h1 id="MySQL事务"><a href="#MySQL事务" class="headerlink" title="MySQL事务"></a>MySQL事务</h1><h2 id="事务的特性"><a href="#事务的特性" class="headerlink" title="事务的特性"></a>事务的特性</h2><p>原子性：由undo log保证</p>
+<p>隔离性：</p>
+<p>一致性：由redo log保证</p>
+<p>持久性：有redo log保证</p>
+<h2 id="InnoDB架构"><a href="#InnoDB架构" class="headerlink" title="InnoDB架构"></a>InnoDB架构</h2><h3 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h3><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/aV1sTqgQmh5Eowr.png" alt="image-20200728072518535"></p>
+<h4 id="BufferPool-缓冲池"><a href="#BufferPool-缓冲池" class="headerlink" title="BufferPool 缓冲池"></a>BufferPool 缓冲池</h4><p>数据页</p>
+<p>脏页</p>
+<p>insert buffer 插入缓冲（插入比较复杂）</p>
+<p>lock info 锁信息</p>
+<p>data dictionary 表定义信息</p>
+<p>undo log（数据的历史记录）</p>
+<h4 id="Redo-log-Buffer"><a href="#Redo-log-Buffer" class="headerlink" title="Redo log Buffer"></a>Redo log Buffer</h4><h4 id="redo-log-的落盘机制"><a href="#redo-log-的落盘机制" class="headerlink" title="redo log 的落盘机制"></a>redo log 的落盘机制</h4><p>buffer pool</p>
+<p>redo log buffer</p>
+<p>OS Buffer（文件系统缓存）：存储应用程序命令的缓存，这是属于操作系统的。调用fsync可以将文件系统缓存写入到磁盘。</p>
+<p>ib_logfiles（磁盘）：操作系统才能操作磁盘。</p>
+<ol>
+<li><p>默认落盘机制：</p>
+<p>innodb_flflush_log_at_trx_commit =2</p>
+<p>commit;// 记录到redo log buffer 并经过OSBuffer调用一次fsync写入到redo log file(磁盘)</p>
+</li>
+<li><p>innodb_flflush_log_at_trx_commit =0时：</p>
+<p>commit;// 记录到 redo log buffer，隔固定时间，刷新到redo log file（磁盘）</p>
+</li>
+<li><p>innodb_flflush_log_at_trx_commit =1时：</p>
+<p>commitj;//记录到 redo log buffer,并写入到 OS Buffer，操作系统隔固定时间刷新到磁盘。</p>
+<p>这一级别下，操作系统不崩溃，数据也不会丢失。</p>
+</li>
+</ol>
+<h4 id="buffer-pool-落盘机制"><a href="#buffer-pool-落盘机制" class="headerlink" title="buffer pool 落盘机制"></a>buffer pool 落盘机制</h4><h5 id="Double-write双写"><a href="#Double-write双写" class="headerlink" title="Double write双写"></a>Double write双写</h5><p>带给InnoDB存储引擎的是数据页的可靠性</p>
+<p>Double write由两部分组成，一部分是内存中的double write buffer,大小为2MB，另一部分是物理磁盘上共享表空间连续的128个页，大小也是2MB。对缓冲池的脏页刷新时，通过memcpy函数将脏页先复制到内存中的double write buffer区域，之后通过double write buffer再分两次，每次1MB写入（系统）共享表空间的物理磁盘上，然后调用fsync函数，同步磁盘。完成double write页的写入后，再将double write buffer中的页写入各个表空间文件中。如果操作系统在将页写入磁盘的过程中发生了崩溃，在恢复过程中，InnoDB可以从共享表空间中的double write 中找到该页的副本，将其复制到表空间文件中。</p>
+<p>系统表空间和用户表空间各存一份。</p>
+<h5 id="CheckPoint检查点"><a href="#CheckPoint检查点" class="headerlink" title="CheckPoint检查点"></a>CheckPoint检查点</h5><p>将脏页写入到磁盘的时机。</p>
+<p>目的：</p>
+<ul>
+<li>缩短数据库的恢复时间</li>
+<li>buffer pool 空间不够用时，将脏页刷新到磁盘</li>
+<li>redo log不够用时，刷新脏页</li>
+</ul>
+<p>检查点分类</p>
+<ul>
+<li><p>sharp checkpoint：完全检查点，数据库正常关闭时，会触发把所有的脏页都写入到磁盘上</p>
+</li>
+<li><p>fuzzy checkpoint:正常使用时，模糊检查点，部分页写入磁盘。</p>
+<ul>
+<li><p>maste thread checkpoint</p>
+<p>每秒或每10秒的速度从缓冲池的脏页列表中刷新一定比例的页到磁盘，异步。</p>
+</li>
+<li><p>flush_lru_list checkpoint</p>
+<p>读取lru (Least Recently Used) list，找到脏页，写入磁盘。 最近最少使用</p>
+</li>
+<li><p>async/sync flush checkpoint</p>
+<p>redo log fifile快满了，会批量的触发数据页回写，这个事件触发的时候又分为异步和同步，不可被覆盖的redolog占log file的比值：75%—&gt;异步、90%—&gt;同步。</p>
+</li>
+<li><p>dirty page too mush checkpoint</p>
+<p>默认是脏页占比75%的时候，就会触发刷盘，将脏页写入磁盘</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘结构"><a href="#磁盘结构" class="headerlink" title="磁盘结构"></a>磁盘结构</h3><h4 id="系统表空间和用户表空间"><a href="#系统表空间和用户表空间" class="headerlink" title="系统表空间和用户表空间"></a>系统表空间和用户表空间</h4><p>系统表空间（共享表空间）</p>
+<ul>
+<li>数据字典（data dictionary):记录数据库相关信息</li>
+<li>double writer</li>
+<li>insert buffer:内存insert buffer 数据，周期写入共享表空间</li>
+<li>回滚段（rollback segments)</li>
+<li>undo 空间：undo 页</li>
+</ul>
+<p>用户表空间（独立表空间）</p>
+<ul>
+<li>每个表的数据和索引都存在自己的表空间中</li>
+<li>每个表的结构</li>
+<li>undo 空间：undo 页</li>
+<li>double write</li>
+</ul>
+<h4 id="redo-log-file"><a href="#redo-log-file" class="headerlink" title="redo log file"></a>redo log file</h4><p>​    两个重做日志文件，大小一致，循环写入。顺序IO循环存储，保证了数据存储的速度和持久性。（每一条SQL致使数据库的改变都真正存储到了磁盘，顺序IO又保证存数据的速度。）</p>
+<p>两个redo log file文件。默认10M大小。（不需要很大，只要保证能存储数据库崩溃，buffer pool中没有写入得到磁盘的脏页、undo log写入到磁盘的redo log file即可。）</p>
+<p>存储内容：</p>
+<ul>
+<li>执行SQL后表的记录（脏页的信息）</li>
+<li>执行SQL前表的的记录（undo log页的信息)</li>
+<li>索引页的信息</li>
+</ul>
+<h3 id="数据库事务，sql执行经过-undo和redo-的流程"><a href="#数据库事务，sql执行经过-undo和redo-的流程" class="headerlink" title="数据库事务，sql执行经过  undo和redo  的流程"></a>数据库事务，sql执行经过  undo和redo  的流程</h3><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/zxQ1Ppv59iWeyRC.png" alt="sql执行经过undo和redo的流程"></p>
+<h2 id="事务并发问题："><a href="#事务并发问题：" class="headerlink" title="事务并发问题："></a>事务并发问题：</h2><h3 id="脏读："><a href="#脏读：" class="headerlink" title="脏读："></a>脏读：</h3><p>事务A读取到了事务B为提交的数据，事务B进行了回滚。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#事务B:</span><br><span class="line">begin;</span><br><span class="line">update user set username = &quot;li&quot; where id =1;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#事务A:</span><br><span class="line">begin;</span><br><span class="line">select * from user where id =1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	li	2019-11-28	男	北京</span><br><span class="line">3	han	0000-00-00	nan	bei</span><br><span class="line">4	han	0000-00-00	nan	bei</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务B:</span><br><span class="line">rollback;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务A:</span><br><span class="line">select * from user where id =1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	zs	2019-11-28	男	北京</span><br><span class="line">3	han	0000-00-00	nan	bei</span><br><span class="line">4	han	0000-00-00	nan	bei</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="不可重复读："><a href="#不可重复读：" class="headerlink" title="不可重复读："></a>不可重复读：</h3><p>事务A因事务B修改了数据导致事务A两次读取的数据不一致。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#事务A:</span><br><span class="line">begin;</span><br><span class="line">select * from user where id =1;</span><br><span class="line">#暂停</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	zs	2019-11-28	男	北京</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务B:</span><br><span class="line">update user set username = &quot;li&quot; where id =1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务A：继续</span><br><span class="line">select * from user where id =1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	li	2019-11-28	男	北京</span><br></pre></td></tr></table></figure>
+
+<h3 id="幻读："><a href="#幻读：" class="headerlink" title="幻读："></a>幻读：</h3><p>事务A因事务B插入了新的数据导致事务A两次读取的数据不一致（插入或删除）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#事务A:</span><br><span class="line">begin;</span><br><span class="line">select * from user;</span><br><span class="line">#暂停</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	zs	2019-11-28	男	北京</span><br><span class="line">3	han	0000-00-00	nan	bei</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务B:</span><br><span class="line">insert INTO `user` VALUES(4,&#x27;han&#x27;,2019-11-28,&#x27;nan&#x27;,&#x27;bei&#x27;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#事务A：继续</span><br><span class="line">select * from user;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	li	2019-11-28	男	北京</span><br><span class="line">3	han	0000-00-00	nan	bei</span><br><span class="line">4	han	0000-00-00	nan	bei</span><br></pre></td></tr></table></figure>
+
+<h2 id="MySQL事务隔离级别"><a href="#MySQL事务隔离级别" class="headerlink" title="MySQL事务隔离级别"></a>MySQL事务隔离级别</h2><p>RU读未提交（read-uncommitted）：事务A可读到事务B未提交的数据。</p>
+<p>RC读已提交（read-committed）：事务A可读到事务B已提交的数据。</p>
+<p>RR可重复读（repeatable-read）:事务B不会对A造成影响。</p>
+<p>串行化（serializable）</p>
+<h2 id="MySQL事务隔离级别与事务并发问题"><a href="#MySQL事务隔离级别与事务并发问题" class="headerlink" title="MySQL事务隔离级别与事务并发问题"></a>MySQL事务隔离级别与事务并发问题</h2><table>
+<thead>
+<tr>
+<th>事务隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交（read-uncommitted）</td>
+<td>是</td>
+<td>是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td>不可重复读（read-committed）</td>
+<td>否</td>
+<td>是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td>可重复读（repeatable-read）</td>
+<td>否</td>
+<td>否</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td>串行化（serializable）</td>
+<td>否</td>
+<td>否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<p>mysql的RR隔离级使用MVCC机制解决了不可重复读，使用间隙锁解决了幻读的发生。</p>
+<p>RR不严格，纯select走readview，update不走readview。会引发一些问题。</p>
+<h2 id="mysql的MVCC机制"><a href="#mysql的MVCC机制" class="headerlink" title="mysql的MVCC机制"></a>mysql的MVCC机制</h2><p>作用：未加读锁实现了事务并发时可重复读。</p>
+<p>MVCC依赖undo log，ReadView和版本号。</p>
+<p>每个事务都有自己的事务id，id使用当前的系统版本号，每有新的事务，系统版本号+1</p>
+<h3 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h3><p>聚簇索引记录中有三个隐藏列：row_id、trx_id、roll_pointer</p>
+<ul>
+<li>trx_id： 存储每次对某条聚簇索引记录进行修改的时候的事务id。</li>
+<li>roll_pointer： 每次对哪条聚簇索引记录有修改的时候，都会把老版本写入undo日志中。这个roll_pointer就是存了一个指针，它指向undo log的老版本地址。</li>
+</ul>
+<p>undo log 的删除是由 purge Thead操作的</p>
+<h3 id="readview"><a href="#readview" class="headerlink" title="readview"></a>readview</h3><h4 id="数据结构："><a href="#数据结构：" class="headerlink" title="数据结构："></a>数据结构：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct read_view_t&#123;</span><br><span class="line">	ulint	type;</span><br><span class="line">	undo_no_t	undo_no;</span><br><span class="line">	trx_id_t	low_limit_no;</span><br><span class="line">	trx_id_t	low_limit_id;	// 高水位，大于此事务id的记录都不可见。</span><br><span class="line">	trx_id_t	up_limit_id;	// 低水位，小于此事务id的记录可见。</span><br><span class="line">	ulint	n_trx_ids;			// 活跃事务数量</span><br><span class="line">	trx_id_t*	trx_ids;		// 以逆序排列的当前获取活跃事务id的数组</span><br><span class="line">	trx_id_t	creator_trx_id;	// 创建当前视图的事务id</span><br><span class="line">	UT_LIST_NODE_T(read_view_t)	view_list;	// 事务系统中的一致性视图链表</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>trx_id_t*    trx_ids; </p>
+<ul>
+<li>记录系统活跃事务的id数组。</li>
+<li>除去本身事务的id，除去内存中commit的id</li>
+<li>直到事务中的 select 不加锁语句执行时创建。update、delete不会创建。 </li>
+</ul>
+</li>
+<li><p>trx_id_t    low_limit_id;</p>
+<ul>
+<li>因id倒数排列，代表活跃事务中最高版本的事务id</li>
+<li>其他事务找到的行记录的trx_id &gt; low_limit_id时，找到的行记录不可见，去undo log中找老版本。</li>
+</ul>
+</li>
+<li><p>trx_id_t    up_limit_id;</p>
+<ul>
+<li>因id倒数排列，代表活跃事务中最低版本的事务id</li>
+<li>其他事务找到的行记录的trx_id &lt; up_limit_id时，找到的行记录可见，返回此行记录。</li>
+</ul>
+</li>
+</ul>
+<h4 id="判断行记录是否可见"><a href="#判断行记录是否可见" class="headerlink" title="判断行记录是否可见"></a>判断行记录是否可见</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">/*********************************************************************//**</span><br><span class="line">Checks if a read view sees the specified transaction.</span><br><span class="line">@return	true if sees */</span><br><span class="line">UNIV_INLINE</span><br><span class="line">bool</span><br><span class="line">read_view_sees_trx_id(</span><br><span class="line">	const read_view_t*	view,	/*!&lt; in: read view */</span><br><span class="line">	trx_id_t		trx_id)	/*!&lt; in: trx id */</span><br><span class="line">&#123;</span><br><span class="line">	if (trx_id &lt; view-&gt;up_limit_id) &#123;/*行记录的事务trx_id &lt; 活跃事务的*/</span><br><span class="line">		return(true);</span><br><span class="line">	&#125; else if (trx_id &gt;= view-&gt;low_limit_id) &#123;</span><br><span class="line">		return(false);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		ulint	lower = 0;</span><br><span class="line">		ulint	upper = view-&gt;n_trx_ids - 1;</span><br><span class="line"></span><br><span class="line">		ut_a(view-&gt;n_trx_ids &gt; 0);</span><br><span class="line"></span><br><span class="line">		do &#123;</span><br><span class="line">			ulint		mid	= (lower + upper) &gt;&gt; 1;</span><br><span class="line">			trx_id_t	mid_id	= view-&gt;trx_ids[mid];</span><br><span class="line"></span><br><span class="line">			if (mid_id == trx_id) &#123;</span><br><span class="line">				return(FALSE);</span><br><span class="line">			&#125; else if (mid_id &lt; trx_id) &#123;</span><br><span class="line">				if (mid &gt; 0) &#123;</span><br><span class="line">					upper = mid - 1;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				lower = mid + 1;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; while (lower &lt;= upper);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return(true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/*行记录的事务trx_id &lt; 活跃事务链表中的最小事务id，此条记录可被当前事务读取。*/</span><br><span class="line">if (trx_id &lt; view-&gt;up_limit_id) &#123;</span><br><span class="line">		return(true);</span><br><span class="line">	&#125; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/*行记录的事务trx_id &gt;= 活跃事务链表中的最大事务id，此条记录不可被当前事务读取。*/</span><br><span class="line">else if (trx_id &gt;= view-&gt;low_limit_id) &#123;</span><br><span class="line">		return(false);</span><br><span class="line">	&#125; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#空表user,有id、name两列</span><br><span class="line">#例如：事务A，trx_id = 10</span><br><span class="line">begin;</span><br><span class="line">select * from user;//无数据</span><br><span class="line"></span><br><span class="line">#事务B，trx_id = 11</span><br><span class="line">insert into user values(1,1);</span><br><span class="line"></span><br><span class="line">#事务A</span><br><span class="line">select * from user;//无数据</span><br><span class="line"></span><br><span class="line">#解释：</span><br><span class="line">#找到了数据 id = 1,name = 1, trx_id = 11。</span><br><span class="line">#但是事务A (trx_id =10 &lt; trx_id = 11),所以此数据没有返回</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/*二分查找算法，如果行记录的事务trx_id == 活跃事务链表的id，此条记录不可被当前事务读取。否则，可被读取。*/</span><br><span class="line">else &#123;</span><br><span class="line">		ulint	lower = 0;</span><br><span class="line">		ulint	upper = view-&gt;n_trx_ids - 1;</span><br><span class="line"></span><br><span class="line">		ut_a(view-&gt;n_trx_ids &gt; 0);</span><br><span class="line"></span><br><span class="line">		do &#123;</span><br><span class="line">			ulint		mid	= (lower + upper) &gt;&gt; 1;</span><br><span class="line">			trx_id_t	mid_id	= view-&gt;trx_ids[mid];</span><br><span class="line"></span><br><span class="line">			if (mid_id == trx_id) &#123;</span><br><span class="line">				return(FALSE);</span><br><span class="line">			&#125; else if (mid_id &lt; trx_id) &#123;</span><br><span class="line">				if (mid &gt; 0) &#123;</span><br><span class="line">					upper = mid - 1;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					break;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				lower = mid + 1;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; while (lower &lt;= upper);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>例子：</strong></p>
+<p>原数据</p>
+<table>
+<thead>
+<tr>
+<th>trx_id</th>
+<th>roll_pointer</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>undo中上一个版本的地址 0x001</td>
+<td>1</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>3</td>
+<td>undo中上一个版本的地址 0x002</td>
+<td>5</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>13</td>
+<td>undo中上一个版本的地址 0x003</td>
+<td>10</td>
+<td>13</td>
+</tr>
+</tbody></table>
+<p>undo log的数据</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>trx_id</th>
+<th>roll_pointer</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x001</td>
+<td>2</td>
+<td>undo中再上一个版本的地址 0x***</td>
+<td>1</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>0x002</td>
+<td>1</td>
+<td>undo中再上一个版本的地址 0x***</td>
+<td>5</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>0x003</td>
+<td>3</td>
+<td>undo中再上一个版本的地址 0x***</td>
+<td>10</td>
+<td>zs</td>
+</tr>
+</tbody></table>
+<p>有trx_id 为6、7、8、9、10、11、12七个事务，7和11在内存中准备提交，当前事务为9</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#事务的trx_id为9 执行</span><br><span class="line">begin;</span><br><span class="line">update role set name = &#x27;www&#x27; where id = 5;// 无关的sql</span><br><span class="line">select * from user; // 普通select执行时创建readview</span><br></pre></td></tr></table></figure>
+
+<p>readview的部分数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">trx_ids[12,10,8,6]</span><br><span class="line">low_limit_id = 12</span><br><span class="line">up_limit_id =6</span><br></pre></td></tr></table></figure>
+
+<p>查出来的数据：</p>
+<table>
+<thead>
+<tr>
+<th>trx_id</th>
+<th>id</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>1</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>3</td>
+<td>5</td>
+<td>zs</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10</td>
+<td>zs</td>
+</tr>
+</tbody></table>
+<p>第三条数据：因为 行记录(trx_id = 13) &gt; review-&gt;low_limit_id,此条行记录对事务9不可见，去undo log中找到行记录trx_id = 3 的记录返回。</p>
+<h3 id="不同隔离级如何创建readview"><a href="#不同隔离级如何创建readview" class="headerlink" title="不同隔离级如何创建readview"></a>不同隔离级如何创建readview</h3><h5 id="RC隔离级"><a href="#RC隔离级" class="headerlink" title="RC隔离级"></a>RC隔离级</h5><p>RC隔离级别下，在每个语句开始的时候，会将当前系统中的所有的活跃事务拷贝到一个列表中(read<br>view)  </p>
+<p>每个语句开始，拷贝新的readview，已提交的事务就不在列表中了。</p>
+<p><strong>这么一个问题：</strong>RC隔离级下使用了MVCC机制，trx_id=5的事务A不应该读到trx_id=10的事务B提交的数据。因为事务B提交后的行记录(trx_id =10) &gt; view-&gt;low_limit_id(高水位)</p>
+<p>解释：每个语句开始的时候拷贝新的readview，readview包括本事务的id，拷贝新的readview就会更新本事务的id，这样本事务的id = 5变为了id = 11，这样就可以看到事务B提交的 id = 10 的记录了。</p>
+<h5 id="RR隔离级"><a href="#RR隔离级" class="headerlink" title="RR隔离级"></a>RR隔离级</h5><p>RR隔离级别下，在每个事务开始的时候，会将当前系统中的所有的活跃事务拷贝到一个列表中(readview)  ，直到事务结束，不会更新readview。不会看到readview事务链表中提交的事务数据。</p>
+<h5 id="设置隔离级别："><a href="#设置隔离级别：" class="headerlink" title="设置隔离级别："></a>设置隔离级别：</h5><p>SET [SESSION | GLOBAL] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE}</p>
+<p>当前会话隔离级读已提交：</p>
+<p>set session transaction isolation level read COMMITTED;  </p>
+<h4 id="RR不严格的问题："><a href="#RR不严格的问题：" class="headerlink" title="RR不严格的问题："></a>RR不严格的问题：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#session1</span><br><span class="line">begin;</span><br><span class="line">select * from user;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	123	2019-11-28	男	北京</span><br><span class="line">3	han	0000-00-00	nan	bei</span><br><span class="line">4	hxr234	0000-00-00	nan	bei</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#session2</span><br><span class="line">insert into user values(5,&#x27;zala&#x27;,0000-00-00,&#x27;nan&#x27;,&#x27;beijing&#x27;);</span><br><span class="line">#session1</span><br><span class="line">update user set username = &#x27;123&#x27; where id &gt; 1;</span><br><span class="line">select * from user;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">id	username	birthday	sex	address</span><br><span class="line">1	zs	2019-11-28	男	北京</span><br><span class="line">3	123	0000-00-00	nan	bei</span><br><span class="line">4	123	0000-00-00	nan	bei</span><br><span class="line">5	123	0000-00-00	nan	beijing</span><br></pre></td></tr></table></figure>
+
+<p>update 不走readview视图使第二次select查到了别的事务insert的数据。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2020/07/29/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E4%BA%8B%E5%8A%A1/" title="Mysql-事务">http://blog.xiaoruiit.com/2020/07/29/214数据库/Mysql-事务/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+              <a href="/tags/%E4%BA%8B%E5%8A%A1/" rel="tag"># 事务</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/27/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%94%81/" rel="prev" title="Mysql-锁">
+      <i class="fa fa-chevron-left"></i> Mysql-锁
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/29/211%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="next" title="查找算法-二分查找">
+      查找算法-二分查找 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">MySQL事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">事务的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">InnoDB架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BufferPool-%E7%BC%93%E5%86%B2%E6%B1%A0"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">BufferPool 缓冲池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redo-log-Buffer"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Redo log Buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-%E7%9A%84%E8%90%BD%E7%9B%98%E6%9C%BA%E5%88%B6"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">redo log 的落盘机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#buffer-pool-%E8%90%BD%E7%9B%98%E6%9C%BA%E5%88%B6"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">buffer pool 落盘机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Double-write%E5%8F%8C%E5%86%99"><span class="nav-number">1.2.1.4.1.</span> <span class="nav-text">Double write双写</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CheckPoint%E6%A3%80%E6%9F%A5%E7%82%B9"><span class="nav-number">1.2.1.4.2.</span> <span class="nav-text">CheckPoint检查点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">磁盘结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%A1%A8%E7%A9%BA%E9%97%B4%E5%92%8C%E7%94%A8%E6%88%B7%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">系统表空间和用户表空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-file"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">redo log file</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%EF%BC%8Csql%E6%89%A7%E8%A1%8C%E7%BB%8F%E8%BF%87-undo%E5%92%8Credo-%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">数据库事务，sql执行经过  undo和redo  的流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">事务并发问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%8F%E8%AF%BB%EF%BC%9A"><span class="nav-number">1.3.1.</span> <span class="nav-text">脏读：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%EF%BC%9A"><span class="nav-number">1.3.2.</span> <span class="nav-text">不可重复读：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BB%E8%AF%BB%EF%BC%9A"><span class="nav-number">1.3.3.</span> <span class="nav-text">幻读：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">1.4.</span> <span class="nav-text">MySQL事务隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E4%B8%8E%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">MySQL事务隔离级别与事务并发问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E7%9A%84MVCC%E6%9C%BA%E5%88%B6"><span class="nav-number">1.6.</span> <span class="nav-text">mysql的MVCC机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undo-log"><span class="nav-number">1.6.1.</span> <span class="nav-text">undo log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#readview"><span class="nav-number">1.6.2.</span> <span class="nav-text">readview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">数据结构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E8%A1%8C%E8%AE%B0%E5%BD%95%E6%98%AF%E5%90%A6%E5%8F%AF%E8%A7%81"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">判断行记录是否可见</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BAreadview"><span class="nav-number">1.6.3.</span> <span class="nav-text">不同隔离级如何创建readview</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RC%E9%9A%94%E7%A6%BB%E7%BA%A7"><span class="nav-number">1.6.3.0.1.</span> <span class="nav-text">RC隔离级</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RR%E9%9A%94%E7%A6%BB%E7%BA%A7"><span class="nav-number">1.6.3.0.2.</span> <span class="nav-text">RR隔离级</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9A"><span class="nav-number">1.6.3.0.3.</span> <span class="nav-text">设置隔离级别：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR%E4%B8%8D%E4%B8%A5%E6%A0%BC%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">RR不严格的问题：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

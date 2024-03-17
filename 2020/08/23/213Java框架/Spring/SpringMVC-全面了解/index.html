@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="参数绑定，RequestMapping、返回值处理、拦截器、RESTful支持、跨域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC-全面了解">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2020/08/23/213Java%E6%A1%86%E6%9E%B6/Spring/SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="参数绑定，RequestMapping、返回值处理、拦截器、RESTful支持、跨域">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/4oOue7PfNEI9C3s.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/Q1OcS5LPMiTCZ4j.png">
+<meta property="article:published_time" content="2020-08-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-03-28T14:48:15.551Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/4oOue7PfNEI9C3s.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2020/08/23/213Java%E6%A1%86%E6%9E%B6/Spring/SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SpringMVC-全面了解 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/08/23/213Java%E6%A1%86%E6%9E%B6/Spring/SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringMVC-全面了解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-08-23T00:00:00+08:00">2020-08-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-28 22:48:15" itemprop="dateModified" datetime="2023-03-28T22:48:15+08:00">2023-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringMVC/" itemprop="url" rel="index"><span itemprop="name">SpringMVC</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/08/23/213Java%E6%A1%86%E6%9E%B6/Spring/SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="SpringMVC-全面了解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参数绑定，RequestMapping、返回值处理、拦截器、RESTful支持、跨域</p>
+<span id="more"></span>
+
+<h1 id="SpringMVC-全面了解"><a href="#SpringMVC-全面了解" class="headerlink" title="SpringMVC-全面了解"></a>SpringMVC-全面了解</h1><p>处理请求映射，视图解析。对servlet做了封装。</p>
+<p>执行流程：</p>
+<ol>
+<li>用户发送请求至前端控制器DispatcherServlet。</li>
+<li>DispatcherServlet收到请求调用HandlerMapping处理器映射器。</li>
+<li>处理器映射器找到具体的处理器返回给DispatcherServlet。</li>
+<li>DispatcherServlet调用HandlerAdapter处理器适配器。</li>
+<li>HandlerAdapter经过适配调用具体的处理器(Controller，也叫后端控制器)。</li>
+<li>Controller执行完成返回ModelAndView。</li>
+<li>HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet。</li>
+<li>DispatcherServlet将ModelAndView传给ViewReslover视图解析器。</li>
+<li>ViewReslover解析后返回具体View.</li>
+<li>DispatcherServlet根据View进行渲染视图（即将模型数据填充至视图中）。</li>
+<li>DispatcherServlet响应用户。</li>
+</ol>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>SpringMVC是spring-web模块的一部分。</p>
+<p>六大组件</p>
+<p>对外的三大组件</p>
+<p>​    前端控制器、处理器、视图</p>
+<p>内部三大组件</p>
+<p> 处理器映射器、处理器适配器、视图解析器</p>
+<p>前后端分离只需要开发处理器。</p>
+<h2 id="参数绑定"><a href="#参数绑定" class="headerlink" title="参数绑定"></a>参数绑定</h2><p>接收前端传递的参数后，SpringMVC依据绑定规则转换参数后，传递给Controller的形参。</p>
+<p>SpringMVC底层采用24种绑定解析器（ArgumentResolver）处理</p>
+<h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><p>请求参数格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key/value</span><br></pre></td></tr></table></figure>
+
+<p>请求参数数据类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String</span><br></pre></td></tr></table></figure>
+
+<p>请求参数要绑定的目标类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Controller类中的方法参数，比如简单类型、POJO类型、集合类型等。</span><br></pre></td></tr></table></figure>
+
+<p>RequestParam注解</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value:参数名字，即入参的请求参数名字</span><br><span class="line">required:默认是true，表示请求中一定要有相应的参数</span><br><span class="line">defaultValue：请求中没有同名参数时的默认值,使用时，required失效</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public ModelAndView test(@RequestParam(value=&quot;name&quot;,required=false)String name)&#123;</span><br></pre></td></tr></table></figure>
+
+<h3 id="绑定类型"><a href="#绑定类型" class="headerlink" title="绑定类型"></a>绑定类型</h3><p>简单类型数组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过HTTP请求批量传递简单类型数组，Controller方法中可以用String[]或者pojo的String[]属性接收 （两种方式任选其一），但是不能使用List集合接收。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&amp;id=2&amp;id=3</span><br></pre></td></tr></table></figure>
+
+<p>POJO类型集合或数组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">批量传递的请求参数，最终要使用List&lt;POJO&gt;来接收，List&lt;POJO&gt;必须放在另一个POJO类中</span><br></pre></td></tr></table></figure>
+
+<p>自定义日期 参数绑定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于springmvc无法解析的参数绑定类型,需要自定义 [参数转换器]进行参数绑定。</span><br></pre></td></tr></table></figure>
+
+<p>Converter代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class DateConverter implements Converter&lt;String, Date&gt; &#123; </span><br><span class="line">	@Override </span><br><span class="line">	public Date convert(String source) &#123; </span><br><span class="line">		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;); </span><br><span class="line">		try &#123;</span><br><span class="line">			return simpleDateFormat.parse(source); </span><br><span class="line">		&#125; catch (ParseException e) &#123; </span><br><span class="line">			e.printStackTrace(); </span><br><span class="line">		&#125;</span><br><span class="line">		return null; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Converter配置 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 转换器配置 --&gt; </span><br><span class="line">&lt;bean id=&quot;conversionService&quot; class=&quot;org.springframework.format.support.FormattingConversionServiceFactoryBean&quot;&gt; 		&lt;property name=&quot;converters&quot;&gt; </span><br><span class="line">		&lt;set&gt;&lt;</span><br><span class="line">			bean class=&quot;com.kkb.ssm.controller.converter.DateConverter&quot;/&gt; </span><br><span class="line">		&lt;/set&gt; </span><br><span class="line">	&lt;/property&gt; </span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<p>文件类型绑定</p>
+<p>1.加入依赖<code> commons-fileupload</code></p>
+<p>2.前端配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSP中的form表单需要指定enctype=”multipart/form-data”</span><br></pre></td></tr></table></figure>
+
+<p>3.配置Multipart解析器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- multipart类型解析器，文件上传 --&gt; </span><br><span class="line">&lt;bean id=&quot;multipartResolver&quot; class=&quot;org.springframework.web.multipart.commons.CommonsMultipartResolver&quot;&gt; </span><br><span class="line">	&lt;!-- 上传文件的最大尺寸 5M--&gt; </span><br><span class="line">	&lt;property name=&quot;maxUploadSize&quot; value=&quot;5242880&quot;/&gt; </span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<p>4.Cotroller类代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;fileupload&quot;) </span><br><span class="line">public String findUserById(MultipartFile uploadFile) throws Exception &#123;</span><br><span class="line">    if (uploadFile != null) &#123;</span><br><span class="line">        System.out.println(uploadFile.getOriginalFilename());</span><br><span class="line">        // 原始图片名称 </span><br><span class="line">        String originalFilename = uploadFile.getOriginalFilename();</span><br><span class="line">        // 如果没有图片名称，则上传不成功 </span><br><span class="line">        if (originalFilename != null &amp;&amp; originalFilename.length() &gt; 0) &#123;</span><br><span class="line">            // 存放图片的物理路径 </span><br><span class="line">            String picPath = &quot;E:\\&quot;;</span><br><span class="line">            // 获取上传文件的扩展名 </span><br><span class="line">            String extName = originalFilename.substring(originalFilename.lastIndexOf(&quot;.&quot;));</span><br><span class="line">            // 新文件的名称 </span><br><span class="line">            String newFileName = UUID.randomUUID() + extName;</span><br><span class="line">            // 新的文件 </span><br><span class="line">            File newFile = new File(picPath + newFileName);</span><br><span class="line">            // 把上传的文件保存成一个新的文件 </span><br><span class="line">            uploadFile.transferTo(newFile);</span><br><span class="line">            // 同时需要把新的文件名更新到数据库中 </span><br><span class="line">            // TODO</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return &quot;文件上传成功&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="RequestMapping"><a href="#RequestMapping" class="headerlink" title="RequestMapping"></a>RequestMapping</h2><p>value属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 用于映射URL和HandlerMethod方法</span><br><span class="line">@RequestMapping(value=&quot;test&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>method属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 限定请求URL使用指定的method请求方式</span><br><span class="line">@RequestMapping(value=&quot;/test&quot;,method=RequestMethod.GET)</span><br><span class="line">@RequestMapping(value=&quot;/test&quot;,method=&#123;RequestMethod.GET,RequestMethod.POST&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>params属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 访问HandlerMethod 的限制</span><br><span class="line">@RequestMapping(value=&quot;test&quot;,params= &#123;&quot;name&quot;,&quot;price&gt;5000&quot;&#125;) </span><br><span class="line">public String test(Model model) &#123; </span><br><span class="line">	model.addAttribute(&quot;msg&quot;, &quot;test方法执行了&quot;); </span><br><span class="line">	return &quot;success&quot;; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="返回值处理"><a href="#返回值处理" class="headerlink" title="返回值处理"></a>返回值处理</h2><h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>@ResponseBody</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">针对Controller返回值类型，使用内置的9种HttpMessageConverter进行匹配，找 到合适HttpMessageConverter进行处理。</span><br></pre></td></tr></table></figure>
+
+<p>@RequestBody 处理请求参数的http消息转换</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@ResponseBody</span><br><span class="line">@RequestMapping()</span><br><span class="line">public Message test(@RequestBody json)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="非注解"><a href="#非注解" class="headerlink" title="非注解"></a>非注解</h3><p>1.ModelAndView </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public ModelAndView test()&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ModelAndView 可添加model数据、指定view。</p>
+<p>2.void</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void test(HttpServletRequest request, HttpServletResponse response)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>request转发向页面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getRequestDispatcher(&quot;页面路径&quot;).forward(request, response);</span><br></pre></td></tr></table></figure>
+
+<p>过response页面重定向</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.sendRedirect(&quot;url&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>response指定响应结果，例如响应json数据如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.setCharacterEncoding(&quot;utf-8&quot;); response.setContentType(&quot;application/json;charset=utf-8&quot;); response.getWriter().write(&quot;json串&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>3.String</p>
+<p>forward转发 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return “forward:testForward&quot;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">相当于“ request.getRequestDispatcher().forward(request,response) ”</span><br><span class="line"></span><br><span class="line">浏览器URL不发送改变</span><br><span class="line"></span><br><span class="line">Request 域可以共享</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><p>Spring MVC 的拦截器做了三次拦截。请求拦截一次，返回拦截两次。</p>
+<p>请求拦截可做登录认证。</p>
+<p>返回拦截中视图处理，前后端分离后不需要了</p>
+<p>返回拦截中**，可用统一日志、统一异常处理。</p>
+<h3 id="定义拦截器"><a href="#定义拦截器" class="headerlink" title="定义拦截器"></a>定义拦截器</h3><p>实现SpringMVC的HandlerIntercepter 接口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class MyHandlerIntercepter implements HandlerInterceptor&#123;</span><br><span class="line"></span><br><span class="line">	//Handler执行前调用 </span><br><span class="line">	//应用场景：登录认证、身份授权 </span><br><span class="line">	//返回值为true则是放行，为false是不放行 </span><br><span class="line">	@Override </span><br><span class="line">	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123; </span><br><span class="line">		return false; </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//进入Handler开始执行，并且在返回ModelAndView之前调用 </span><br><span class="line">	//应用场景：对ModelAndView对象操作，可以把公共模型数据传到前台，可以统一指定视图 </span><br><span class="line">	@Override </span><br><span class="line">	public void postHandle(HttpServletRequest request,HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception &#123; </span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//执行完Handler之后调用 </span><br><span class="line">	//应用场景：统一异常处理、统一日志处理 </span><br><span class="line">	@Override </span><br><span class="line">	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception &#123; </span><br><span class="line">	</span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置拦截器"><a href="#配置拦截器" class="headerlink" title="配置拦截器"></a>配置拦截器</h3><p>SpringMVC 拦截器是绑定在 HandlerMapping 中的，即：如果某个 HandlerMapping 中配置拦截，则该HandlerMapping 映射成功的 Handler 会使用该拦截器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置全局mapping的拦截器 --&gt; </span><br><span class="line">&lt;mvc:interceptors&gt; </span><br><span class="line">	&lt;!-- 公共拦截器可以拦截所有请求，而且可以有多个 --&gt; </span><br><span class="line">	&lt;bean class=&quot;com.ssm.interceptor.MyHandlerInterceptor&quot; /&gt; </span><br><span class="line">	&lt;bean class=&quot;com.ssm.interceptor.MyHandlerInterceptor2&quot; /&gt; </span><br><span class="line">	&lt;!-- 如果有针对特定URL的拦截器，则进行以下配置 --&gt; </span><br><span class="line">	&lt;mvc:interceptor&gt; </span><br><span class="line">		&lt;!-- /**表示所有URL和子URL路径 --&gt; </span><br><span class="line">		&lt;mvc:mapping path=&quot;/orders/**&quot; /&gt; </span><br><span class="line">		&lt;!-- 特定请求的拦截器只能有一个 --&gt; </span><br><span class="line">		&lt;bean class=&quot;com.ssm.interceptor.MyHandlerInterceptor3&quot; /&gt; </span><br><span class="line">	&lt;/mvc:interceptor&gt; </span><br><span class="line">&lt;/mvc:interceptors&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 如果有多个拦截器，那么配置到`springmvc.xml`中最上面的拦截器，拦截优先级最高。 --&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Restful支持"><a href="#Restful支持" class="headerlink" title="Restful支持"></a>Restful支持</h2><h3 id="rest介绍"><a href="#rest介绍" class="headerlink" title="rest介绍"></a>rest介绍</h3><p>REST（英文：Representational State Transfer，意思是：（资源）表述性状态转化)</p>
+<p>rest是一种软件架构风格、设计风格，而不是标准，只是提供了一组设计原则和约束条件。</p>
+<p>基于rest风格设计的软件更简洁，有层次，更易于实现缓存等机制。</p>
+<h4 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">网络上的一个实体，例如：一段文本、一张图片、一首歌曲、一种服务。</span><br><span class="line">可以用URI（统一资源定位符）指向它，每种资源对应一个特定的URI。</span><br></pre></td></tr></table></figure>
+
+<h4 id="表现层"><a href="#表现层" class="headerlink" title="表现层"></a>表现层</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把资源呈现出来的形式，叫做表现层。</span><br><span class="line">格式：html、xml、json，二级制。</span><br></pre></td></tr></table></figure>
+
+<h4 id="状态转化"><a href="#状态转化" class="headerlink" title="状态转化"></a>状态转化</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">每发出一个HTTP请求，就代表了客户端和服务器的一次交互过程。</span><br><span class="line">HTTP协议，是一个无状态协议，即所有的【状态】 都保存在服务器端。因此，如果客户端想要操作服务器， 必须通过某种手段，让服务器端发生“状态转化”（State Transfer）。而这种转化是建立在表现层之上的，所以就是 “ 表现层状态转化” 。</span><br><span class="line"></span><br><span class="line">HTTP 协议里面，四个表示操作方式的动词：GET 、POST 、PUT 、DELETE 。它们分别对应四种 基本操作：GET 用来获取资源，POST 用来新建资源，PUT 用来更新资源，DELETE 用来删除资源。</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何设计RESTful应用程序的API"><a href="#如何设计RESTful应用程序的API" class="headerlink" title="如何设计RESTful应用程序的API"></a>如何设计RESTful应用程序的API</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">路径设计：数据库设计完毕之后，基本上就可以确定有哪些资源要进行操作，相对于资源的路径也可以设计出来 </span><br><span class="line">动词设计：也就是针对资源的具体操作类型，由HTTP动词表示，常用的HTTP动词如下：POST、DELETE、PUT、GET</span><br></pre></td></tr></table></figure>
+
+<p>RESTful的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/account/1 HTTP GET ： 得到 id = 1 的 account </span><br><span class="line">/account/1 HTTP DELETE： 删除 id = 1 的 account </span><br><span class="line">/account/1 HTTP PUT： 更新 id = 1 的 account</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SpringMVC如何支持Restful"><a href="#SpringMVC如何支持Restful" class="headerlink" title="SpringMVC如何支持Restful"></a>SpringMVC如何支持Restful</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 拦截RESTful请求</span><br><span class="line">&lt;servlet-mapping&gt; </span><br><span class="line">	&lt;servlet-name&gt;DispatcherServlet&lt;/servlet-name&gt; </span><br><span class="line">	&lt;url-pattern&gt;/&lt;/url-pattern&gt; </span><br><span class="line">&lt;/servlet-mapping&gt;</span><br><span class="line">// 设置为/ ,前后端不分离时，需要处理静态资源路径。</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="url与参数绑定"><a href="#url与参数绑定" class="headerlink" title="url与参数绑定"></a>url与参数绑定</h4><p>@PathVariable</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 请求URL http://localhost:8080/ssm/item/1/lisi</span><br><span class="line"></span><br><span class="line">// Controller</span><br><span class="line">@RequestMapping(“&#123;id&#125;/&#123;name&#125;”) </span><br><span class="line">@ResponseBody </span><br><span class="line">public Item queryItemById(@PathVariable Integer id, @PathVariable String name)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="资源的表现形式"><a href="#资源的表现形式" class="headerlink" title="资源的表现形式"></a>资源的表现形式</h4><p>SpringMVC中可以使用 ContentNegotiatingManager这个内容协商管理器来控制表现形式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">扩展名：比如.json表示我要JSON格式数据、.xml表示我要XML格式数据</span><br><span class="line">请求参数：默认是”format”</span><br><span class="line">请求头设置Accept参数：比如设置Accept为application/json表示要JSON格式数据</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="请求方式"><a href="#请求方式" class="headerlink" title="请求方式"></a>请求方式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping：通过设置method属性值</span><br><span class="line">@GetMapping、@PostMapping、@PutMapping、@DeleteMapping注解等同@RequestMapping注解配置method属性。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h2><h3 id="介绍-2"><a href="#介绍-2" class="headerlink" title="介绍"></a>介绍</h3><p>浏览器为了安全有这么一个规定：同源策略，即只用同源才可以访问浏览器的数据，非同源不可访问。</p>
+<p>同源：相同的http协议、相同的域名、相同的端口号。</p>
+<p>前后端分离后，前端和后端不是同源。这种情况我们要实现前后的非同源访问，就是跨域访问。</p>
+<table>
+<thead>
+<tr>
+<th>跨域情况</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主域相同子域不同</td>
+<td><a target="_blank" rel="noopener" href="http://www.baidu.com/a.js">http://www.baidu.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://blog.baidu.com/b.js">http://blog.baidu.com/b.js</a></td>
+</tr>
+<tr>
+<td>协议不同</td>
+<td><a target="_blank" rel="noopener" href="http://www.baidu.com/a.js">http://www.baidu.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="https://www.baidu.com/b.js">https://www.baidu.com/b.js</a></td>
+</tr>
+<tr>
+<td>域名对应真实ip</td>
+<td><a target="_blank" rel="noopener" href="http://www.baidu.com/a.js">http://www.baidu.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://192.168.2.2/b.js">http://192.168.2.2/b.js</a></td>
+</tr>
+</tbody></table>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>三种方式：基于JavaScript标签的src方式，基于JQuery的JSONP方式，基于CORS的方式。</p>
+<p>JSONP只能解决get方式。CORS可解决GET、POST。</p>
+<h4 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h4><h5 id="介绍-3"><a href="#介绍-3" class="headerlink" title="介绍"></a>介绍</h5><p>CORS 是一个 W3C 标准，全称是”跨域资源共享”（ Cross-origin resource sharing ）。</p>
+<p>它允许浏览器向跨源服务器，发出 XMLHttpRequest 请求。</p>
+<p>CORS 需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能， IE 浏览器不能低于 IE10 </p>
+<p>请求信息：</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/4oOue7PfNEI9C3s.png" alt="image-20200823082701342"></p>
+<p>响应信息：</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/Q1OcS5LPMiTCZ4j.png" alt="image-20200823082826743"></p>
+<p>前端设置请求头。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">自动向请求头 header 中注入 Origin 。</span><br></pre></td></tr></table></figure>
+
+<p>后端对响应拦截，设置响应头</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">服务器端需要向响应头 header 中注入 Access-Control-Allow-Origin</span><br></pre></td></tr></table></figure>
+
+<h5 id="CORS实现跨域"><a href="#CORS实现跨域" class="headerlink" title="CORS实现跨域"></a>CORS实现跨域</h5><h6 id="CORS通过拦截器实现"><a href="#CORS通过拦截器实现" class="headerlink" title="CORS通过拦截器实现"></a>CORS通过拦截器实现</h6><p>跨域不提交cookie</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class AllowOriginInterceptor implements HandlerInterceptor &#123; </span><br><span class="line">	@Override</span><br><span class="line">	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception &#123; </span><br><span class="line">		// 跨域行为参考网址 http://www.cnblogs.com/renhaisong/p/6892341.html</span><br><span class="line">		if (request.getHeader(&quot;Origin&quot;) != null) &#123; </span><br><span class="line">            response.setContentType(&quot;text/html;charset=UTF-8&quot;); </span><br><span class="line">            // 允许哪一个URL </span><br><span class="line">            response.setHeader(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;); </span><br><span class="line">            // 允许那种请求方法 </span><br><span class="line">            response.setHeader(&quot;Access-Control-Allow-Methods&quot;, &quot;POST, GET, OPTIONS, DELETE, PUT&quot;); </span><br><span class="line">            response.setHeader(&quot;XDomainRequestAllowed&quot;, &quot;1&quot;); </span><br><span class="line">            System.out.println(&quot;正在跨域&quot;); </span><br><span class="line">		&#125;</span><br><span class="line">		return true; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跨域提交Cookie</p>
+<p>注意：</p>
+<ul>
+<li><code>Access-Control-Allow-Credentials</code> 为 true 的时候， <code>Access-Control-Allow-Origin</code> 不能设置为”*”，否则报错。</li>
+<li>如果有多个拦截器，把处理跨域请求的拦截器放到首位</li>
+</ul>
+<p>前端JQuery代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123; </span><br><span class="line">	url: &#x27;url&#x27;, </span><br><span class="line">	method:&#x27;请求方式&#x27;, //GET POST PUT DELETE </span><br><span class="line">	xhrFields:&#123; </span><br><span class="line">		withCredentials:true </span><br><span class="line">	&#125;,</span><br><span class="line">	success:function(data)&#123; </span><br><span class="line">		// do something </span><br><span class="line">	&#125;,</span><br><span class="line">	error:function()&#123; </span><br><span class="line">		// do something  </span><br><span class="line">	&#125; </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>后端JAVA代码，采用springMVC拦截器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class AllowOriginInterceptor implements HandlerInterceptor &#123; </span><br><span class="line">	@Override </span><br><span class="line">	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception &#123; </span><br><span class="line">		// 有跨域行为时参考网址 http://namezhou.iteye.com/blog/2384434 </span><br><span class="line">		if (request.getHeader(&quot;Origin&quot;) != null) &#123; </span><br><span class="line">			response.setContentType(&quot;text/html;charset=UTF-8&quot;); </span><br><span class="line">			// 允许哪一个URL访问 request.getHeader(&quot;Origin&quot;) 动态获取请求来的url</span><br><span class="line">			response.setHeader(&quot;Access-Control-Allow-Origin&quot;, request.getHeader(&quot;Origin&quot;)); </span><br><span class="line">			// 允许那种请求方法 </span><br><span class="line">			response.setHeader(&quot;Access-Control-Allow-Methods&quot;, &quot;POST, GET, OPTIONS, DELETE,HEAD&quot;); </span><br><span class="line">			// 本次预检请求的有效期 (&quot;0&quot;:每次异步请求都发起预检请求，允许跨域，再发出正式请求。&quot;3600&quot;：有效期1小时)</span><br><span class="line">			response.setHeader(&quot;Access-Control-Max-Age&quot;, &quot;0&quot;); </span><br><span class="line">			// 允许请求头里的参数列表 </span><br><span class="line">			response.setHeader(&quot;Access-Control-Allow-Headers&quot;, &quot;Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token&quot;); </span><br><span class="line">			// 允许对方带cookie访问 </span><br><span class="line">			response.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;); </span><br><span class="line">			response.setHeader(&quot;XDomainRequestAllowed&quot;, &quot;1&quot;); </span><br><span class="line">			System.out.println(&quot;可接待cookie跨域&quot;); </span><br><span class="line">		&#125;</span><br><span class="line">		return true; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后端JAVA代码，采用过滤器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Component // 表示这是配置类，注入到Spring容器中。（不属于@Controller、@Services、@repository)</span><br><span class="line">public class CorsFilter implements Filter &#123;</span><br><span class="line"> </span><br><span class="line">     @Override</span><br><span class="line">     public void init(FilterConfig filterConfig) throws ServletException &#123;</span><br><span class="line">    </span><br><span class="line">     &#125;</span><br><span class="line">    </span><br><span class="line">     @Override</span><br><span class="line">     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException &#123;</span><br><span class="line">         HttpServletResponse httpResponse = (HttpServletResponse) response;</span><br><span class="line">         HttpServletRequest httpRequest = (HttpServletRequest) request;</span><br><span class="line">         httpResponse.setHeader(&quot;Access-Control-Allow-Origin&quot;, httpRequest.getHeader(&quot;Origin&quot;)!=null ? httpRequest.getHeader(&quot;Origin&quot;):&quot;&quot;);</span><br><span class="line">         httpResponse.setHeader(&quot;Access-Control-Allow-Methods&quot;, httpRequest.getMethod());</span><br><span class="line">         httpResponse.setHeader(&quot;Access-Control-Max-Age&quot;, &quot;3600&quot;);</span><br><span class="line">         httpResponse.setHeader(&quot;Access-Control-Allow-Credentials&quot;, &quot;true&quot;);</span><br><span class="line">         httpResponse.setHeader(&quot;Access-Control-Allow-Headers&quot;, httpRequest.getHeader(&quot;Access-Control-Request-Headers&quot;));</span><br><span class="line">         chain.doFilter(request, response);</span><br><span class="line">     &#125;</span><br><span class="line">    </span><br><span class="line">     @Override</span><br><span class="line">     public void destroy() &#123;</span><br><span class="line">    </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="CORS通过注解方式"><a href="#CORS通过注解方式" class="headerlink" title="CORS通过注解方式"></a>CORS通过注解方式</h6><p>springMVC4.x以上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@CrossOrigin</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2020/08/23/213Java%E6%A1%86%E6%9E%B6/Spring/SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3/" title="SpringMVC-全面了解">http://blog.xiaoruiit.com/2020/08/23/213Java框架/Spring/SpringMVC-全面了解/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringMVC/" rel="tag"># SpringMVC</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/20/git-%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF/" rel="prev" title="git-常见错误">
+      <i class="fa fa-chevron-left"></i> git-常见错误
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/24/213Java%E6%A1%86%E6%9E%B6/Rabbit-%E5%85%A5%E9%97%A8/" rel="next" title="RabbitMQ-入门">
+      RabbitMQ-入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringMVC-%E5%85%A8%E9%9D%A2%E4%BA%86%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">SpringMVC-全面了解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="nav-number">1.2.</span> <span class="nav-text">参数绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%91%E5%AE%9A%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">绑定类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RequestMapping"><span class="nav-number">1.3.</span> <span class="nav-text">RequestMapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E5%A4%84%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">返回值处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.4.1.</span> <span class="nav-text">注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.4.2.</span> <span class="nav-text">非注解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text">拦截器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">定义拦截器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">配置拦截器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Restful%E6%94%AF%E6%8C%81"><span class="nav-number">1.6.</span> <span class="nav-text">Restful支持</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rest%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.6.1.</span> <span class="nav-text">rest介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%BA%90"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A8%E7%8E%B0%E5%B1%82"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">表现层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E5%8C%96"><span class="nav-number">1.6.1.3.</span> <span class="nav-text">状态转化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1RESTful%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%9A%84API"><span class="nav-number">1.6.2.</span> <span class="nav-text">如何设计RESTful应用程序的API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringMVC%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81Restful"><span class="nav-number">1.6.3.</span> <span class="nav-text">SpringMVC如何支持Restful</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#url%E4%B8%8E%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">url与参数绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%9A%84%E8%A1%A8%E7%8E%B0%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">资源的表现形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F"><span class="nav-number">1.6.3.4.</span> <span class="nav-text">请求方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%A8%E5%9F%9F"><span class="nav-number">1.7.</span> <span class="nav-text">跨域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-2"><span class="nav-number">1.7.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">1.7.2.</span> <span class="nav-text">解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CORS"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">CORS</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-3"><span class="nav-number">1.7.2.1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CORS%E5%AE%9E%E7%8E%B0%E8%B7%A8%E5%9F%9F"><span class="nav-number">1.7.2.1.2.</span> <span class="nav-text">CORS实现跨域</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CORS%E9%80%9A%E8%BF%87%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.7.2.1.2.1.</span> <span class="nav-text">CORS通过拦截器实现</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CORS%E9%80%9A%E8%BF%87%E6%B3%A8%E8%A7%A3%E6%96%B9%E5%BC%8F"><span class="nav-number">1.7.2.1.2.2.</span> <span class="nav-text">CORS通过注解方式</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

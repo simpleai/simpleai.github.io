@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机基本原理">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2024/01/10/212Java%E8%AF%AD%E8%A8%80/JVM/%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="JVM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114163800316.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114103508468.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/20231228151409.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114162239034.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/010e6380ccee4b20e70ebf3474eef600.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231117191235574.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231121164318808.png">
+<meta property="article:published_time" content="2024-01-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-17T01:11:20.096Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114163800316.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2024/01/10/212Java%E8%AF%AD%E8%A8%80/JVM/%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java虚拟机基本原理 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2024/01/10/212Java%E8%AF%AD%E8%A8%80/JVM/%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java虚拟机基本原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-10 00:00:00" itemprop="dateCreated datePublished" datetime="2024-01-10T00:00:00+08:00">2024-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-17 09:11:20" itemprop="dateModified" datetime="2024-03-17T09:11:20+08:00">2024-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">Java语言</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E8%AF%AD%E8%A8%80/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/01/10/212Java%E8%AF%AD%E8%A8%80/JVM/%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="Java虚拟机基本原理" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>JVM</p>
+<span id="more"></span>
+
+<h1 id="Java虚拟机基本原理"><a href="#Java虚拟机基本原理" class="headerlink" title="Java虚拟机基本原理"></a>Java虚拟机基本原理</h1><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114163800316.png" alt="image-20231114163800316"></p>
+<h2 id="1-Java代码运行"><a href="#1-Java代码运行" class="headerlink" title="1.Java代码运行"></a>1.Java代码运行</h2><p>机器码：CPU能理解的代码格式。机器码是一个个的字节。</p>
+<p>C语言运行：编译为机器码，在机器上执行。为了理解机器码，可以用反汇编工具将机器码反编译为汇编代码。</p>
+<p>Java语言运行的初始设计：设计一个面向Java语言的特性的虚拟机，将Java代码转化为虚拟机能识别的指令序列，即Java字节码（.class文件)。</p>
+<p>Java虚拟机可以由硬件实现，但更为常见的是运行在现有平台windows、linux上。</p>
+<p>虚拟机的好处：</p>
+<ol>
+<li>跨平台</li>
+<li>代码托管环境。<ol>
+<li>代码运行</li>
+<li>无关业务逻辑，而代码需要的处理（内存管理，垃圾回收，数组越界，动态类型，安全权限）</li>
+</ol>
+</li>
+<li>利用运行信息优化代码执行效率。</li>
+</ol>
+<h3 id="Java虚拟机如何运行Java字节码"><a href="#Java虚拟机如何运行Java字节码" class="headerlink" title="Java虚拟机如何运行Java字节码"></a>Java虚拟机如何运行Java字节码</h3><p>虚拟机主要区域划分：</p>
+<ol>
+<li>方法区</li>
+<li>堆</li>
+<li>PC寄存器（程序计数器）</li>
+<li>Java方法栈</li>
+<li>本地方法栈（native方法）</li>
+</ol>
+<p>虚拟机的执行：</p>
+<ol>
+<li>加载。将class文件加载到虚拟机中的方法区。</li>
+<li>运行。<ol>
+<li>调用进入一个Java方法，Java虚拟机在当前线程的Java方法栈中生成一个栈帧，用来存放局部变量和字节码的操作数。</li>
+<li>当退出当前执行的方法时，Java虚拟机弹出当前线程的当前栈帧，并舍弃。</li>
+</ol>
+</li>
+</ol>
+<p>字节码→机器码：</p>
+<p>字节码无法直接在硬件上执行。是虚拟机可识别的操作码。类似于机器可识别的机器码。</p>
+<p>字节码转化为机器码有两种方式：</p>
+<ol>
+<li>解释执行。运行时，逐行解释为机器码。优点：无需等待编译。</li>
+<li>即时编译（JIT）。将一个方法中包含的所有字节码编译为机器码后再执行。优点：峰值运行速度快。</li>
+</ol>
+<p>大部分代码使用解释执行。执行次数多的代码会被即时编译先先编译为机器码，之后直接执行机器码。</p>
+<p>优点：即时编译可以收集运行时信息，理论上，即时编译后的代码比C++运行速度更高。</p>
+<p>Java7开始，HotSpot默认采用分层编译：热点方法先被C1编译，然后C1编译后的热点方法进一步被C2编译。</p>
+<p>HotSpot 装载了多个不同的即时编译器，以便在编译时间和生成代码的执行效率之间做取舍。</p>
+<h2 id="2-Java基本类型"><a href="#2-Java基本类型" class="headerlink" title="2.Java基本类型"></a>2.Java基本类型</h2><p>Java之前的语言Smalltalk，万物皆对象</p>
+<p>基本类型：工程上的考虑，速度和内存占用比引用类型的性能好</p>
+<p>boolean。Java虚拟机使用1位int的数值0,1来表示 false，true。高位到地位的转换，使用掩码（去除高位）实现。</p>
+<p>浮点值的运算</p>
+<ol>
+<li>+0.0F</li>
+<li>-0.0F</li>
+<li>NaN</li>
+</ol>
+<p>占用内存：</p>
+<ul>
+<li>栈上64位机器，boolean,byte,char,short,int都占用8个字节</li>
+<li>堆上byte1个字节，char,short是2个字节，int8个字节</li>
+</ul>
+<p>加载：</p>
+<p>Java 虚拟机的算数运算几乎全部依赖于操作数栈。我们需要将堆中的 boolean、byte、char 以及 short 加载到操作数栈上，而后将栈上的值当成 int 类型来运算。</p>
+<h2 id="3-类加载过程"><a href="#3-类加载过程" class="headerlink" title="3.类加载过程"></a>3.类加载过程</h2><p>Java语言类型：</p>
+<p>基本类型</p>
+<p>引用类型</p>
+<ol>
+<li>类</li>
+<li>接口</li>
+<li>数组类</li>
+<li>泛型</li>
+</ol>
+<p>基本类型是JVM直接定义好的。数组类由JVM直接生成。</p>
+<p>类加载器加载的类型：类、接口</p>
+<p>类字节流形式：.class文件，程序内部生成，网络字节流</p>
+<ol>
+<li><p>加载</p>
+<p>读取各类字节流，用类加载器加载到JVM中。</p>
+<p>类加载器分类：</p>
+<ol>
+<li><p>启动类加载器</p>
+<p>C++编写的bootstrap class loader。</p>
+</li>
+<li><p>扩展类加载器（Java9升级为平台类加载器）</p>
+</li>
+<li><p>应用类加载器</p>
+<p>加载应用程序路径下的类。主要指系统变量 java.class.path 或环境变量 CLASSPATH 所指定的路径</p>
+</li>
+<li><p>自定义类加载器</p>
+</li>
+</ol>
+<p>双亲委派机制：优先用自己的父类加载器去加载类，无法找到时，再自己去加载</p>
+<p>类的唯一性是由类加载器实例以及类的全名一同确定的。</p>
+</li>
+<li><p>链接</p>
+<ol>
+<li><p>验证</p>
+<p>验证类是否符合Java虚拟机规范</p>
+</li>
+<li><p>准备</p>
+<p>静态字段内存分配；实现虚方法的动态绑定的方法表</p>
+</li>
+<li><p>解析</p>
+<p>编译生成的类之间的符号引用改为实际引用</p>
+</li>
+</ol>
+</li>
+<li><p>初始化</p>
+<p>静态字段、常量赋值。</p>
+<p>其他直接赋值操作，执行所有静态代码块中的代码</p>
+</li>
+</ol>
+<h2 id="4-5-JVM如何执行方法"><a href="#4-5-JVM如何执行方法" class="headerlink" title="4-5.JVM如何执行方法"></a>4-5.JVM如何执行方法</h2><h3 id="方法编译"><a href="#方法编译" class="headerlink" title="方法编译"></a>方法编译</h3><ul>
+<li><p>重载方法</p>
+<ul>
+<li><p>定义：Java语言：相同名称，不同参数</p>
+</li>
+<li><p>重载方法的选择</p>
+<ol>
+<li>不考虑自动拆装箱和可变长参数下选取重载方法</li>
+<li>1中未找到，则可考虑拆装箱。</li>
+<li>2中未找到，考虑拆装箱+可变长参数</li>
+</ol>
+<p>一个阶段中找到了多个方法，则选择一个形式参数类型最为贴切的方法。优先选择更明确的子类。</p>
+</li>
+</ul>
+</li>
+<li><p>重写方法</p>
+<ul>
+<li><p>定义：</p>
+<ul>
+<li>JVM：相同名称，相同参数且返回值类型相同</li>
+</ul>
+</li>
+<li><p>重写方法的选择</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="静态绑定和动态绑定"><a href="#静态绑定和动态绑定" class="headerlink" title="静态绑定和动态绑定"></a>静态绑定和动态绑定</h3><p>JVM如何识别方法：类名+方法名+方法描述符（参数类型+返回类型）</p>
+<p>静态绑定的条件：私有实例方法、构造方法、静态方法、final修饰的方法、接口默认方法</p>
+<p>方法调用的五种指令：</p>
+<ol>
+<li>invokestatic：静态方法</li>
+<li>invokespecial:私有实例方法、构造器、接口默认方法、使用super关键字调用父类的实例方法或者构造器</li>
+<li>invokevirtual：非私有实例方法</li>
+<li>invokeinterface:接口方法</li>
+<li>invokedynamic：动态方法</li>
+</ol>
+<p>符号引用解析为实际引用：</p>
+<p>方法指向类C。1,2,3指令的解析：</p>
+<ol>
+<li><p>在类中查找符合名字和描述符的方法</p>
+</li>
+<li><p>在C的父类中继续搜索，直到Object类</p>
+</li>
+<li><p>在C所实现或间接实现的接口中搜索非私有、非静态方法，找到多个时，任意返回一个。</p>
+<p>C所实现或间接实现的接口？？？</p>
+</li>
+</ol>
+<h3 id="虚方法"><a href="#虚方法" class="headerlink" title="虚方法"></a>虚方法</h3><p>invokevirtual、invokeinterface</p>
+<p>动态绑定：在执行过程中，Java 虚拟机将获取调用者的实际类型，并在该实际类型的虚方法表中，根据索引值获得目标方法。这个过程便是动态绑定。</p>
+<p>需要动态绑定的方法：非final修饰的invokevirtual、invokeinterface</p>
+<h3 id="方法表"><a href="#方法表" class="headerlink" title="方法表"></a>方法表</h3><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114103508468.png" alt="image-20231114103508468"></p>
+<p>每个类都有一个方法表，存储索引和当前类及其祖先类中非私有的实例方法（包括抽象方法）的对应关系。</p>
+<p>对于重写的父类方法，子类的索引和父类的索引值相同。</p>
+<p>解析符号引用是将符号值转化为方法表的索引值。（实际上不是索引值）</p>
+<p>加载中第二步链接中的第二个阶段，使用方法表这种数据结构提供方法之间的引用的索引值。</p>
+<h3 id="动态绑定相对于静态绑定的额外操作"><a href="#动态绑定相对于静态绑定的额外操作" class="headerlink" title="动态绑定相对于静态绑定的额外操作"></a>动态绑定相对于静态绑定的额外操作</h3><ol>
+<li>访问栈上的调用者</li>
+<li>读取调用者的动态类型</li>
+<li>读取该类型的方法表</li>
+<li>读取方法表中某个索引值所对应的目标方法</li>
+</ol>
+<h3 id="内联缓存"><a href="#内联缓存" class="headerlink" title="内联缓存"></a>内联缓存</h3><p>用途：加快动态绑定。</p>
+<p>原理：缓存虚方法调用中调用者的动态类型，以及该类型对应的方法。</p>
+<p>单态缓存：只缓存了一种动态类型以及它所对应的目标方法。JVM使用的是单态缓存。</p>
+<p>多态方法，遇到缓存中类型不匹配时，退化为不使用缓存，使用方法表找目标方法。</p>
+<h3 id="调用方法开销"><a href="#调用方法开销" class="headerlink" title="调用方法开销"></a>调用方法开销</h3><p>内联缓存无法消除调用方法开销。方法内联可以消除</p>
+<ol>
+<li>记录程序在方法中的位置。</li>
+<li>创建栈帧，压入、弹出栈帧</li>
+</ol>
+<h2 id="6-异常"><a href="#6-异常" class="headerlink" title="6.异常"></a>6.异常</h2><h3 id="遇到异常时Java代码执行"><a href="#遇到异常时Java代码执行" class="headerlink" title="遇到异常时Java代码执行"></a>遇到异常时Java代码执行</h3><p>try,catch,finaly</p>
+<ol>
+<li>try</li>
+<li>挨个遍历catch</li>
+<li>finaly</li>
+<li>重新抛出异常</li>
+</ol>
+<h3 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h3><p>Error，涵盖程序不应捕获的异常。当程序触发 Error 时，它的执行状态已经无法恢复，需要中止线程甚至是中止虚拟机。<br>Exception，涵盖程序可能需要捕获并且处理的异常。<br><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/20231228151409.png"></p>
+<p>Throwable</p>
+<p>Exception error</p>
+<p>RunException</p>
+<h3 id="JVM中遇到异常的执行"><a href="#JVM中遇到异常的执行" class="headerlink" title="JVM中遇到异常的执行"></a>JVM中遇到异常的执行</h3><p>每个类的方法编译时，都会构建异常表。每捕获一个异常，会有一条信息。    </p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231114162239034.png" alt="image-20231114162239034"></p>
+<p>遇到异常时，JVM从上到下遍历该方法的异常表，匹配到相应类型时，程序运行交给此类型对应的字节码；未找到时，弹出刚方法的栈帧，接着遍历当前方法的异常表</p>
+<h3 id="try-with-resources"><a href="#try-with-resources" class="headerlink" title="try-with-resources"></a>try-with-resources</h3><p>好处：</p>
+<ol>
+<li>简化关闭资源。</li>
+<li>自动添加了supressed异常（避免原异常消失）。</li>
+</ol>
+<h2 id="7-反射"><a href="#7-反射" class="headerlink" title="7.反射"></a>7.反射</h2><h3 id="反射方法使用"><a href="#反射方法使用" class="headerlink" title="反射方法使用"></a>反射方法使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;？&gt; aclass = Class.forName(&quot;Reflect&quot;);</span><br><span class="line">Method method = aclass.getMethod(&quot;test&quot;,int.class);</span><br><span class="line">method.invoke(null, 0);</span><br></pre></td></tr></table></figure>
+
+<h3 id="反射场景"><a href="#反射场景" class="headerlink" title="反射场景"></a>反射场景</h3><p>接口访问的日志记录，我使用了AOP，里边用到了反射的invoke方法</p>
+<p>idea中代码可用字段提示。</p>
+<p>spring依赖反转的实现</p>
+<h3 id="反射实现与性能"><a href="#反射实现与性能" class="headerlink" title="反射实现与性能"></a>反射实现与性能</h3><ul>
+<li><p>具体实现：</p>
+<ul>
+<li><p>本地实现：</p>
+<p>native，使用了c++。先调用委派实现，然后调用本地实现，然后进入目标方法</p>
+<ul>
+<li>优点：是第一次使用动态实现的3-4倍。</li>
+</ul>
+</li>
+<li><p>动态实现：</p>
+<p>先生成字节码，然后直接调用目标方法。</p>
+<ul>
+<li>优点：生成字节码后，速度是本地实现的20倍。动态实现无需经过Java到C++再到Java的切换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>委派实现：为了在本地实现和动态实现之间动态切换，在本地实现、动态实现上而封装的。</p>
+</li>
+</ul>
+<p>性能差距：1.3→6.7</p>
+<p>指定动态实现：-Dsun.reflect.inflationThreshold= 来调整。默认值15</p>
+<p>反射调用不使用本地实现机制：-Dsun.reflect.noInflation=true</p>
+<p>修改存储动态实现个数：-XX:TypeProfileWidth。默认值2</p>
+<h4 id="影响反射性能"><a href="#影响反射性能" class="headerlink" title="影响反射性能"></a>影响反射性能</h4><ol>
+<li>方法内联，目标方法是否可内联到当前方法中</li>
+<li>拆装箱</li>
+<li>变量逃逸分析，是否可优化为栈上分配</li>
+<li>权限检查。method.setAccessible(true);  // 关闭权限检查</li>
+</ol>
+<h2 id="8-9-JVM执行方法中的invokedynamic指令"><a href="#8-9-JVM执行方法中的invokedynamic指令" class="headerlink" title="8-9 JVM执行方法中的invokedynamic指令"></a>8-9 JVM执行方法中的invokedynamic指令</h2><h3 id="方法句柄"><a href="#方法句柄" class="headerlink" title="方法句柄"></a>方法句柄</h3><h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodHandleTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMethodHandle</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;testMethodHandle&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        MethodHandles.Lookup l = MethodHandles.lookup();</span><br><span class="line"></span><br><span class="line">        MethodType methodType = MethodType.methodType(<span class="keyword">void</span>.class, Object.class);</span><br><span class="line"></span><br><span class="line">        MethodHandle methodHandle = l.findVirtual(MethodHandleTest.class, <span class="string">&quot;testMethodHandle&quot;</span>, methodType);</span><br><span class="line"></span><br><span class="line">        methodHandle.invokeExact(<span class="keyword">new</span> MethodHandleTest(), <span class="keyword">new</span> Object());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>方法句柄是一个强类型的，能够被直接执行的引用 [2]。该引用可以指向常规的静态方法或者实例方法，也可以指向构造器或者字段。</p>
+<p>invokeExact：Java 编译器会根据所传入参数的声明类型来生成方法描述符。</p>
+<p> invoke：自动适配参数类型</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>方法句柄没有运行时权限检查，因此，应用程序需要负责方法句柄的管理。</p>
+<p>方法句柄的内联瓶颈在于即时编译器能否将该方法句柄识别为常量。</p>
+<h3 id="调用invokedynamic指令的实现"><a href="#调用invokedynamic指令的实现" class="headerlink" title="调用invokedynamic指令的实现"></a>调用invokedynamic指令的实现</h3><p>java7引入invokedynamic。</p>
+<p>每一条 invokedynamic 指令将捆绑一个调用点，并且会调用该调用点所链接的方法句柄。</p>
+<p>将调用点（CallSite）是一个抽象的 Java 类，原本由 Java 虚拟机控制的方法调用以及方法链接暴露给了应用程序控制。</p>
+<h3 id="lamada实现-amp-性能"><a href="#lamada实现-amp-性能" class="headerlink" title="lamada实现&amp;性能"></a>lamada实现&amp;性能</h3><p>将函数式接口内容生成静态函数，然后用invokedynamic指令调用。</p>
+<p>lamada也会被方法内联和逃逸分析优化。</p>
+<p>性能基本没差别。</p>
+<h2 id="10Java对象的内存使用"><a href="#10Java对象的内存使用" class="headerlink" title="10Java对象的内存使用"></a>10Java对象的内存使用</h2><h3 id="对象内容"><a href="#对象内容" class="headerlink" title="对象内容"></a>对象内容</h3><ul>
+<li><p>隐藏的对象头</p>
+<ul>
+<li><p>标记字段</p>
+<p>占用8个字节</p>
+<ul>
+<li>锁信息</li>
+<li>哈希码</li>
+<li>GC信息</li>
+</ul>
+</li>
+<li><p>类型指针</p>
+<p>指向该对象的类。</p>
+<p>64位机器，默认使用压缩指针，占用4个字节。</p>
+<p>起始位置默认8字节对齐，可以标记 2的32次方 * 8 个 = 32G内存的地址。-XX:ObjectAlignmentInBytes，默认值为 8</p>
+</li>
+</ul>
+</li>
+<li><p>字段</p>
+<ul>
+<li>父类所有字段</li>
+<li>自身所有字段</li>
+</ul>
+</li>
+</ul>
+<h3 id="对象占用内存举例"><a href="#对象占用内存举例" class="headerlink" title="对象占用内存举例"></a>对象占用内存举例</h3><p>64位机器，32G内存，默认8字节对齐</p>
+<p>Integer，对象头占用12字节，int属性占用4个字节。共占用16个字节</p>
+<h3 id="字段重排列"><a href="#字段重排列" class="headerlink" title="字段重排列"></a>字段重排列</h3><p>优点：节省对齐可能浪费的空间</p>
+<p>规则：</p>
+<ol>
+<li><p>如果一个字段占用C字节，那么该字段的偏移量需要对齐至对象起始地址的NC。</p>
+<p>Long类型的long字段，对象占了12字节，但long字段需要从16字节开始，中间空4个字节。</p>
+</li>
+<li><p>子类所继承字段的偏移量，需要与父类对应字段的偏移量保持一致。</p>
+</li>
+<li><p>使用了压缩指针的64位机器，子类第一个字段对齐至4N；关闭压缩指针，子类第一个字段对齐至8N。</p>
+</li>
+</ol>
+<h2 id="11-12垃圾回收"><a href="#11-12垃圾回收" class="headerlink" title="11-12垃圾回收"></a>11-12垃圾回收</h2><p>堆空间消亡对象的内存回收，回收后用于新对象。</p>
+<h3 id="垃圾识别"><a href="#垃圾识别" class="headerlink" title="垃圾识别"></a>垃圾识别</h3><h4 id="引用技术法"><a href="#引用技术法" class="headerlink" title="引用技术法"></a>引用技术法</h4><p>缺点：循环引用的对象，即使是真的垃圾，也识别不了。</p>
+<h4 id="可达性分析"><a href="#可达性分析" class="headerlink" title="可达性分析"></a>可达性分析</h4><ul>
+<li><p>介绍：除了roots对象可达的对象外，其他对象为垃圾对象。</p>
+</li>
+<li><p>roots对象种类</p>
+<p>可从堆外指向堆内的堆外对象</p>
+<ul>
+<li>栈帧里的局部变量</li>
+<li>已加载类的静态变量</li>
+<li>JNI handles</li>
+<li>未停止多线程中的对象</li>
+</ul>
+</li>
+</ul>
+<h5 id="stop-the-wold和安全点"><a href="#stop-the-wold和安全点" class="headerlink" title="stop-the-wold和安全点"></a>stop-the-wold和安全点</h5><ul>
+<li><p>stop-the-wold</p>
+<ul>
+<li>介绍：垃圾回收线程等待所有线程进入安全点，再执行标记和清理。</li>
+<li>原因：可达性分析对象时，对象的引用有可能被修改，有未标记为可达，却在清理时被修改为可达，这时被当成垃圾回收就出问题了。所以可以被修改的地方，需要暂停下来，等标记清理完成后，再继续执行。</li>
+</ul>
+</li>
+<li><p>安全点：使堆栈不会被修改的机制。</p>
+<p>检测的位置接收到要求停留在安全点时，挂起当前线程。</p>
+<ul>
+<li>使用JNI调用本地方法时：入口处进行安全点检测</li>
+<li>解释执行字节码</li>
+<li>执行即时编译器生成的机器码：生产机器码时，子啊生成代码的方法出口和非计数循环插入安全点检测</li>
+<li>线程阻塞</li>
+</ul>
+</li>
+</ul>
+<h3 id="垃圾清除"><a href="#垃圾清除" class="headerlink" title="垃圾清除"></a>垃圾清除</h3><p>方式：</p>
+<ul>
+<li><p>直接清除</p>
+<ul>
+<li>缺点：内存碎片，总内存够，但无法分配</li>
+</ul>
+</li>
+<li><p>压缩（整理）</p>
+<p>即把存活的对象聚集到内存区域的起始位置</p>
+<ul>
+<li>缺点：压缩算法的性能开销</li>
+</ul>
+</li>
+<li><p>复制</p>
+<p>把内存区域分为两等分，分别用两个指针 from 和 to 来维护，并且只是用 from 指针指向的内存区域来分配内存。当发生垃圾回收时，便把存活的对象复制到 to 指针指向的内存区域中，并且交换 from 指针和 to 指针的内容。</p>
+<ul>
+<li>缺点：堆空间利用率低。</li>
+</ul>
+</li>
+</ul>
+<h3 id="垃圾分代"><a href="#垃圾分代" class="headerlink" title="垃圾分代"></a>垃圾分代</h3><p>程序中对象实际生存时间、次数不同。</p>
+<p>根据存在时间，次数将对象分为年轻代、老年代。根据不同代可以使用不同的回收算法加快回收。比如：年轻代使用复制算法；老年代使用清除、压缩算法。</p>
+<p>年轻代：存在时间很短、使用次数很少就消亡。比如：一次列表查询，返回给前端的实体对象。</p>
+<p>老年代：存在时间很长、使用次数很多。比如：数据库配置类生成的对象，程序运行期间一直被使用。</p>
+<h3 id="年轻代回收"><a href="#年轻代回收" class="headerlink" title="年轻代回收"></a>年轻代回收</h3><h4 id="年轻代空间划分"><a href="#年轻代空间划分" class="headerlink" title="年轻代空间划分"></a>年轻代空间划分</h4><p>初始值 E（8） ：S（2（From（1）：To (1)）。程序运行期间，JVM根据对象生成速度，自动调整E 和 S区大小。</p>
+<p>可设置参数固定E区 和 S区大小。</p>
+<p>默认对象复制超过15次，或者年轻代单个Survivor区空间占用大于50%时，复制次数多的会升级为老年代。</p>
+<h4 id="对象申请空间"><a href="#对象申请空间" class="headerlink" title="对象申请空间"></a>对象申请空间</h4><p>堆空间线程共享，但不能让两个线程的私有对象共用相同的内存，即避免线程内存竞争。</p>
+<ol>
+<li>首次new 对象时，线程向 Java 虚拟机申请一段连续的内存，比如 2048 字节，作为线程私有的 TLAB。这个操作需要加锁，线程需要维护两个指针（实际上可能更多，但重要也就两个），一个指向 TLAB 中空余内存的起始位置，一个则指向 TLAB 末尾。</li>
+<li>接下来的 new 指令，便可以直接通过指针加法（bump the pointer）来实现，即把指向空余内存位置的指针加上所请求的字节数。</li>
+<li>如果加法后空余内存指针的值仍小于或等于指向末尾的指针，则代表分配成功。否则，TLAB 已经没有足够的空间来满足本次新建操作。这个时候，便需要当前线程重新申请新的 TLAB。</li>
+</ol>
+<h4 id="卡表"><a href="#卡表" class="headerlink" title="卡表"></a>卡表</h4><ul>
+<li><p>原因</p>
+<p>老年代的对象可能引用新生代的对象。也就是说，在标记存活对象的时候，我们需要扫描老年代中的对象。如果该对象拥有对新生代对象的引用，那么这个引用也会被作为 GC Roots。可以避免扫描整个老年代。</p>
+</li>
+<li><p>实现</p>
+<p>将整个堆划分为每个大小为 512 字节的卡，并且维护一个卡表，用来存储每张卡的一个标识位。这个标识位代表对应的卡是否可能存有指向新生代对象的引用。有指向新生代对象引用的卡标识为脏卡。</p>
+<p>在进行 Minor GC 的时候，我们便可以不用扫描整个老年代，而是在卡表中寻找脏卡，并将脏卡中的对象加入到 Minor GC 的 GC Roots 里。当完成所有脏卡的扫描之后，Java 虚拟机便会将所有脏卡的标识位清零。</p>
+<p>然后复制存活对象到另一个S区，并更新指向该对象的引用，更新引用的同时，设置引用所在的卡的标识位为脏卡。</p>
+</li>
+</ul>
+<h4 id="缓存行实现"><a href="#缓存行实现" class="headerlink" title="缓存行实现"></a>缓存行实现</h4><p>byte数组实现，64B的缓存行。可以加载64张卡，即32KB内存。任意线程对缓存行的引用更新操作，都会让整个缓存行中的内容写回主存。</p>
+<h2 id="13Java内存模型"><a href="#13Java内存模型" class="headerlink" title="13Java内存模型"></a>13Java内存模型</h2><p>乱序执行种类：</p>
+<ul>
+<li>即时编译器重排序</li>
+<li>处理器乱序执行</li>
+<li>内存系统重排序</li>
+</ul>
+<p>即时编译器对代码不影响单线程结果的乱序优化：</p>
+<ol>
+<li><p>延迟加载数据到寄存器，减少栈空间占用时间</p>
+<p>可能在 b = 1之后再将a加载到寄存器中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>,b =<span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> test&#123;</span><br><span class="line">    <span class="keyword">int</span> z1 = a;</span><br><span class="line">    b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>无意义语句移出循环</p>
+</li>
+</ol>
+<h3 id="代码顺序"><a href="#代码顺序" class="headerlink" title="代码顺序"></a>代码顺序</h3><p>后边的代码依赖（读或写）到了前边的代码时，代码的顺序性规定。</p>
+<p>如果后者没有观测前者的运行结果，即后者没有数据依赖于前者，那么它们可能会被重排序。</p>
+<ul>
+<li>单线程代码的顺序按语法从上至下</li>
+<li>解锁在加锁之前</li>
+<li>volatile字段的写操作在此字段的读操作之前</li>
+<li>线程的启动操作在该线程的第一个操作之前</li>
+<li>线程的最后一个操作在线程终止之前</li>
+<li>A线程对B线程的中断操作在B线程接收中断时间之前</li>
+<li>构造器的最后一个操作在析构器之前。</li>
+<li>happens-before具有传递性</li>
+</ul>
+<h3 id="内存模型的实现"><a href="#内存模型的实现" class="headerlink" title="内存模型的实现"></a>内存模型的实现</h3><p>Java 内存模型是通过内存屏障（memory barrier）来禁止重排序的。</p>
+<p>内存屏障种类：读读、读写、写写、写读</p>
+<p>即时编译器会针对前面提到的每一个 happens-before 关系，向正在编译的目标方法中插入相应的读读、读写、写读以及写写内存屏障。有内存屏障，即时编译器不会重排序。</p>
+<p>处理器：x86_64架构内存屏障：只有写读。对与x86_64架构机器，只有写读屏障会替换为具体的指令。</p>
+<p>JVM使用的指令是lock add DWORD PTR [rsp],0x0。即强制刷新处理器的写缓存到主内存。主内存写操作后无效化其他处理器对此数据所在缓存行的数据。</p>
+<h4 id="锁、volatile，final"><a href="#锁、volatile，final" class="headerlink" title="锁、volatile，final"></a>锁、volatile，final</h4><p>在解锁时，Java 虚拟机需要强制刷新缓存。</p>
+<p>volatile 字段可以看成一种轻量级的、不保证原子性的同步，其性能往往优于（至少不亚于）锁操作。适合读多写少。</p>
+<p>volatile标记的字段不会被分配到寄存器中，每次加载到寄存器计算需要去内存读取。</p>
+<h2 id="sychronized实现"><a href="#sychronized实现" class="headerlink" title="sychronized实现"></a>sychronized实现</h2><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/010e6380ccee4b20e70ebf3474eef600.png" alt="010e6380ccee4b20e70ebf3474eef600"></p>
+<p>偏向锁→轻量级锁（自旋）→重量级锁</p>
+<p>线性执行：所有线程大部分时间使用同一资源的情况。如：数据库插入大量数据，使用MQ打散拆分时，需要用顺序MQ线性执行。</p>
+<p>重量级锁保证共享变量的同步。针对多个线程同时竞争同一把锁的情况。</p>
+<p>轻量级锁，针对线程少量竞争同一把锁的情况。避免很快能拿到锁，却执行了耗资源的操作系统线程阻塞和唤醒操作</p>
+<p>偏向锁只会在第一次请求时采用 CAS 操作，在锁对象的标记字段中记录下当前线程的地址。在之后的运行过程中，持有该偏向锁的线程的加锁操作将直接返回。</p>
+<h3 id="sychronized编译"><a href="#sychronized编译" class="headerlink" title="sychronized编译"></a>sychronized编译</h3><p>锁对象编译生成的字节码包含monitorenter 指令以及多个 monitorexit 指令。</p>
+<p>方法的访问标记包括 ACC_SYNCHRONIZED。该标记表示在进入该方法时，Java 虚拟机进行 monitorenter 操作。而在退出该方法时，不管是正常返回，还是向调用者抛异常，Java 虚拟机进行 monitorexit 操作。</p>
+<h3 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h3><p>为了尽量避免昂贵的线程阻塞、唤醒操作，Java 虚拟机会在线程进入阻塞状态之前，以及被唤醒后竞争不到锁的情况下，进入自旋状态，在处理器上空跑并且轮询锁是否被释放。如果此时锁恰好被释放了，那么当前线程便无须进入阻塞状态，而是直接获得这把锁。</p>
+<p>与线程阻塞相比，自旋状态的线程处于运行状况，只不过跑的是无用指令。可能会浪费大量的处理器资源。</p>
+<h3 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h3><h4 id="加锁操作"><a href="#加锁操作" class="headerlink" title="加锁操作"></a>加锁操作</h4><ol>
+<li>Java 虚拟机会判断是否已经是重量级锁。如果不是，它会在当前线程的当前栈桢中划出一块空间，作为该锁的锁记录，并且将锁对象的标记字段复制到该锁记录中。</li>
+<li>Java 虚拟机会尝试用 CAS（compare-and-swap）操作替换锁对象的标记字段。<ol>
+<li>如果是轻量级锁的状态标记，替换为锁记录地址，获取到轻量级锁；</li>
+<li>如果不是<ol>
+<li>该线程重复获取同一把锁。将锁记录清零，以代表该锁被重复获取。</li>
+<li>其他线程持有该锁，膨胀为重量级锁，阻塞当前线程。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="解锁操作"><a href="#解锁操作" class="headerlink" title="解锁操作"></a>解锁操作</h4><ol>
+<li>当前锁记录（你可以将一个线程的所有锁记录想象成一个栈结构，每次加锁压入一条锁记录，解锁弹出一条锁记录，当前锁记录指的便是栈顶的锁记录）的值为 0，则代表重复进入同一把锁，直接返回。</li>
+<li>Java 虚拟机会尝试用 CAS 操作，比较锁对象的标记字段的值是否为当前锁记录的地址。<ol>
+<li>如果是，则替换为锁记录中的值，也就是锁对象原本的标记字段。此时，该线程已经成功释放这把锁。</li>
+<li>如果不是，则意味着这把锁已经被膨胀为重量级锁。此时，Java 虚拟机会进入重量级锁的释放过程，唤醒因竞争该锁而被阻塞了的线程。</li>
+</ol>
+</li>
+</ol>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><h4 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h4><p>当请求加锁的线程和锁对象标记字段保持的线程地址不匹配时（而且 epoch 值相等，如若不等，那么当前线程可以将该锁重偏向至自己），Java 虚拟机需要撤销该偏向锁。这个撤销过程非常麻烦，它要求持有偏向锁的线程到达安全点，再将偏向锁替换成轻量级锁。</p>
+<h4 id="类偏向锁失效-amp-撤销"><a href="#类偏向锁失效-amp-撤销" class="headerlink" title="类偏向锁失效&amp;撤销"></a>类偏向锁失效&amp;撤销</h4><ul>
+<li><p>失效介绍</p>
+<p>如果某一类锁对象的总撤销数超过了一个阈值20（对应 Java 虚拟机参数 -XX:BiasedLockingBulkRebiasThreshold，默认为 20），那么 Java 虚拟机会宣布这个类的偏向锁失效。</p>
+</li>
+<li><p>失效&amp;撤销实现</p>
+<p>在每个类中维护一个 epoch 值，当设置偏向锁时，Java 虚拟机需要将该 epoch 值复制到锁对象的标记字段中。</p>
+<p>在宣布某个类的偏向锁失效时，Java 虚拟机实则将该类的 epoch 值加 1，表示之前那一代的偏向锁已经失效。而新设置的偏向锁则需要复制新的 epoch 值。</p>
+<p>为了保证当前持有偏向锁并且已加锁的线程不至于因此丢锁，Java 虚拟机需要遍历所有线程的 Java 栈，找出该类已加锁的实例，并且将它们标记字段中的 epoch 值加 1。该操作需要所有线程处于安全点状态。</p>
+</li>
+<li><p>撤销介绍</p>
+<p>如果总撤销数超过阈值40（对应 Java 虚拟机参数 -XX:BiasedLockingBulkRevokeThreshold，默认值为 40），那么 Java 虚拟机会认为这个类已经不再适合偏向锁。此时，Java 虚拟机会撤销该类实例的偏向锁，并且在之后的加锁过程中直接为该类实例设置轻量级锁。</p>
+</li>
+</ul>
+<h2 id="16-17即时编译"><a href="#16-17即时编译" class="headerlink" title="16-17即时编译"></a>16-17即时编译</h2><h3 id="五种编译"><a href="#五种编译" class="headerlink" title="五种编译"></a>五种编译</h3><ol start="0">
+<li><p>解释执行</p>
+</li>
+<li><p>不带profiling的C1编译</p>
+<p>终态，不会再被别的编译</p>
+</li>
+<li><p>带少量profiling(方法调用次数和循环回边计数)的C1编译。</p>
+<p>比全量profiling的C1编译快30%</p>
+</li>
+<li><p>全量profiling的C1编译</p>
+</li>
+<li><p>C2编译</p>
+<p>比C1编译快30%</p>
+<p>终态，不会再被别的编译</p>
+</li>
+</ol>
+<h3 id="编译的选择"><a href="#编译的选择" class="headerlink" title="编译的选择"></a>编译的选择</h3><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231117191235574.png" alt="image-20231117191235574"></p>
+<h3 id="编译的配置"><a href="#编译的配置" class="headerlink" title="编译的配置"></a>编译的配置</h3><p>关闭分层编译，会直接使用C2编译。</p>
+<p>在不启用分层编译的情况下，当方法的调用次数和循环回边的次数的和，超过由参数 -XX:CompileThreshold 指定的阈值时（使用 C1 时，该值为 1500；使用 C2 时，该值为 10000），便会触发即时编译。</p>
+<h3 id="Graal-编译-todo"><a href="#Graal-编译-todo" class="headerlink" title="Graal 编译 todo"></a>Graal 编译 todo</h3><p>Java10引入</p>
+<h3 id="profilling收集种类"><a href="#profilling收集种类" class="headerlink" title="profilling收集种类"></a>profilling收集种类</h3><ol>
+<li>方法调用次数</li>
+<li>循环回边次数</li>
+<li>分支跳转</li>
+<li>instance类型判断</li>
+<li>非私有实例方法调用指令、强制类型转换 checkcast 指令</li>
+<li>引用类型的数组存储 aastore 指令</li>
+<li>等</li>
+</ol>
+<h3 id="优化类别"><a href="#优化类别" class="headerlink" title="优化类别"></a>优化类别</h3><p>if else 剪枝。一直跳转一个分支，会只编译一个分支，遇到判断相同时，跳转到此条件。剪枝还会联动其他优化，如：方法内联。</p>
+<p>instanceof 剪枝</p>
+<h3 id="优化失败处理"><a href="#优化失败处理" class="headerlink" title="优化失败处理"></a>优化失败处理</h3><p>通过预埋陷阱，检测到执行了未优化的分支时，回退到解释执行</p>
+<h3 id="instanceof-判断"><a href="#instanceof-判断" class="headerlink" title="instanceof 判断"></a>instanceof 判断</h3><p>如果 instanceof 的目标类型是 final 类型，那么 Java 虚拟机仅需比较测试对象的动态类型是否为该 final 类型。</p>
+<p>如果目标类型不是 final 类型，比如说 Exception，那么 Java 虚拟机需要从测试对象的动态类型开始，依次测试该类，该类的父类、祖先类，该类所直接实现或者间接实现的接口是否与目标类型一致。</p>
+<h2 id="18即时编译器的中间表达形式"><a href="#18即时编译器的中间表达形式" class="headerlink" title="18即时编译器的中间表达形式"></a>18即时编译器的中间表达形式</h2><p>编译器分为前端和后端。</p>
+<p>​    前端会对所输入的程序进行词法分析、语法分析、语义分析，然后生成中间表达形式，也就是 IR（Intermediate Representation ）。</p>
+<p>​    后端会对 IR 进行优化，然后生成目标代码。</p>
+<p>Java字节码不适合做IR，因为现代编译器一般采用静态单赋值（Static Single Assignment，SSA）IR（每个变量只能被赋值一次）。</p>
+<p>即时编译器会将 Java 字节码转换成 SSA IR。</p>
+<p>SSA IR可以使用工具表达为图。</p>
+<p>如果是为了可读性高，无需优化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x1=<span class="number">4</span>*<span class="number">1024</span> 经过常量折叠后变为 x1=<span class="number">4096</span></span><br><span class="line"></span><br><span class="line">x1=<span class="number">4</span>; y1=x1 经过常量传播后变为 x1=<span class="number">4</span>; y1=<span class="number">4</span></span><br><span class="line"></span><br><span class="line">y1=x1*<span class="number">3</span> 经过强度削减后变为 y1=(x1&lt;&lt;<span class="number">1</span>)+<span class="function">x1</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">if</span><span class="params">(<span class="number">2</span>&gt;<span class="number">1</span>)</span></span>&#123;y1=<span class="number">1</span>;&#125;<span class="keyword">else</span>&#123;y2=<span class="number">1</span>;&#125;经过死代码删除后变为 y1=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="19Java字节码"><a href="#19Java字节码" class="headerlink" title="19Java字节码"></a>19Java字节码</h2><h3 id="基于栈的计算模型"><a href="#基于栈的计算模型" class="headerlink" title="基于栈的计算模型"></a>基于栈的计算模型</h3><p>每当为 Java 方法分配栈桢时，Java 虚拟机需要开辟一块额外的空间作为操作数栈，来存放计算的操作数以及返回结果。</p>
+<p>执行每一条指令之前，Java 虚拟机会提前将指令的操作数已被压入操作数栈中。在执行指令时，Java 虚拟机会将该指令所需的操作数弹出，并且将指令的结果重新压入栈中。</p>
+<p>栈{</p>
+<p>​    栈帧{</p>
+<p>​        操作数栈，</p>
+<p>​        局部变量数组[]</p>
+<p>​    }</p>
+<p>}</p>
+<h3 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h3><h3 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h3><p>字节码程序可以将计算的结果缓存在局部变量区之中。</p>
+<p>依次存放 this 指针（仅非静态方法），所传入的参数，以及字节码中的局部变量。</p>
+<p>long 类型以及 double 类型的值将占据两个单元，其余类型仅占据一个单元。</p>
+<h3 id="Java字节码"><a href="#Java字节码" class="headerlink" title="Java字节码"></a>Java字节码</h3><h3 id="操作数栈字节码"><a href="#操作数栈字节码" class="headerlink" title="操作数栈字节码"></a>操作数栈字节码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pop // 弹出（舍弃）栈顶元素</span><br><span class="line">dup // 复制栈顶元素。常用于复制 new 指令所生成的未经初始化的引用。</span><br></pre></td></tr></table></figure>
+
+<h4 id="变量加载-amp-存储字节码"><a href="#变量加载-amp-存储字节码" class="headerlink" title="变量加载&amp;存储字节码"></a>变量加载&amp;存储字节码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">iload // 加载int类型 </span><br><span class="line">fload // 加载float类型</span><br><span class="line">aload // 加载引用类型</span><br><span class="line">istore // 存储int类型</span><br><span class="line"></span><br><span class="line">iaload // 加载int[]</span><br><span class="line">astore_1 [o] // 加载局部变量数组下标为1，名称为o的Object对象</span><br><span class="line"></span><br><span class="line">iconst // 加载-1至5之间的int值</span><br><span class="line">lconst // 加载0,1的long值</span><br><span class="line">idc // 加载常量池中的常量值</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法调用字节码"><a href="#方法调用字节码" class="headerlink" title="方法调用字节码"></a>方法调用字节码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">invokevirtual</span><br><span class="line">invokestatic</span><br><span class="line">invokespecial</span><br><span class="line">invokedynamic</span><br><span class="line">invokeinterface</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="返回字节码"><a href="#返回字节码" class="headerlink" title="返回字节码"></a>返回字节码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">return //无返回值</span><br><span class="line">ireturn // 返回int</span><br><span class="line">athrow</span><br><span class="line"></span><br><span class="line">iflt 6 // 控制流指令均附带一个或者多个字节码偏移量，代表需要跳转到的位置。</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="计算字节码"><a href="#计算字节码" class="headerlink" title="计算字节码"></a>计算字节码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iadd // 加法，消耗栈顶的两个元素。</span><br><span class="line">iinc M N // 直接作用于局部变量区的指令是 （M 为非负整数，N 为整数）。该指令指的是将局部变量数组的第 M 个单元中的 int 值增加 N，常用于 for 循环中自增量的更新。还有自增、自减</span><br></pre></td></tr></table></figure>
+
+<h3 id="Java-字节码"><a href="#Java-字节码" class="headerlink" title="Java 字节码"></a>Java 字节码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">new 目标类</span><br><span class="line">newarray 目标类</span><br><span class="line">anewarray 目标类 // 新建引用类型数组</span><br><span class="line">multianewarray // 新建多维数组</span><br><span class="line">instanceof 目标类</span><br><span class="line">checkcast 目标类</span><br><span class="line">monitorenter // 为栈顶对象加锁</span><br><span class="line">monitorexit // 为栈顶对象解锁</span><br><span class="line">getstatic // 静态字段访问</span><br><span class="line">getfield // 实例字段访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="20-21方法内联"><a href="#20-21方法内联" class="headerlink" title="20-21方法内联"></a>20-21方法内联</h2><h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><p>没有方法内联，调用一个方法前需要当前方法执行位置，为新方法创建并压入栈帧，访问字段，弹出栈帧，恢复当前方法执行。</p>
+<p>方法内联不仅可以消除调用本身带来的性能开销，还可以进一步触发更多的优化。</p>
+<p>每当碰到方法调用字节码时，C2 将决定是否需要内联该方法调用。</p>
+<p>内联越多，生成代码的执行效率越高。内联越多，编译时间越长，程序达到峰值性能的时刻将被推迟。</p>
+<h3 id="方法内联规则"><a href="#方法内联规则" class="headerlink" title="方法内联规则"></a>方法内联规则</h3><ul>
+<li><p>会内联</p>
+<ol>
+<li>自动拆箱总会被内联</li>
+<li> -XX:CompileCommand 中的 inline 指令指定的方法</li>
+</ol>
+</li>
+<li><p>不会内联</p>
+<ol>
+<li>调用字节码对应的符号引用未被解析</li>
+<li>目标方法所在的类未被初始化</li>
+<li>目标方法是 native 方法</li>
+<li>Throwable 类的方法不能被其他类中的方法所内联</li>
+<li>C2 不支持内联超过 9 层的调用（可以通过虚拟机参数 -XX:MaxInlineLevel 调整），</li>
+<li>C2 不支持1 层的直接递归调用（可以通过虚拟机参数 -XX:MaxRecursiveInlineLevel 调整）。</li>
+<li>由 -XX:CompileCommand 中的 dontinline 指令或 exclude 指令（表示不编译）指定的方法</li>
+</ol>
+</li>
+<li><p>JVM方法内联参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:ReservedCodeCacheSize //编译生成的机器码会被部署到 Code Cache 之中。Code Cache 已满，即时编译已被关闭的警告信息（CodeCache is full. Compiler has been disabled)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/image-20231121164318808.png" alt="image-20231121164318808"></p>
+</li>
+</ul>
+<h3 id="去虚化规则"><a href="#去虚化规则" class="headerlink" title="去虚化规则"></a>去虚化规则</h3><ol>
+<li><p>类型</p>
+<p>List list = new ArrayList(); </p>
+<p>list.add(1);// 明确类型是 ArrayList，可以将ArrayList.add()方法进行内联</p>
+</li>
+<li><p>类层次分析</p>
+<p>假设只有一种调用。其他可能性增加陷阱，命中陷阱，去优化。</p>
+</li>
+<li><p>增加条件去虚化</p>
+<p>动态调用改为明确的多个if {}else{}调用来去虚化</p>
+</li>
+</ol>
+<h2 id="22-虚拟机的intrinsic"><a href="#22-虚拟机的intrinsic" class="headerlink" title="22 虚拟机的intrinsic"></a>22 虚拟机的intrinsic</h2><p>使用高效的CPU指令替代本地实现。</p>
+<p>Java9开始比较多。</p>
+<p>intrinsic的本地方法也能够被方法内联。</p>
+<h2 id="23-逃逸分析"><a href="#23-逃逸分析" class="headerlink" title="23 逃逸分析"></a>23 逃逸分析</h2><p>优化内容：</p>
+<ul>
+<li><p>锁消除</p>
+</li>
+<li><p>标量替换</p>
+<p>方法内联后，没有逃逸出当前方法的对象。会使用标量替换来分配对象。没有使用栈上分配。</p>
+<p>标量替换将原本对对象的字段的访问，替换为一个个局部变量的访问。</p>
+<p>标量替换可能分配在栈上，也可能直接分配在寄存器上。标量替换分配的对像的一个个字段不再连续。</p>
+</li>
+<li><p>if条件部分逃逸分析（Graal编译器实现）</p>
+</li>
+</ul>
+<p>堆上分配：堆上的内容对任何线程都是可见的。Java 虚拟机需要对所分配的堆内存进行管理。</p>
+<h2 id="32JNI"><a href="#32JNI" class="headerlink" title="32JNI"></a>32JNI</h2><h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><p>Java 语言较难表达，甚至是无法表达的应用场景。</p>
+<ol>
+<li>我们希望使用汇编语言（如 X86_64 的 SIMD 指令）来提升关键代码的性能；</li>
+<li>我们希望调用 Java 核心类库无法提供的，某个体系架构或者操作系统特有的功能。</li>
+<li>等</li>
+</ol>
+<p>Java中<code>native</code>修饰的方法.</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>在调用 native 方法前，Java 虚拟机需要将该 native 方法链接至对应的 C 函数上。</p>
+<p>链接方式一：Java 虚拟机自动查找符合默认命名规范的 C 函数，并且链接起来。</p>
+<ol>
+<li>用<code>javac -h . org/example/Test.java</code>命令，将在当前文件夹（对应<code>-h</code>后面跟着的<code>.</code>）生成名为<code>org_example_Test.h</code>的头文件</li>
+<li>编写.c文件，实现.h的方法</li>
+<li>编译.c文件</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="系统预热作用"><a href="#系统预热作用" class="headerlink" title="系统预热作用"></a>系统预热作用</h3><p>缓存加载，C2分层编译执行，对象到老年代，偏向锁失效</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2024/01/10/212Java%E8%AF%AD%E8%A8%80/JVM/%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="Java虚拟机基本原理">http://blog.xiaoruiit.com/2024/01/10/212Java语言/JVM/深入拆解Java虚拟机-Java虚拟机基本原理/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JVM/" rel="tag"># JVM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/30/212Java%E8%AF%AD%E8%A8%80/JavaSE/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/07%E5%85%B6%E4%BB%96%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" rel="prev" title="其他并发模型">
+      <i class="fa fa-chevron-left"></i> 其他并发模型
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/02/09/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E6%9D%BF/" rel="next" title="架构设计模板">
+      架构设计模板 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Java虚拟机基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C"><span class="nav-number">1.1.</span> <span class="nav-text">1.Java代码运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8CJava%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.1.1.</span> <span class="nav-text">Java虚拟机如何运行Java字节码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Java%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">2.Java基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">3.类加载过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-JVM%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">4-5.JVM如何执行方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E7%BC%96%E8%AF%91"><span class="nav-number">1.4.1.</span> <span class="nav-text">方法编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E7%BB%91%E5%AE%9A%E5%92%8C%E5%8A%A8%E6%80%81%E7%BB%91%E5%AE%9A"><span class="nav-number">1.4.2.</span> <span class="nav-text">静态绑定和动态绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.3.</span> <span class="nav-text">虚方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%A1%A8"><span class="nav-number">1.4.4.</span> <span class="nav-text">方法表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E7%BB%91%E5%AE%9A%E7%9B%B8%E5%AF%B9%E4%BA%8E%E9%9D%99%E6%80%81%E7%BB%91%E5%AE%9A%E7%9A%84%E9%A2%9D%E5%A4%96%E6%93%8D%E4%BD%9C"><span class="nav-number">1.4.5.</span> <span class="nav-text">动态绑定相对于静态绑定的额外操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E8%81%94%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.6.</span> <span class="nav-text">内联缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95%E5%BC%80%E9%94%80"><span class="nav-number">1.4.7.</span> <span class="nav-text">调用方法开销</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%BC%82%E5%B8%B8"><span class="nav-number">1.5.</span> <span class="nav-text">6.异常</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E5%BC%82%E5%B8%B8%E6%97%B6Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="nav-number">1.5.1.</span> <span class="nav-text">遇到异常时Java代码执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%88%86%E7%B1%BB"><span class="nav-number">1.5.2.</span> <span class="nav-text">异常分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM%E4%B8%AD%E9%81%87%E5%88%B0%E5%BC%82%E5%B8%B8%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="nav-number">1.5.3.</span> <span class="nav-text">JVM中遇到异常的执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#try-with-resources"><span class="nav-number">1.5.4.</span> <span class="nav-text">try-with-resources</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%8F%8D%E5%B0%84"><span class="nav-number">1.6.</span> <span class="nav-text">7.反射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">反射方法使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.6.2.</span> <span class="nav-text">反射场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%80%A7%E8%83%BD"><span class="nav-number">1.6.3.</span> <span class="nav-text">反射实现与性能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%B1%E5%93%8D%E5%8F%8D%E5%B0%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">影响反射性能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-9-JVM%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84invokedynamic%E6%8C%87%E4%BB%A4"><span class="nav-number">1.7.</span> <span class="nav-text">8-9 JVM执行方法中的invokedynamic指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8F%A5%E6%9F%84"><span class="nav-number">1.7.1.</span> <span class="nav-text">方法句柄</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.7.1.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.7.1.3.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8invokedynamic%E6%8C%87%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.7.2.</span> <span class="nav-text">调用invokedynamic指令的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lamada%E5%AE%9E%E7%8E%B0-amp-%E6%80%A7%E8%83%BD"><span class="nav-number">1.7.3.</span> <span class="nav-text">lamada实现&amp;性能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10Java%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8"><span class="nav-number">1.8.</span> <span class="nav-text">10Java对象的内存使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AE%B9"><span class="nav-number">1.8.1.</span> <span class="nav-text">对象内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E4%B8%BE%E4%BE%8B"><span class="nav-number">1.8.2.</span> <span class="nav-text">对象占用内存举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E6%AE%B5%E9%87%8D%E6%8E%92%E5%88%97"><span class="nav-number">1.8.3.</span> <span class="nav-text">字段重排列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-12%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">1.9.</span> <span class="nav-text">11-12垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E8%AF%86%E5%88%AB"><span class="nav-number">1.9.1.</span> <span class="nav-text">垃圾识别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E6%8A%80%E6%9C%AF%E6%B3%95"><span class="nav-number">1.9.1.1.</span> <span class="nav-text">引用技术法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-number">1.9.1.2.</span> <span class="nav-text">可达性分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#stop-the-wold%E5%92%8C%E5%AE%89%E5%85%A8%E7%82%B9"><span class="nav-number">1.9.1.2.1.</span> <span class="nav-text">stop-the-wold和安全点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%B8%85%E9%99%A4"><span class="nav-number">1.9.2.</span> <span class="nav-text">垃圾清除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%88%86%E4%BB%A3"><span class="nav-number">1.9.3.</span> <span class="nav-text">垃圾分代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B4%E8%BD%BB%E4%BB%A3%E5%9B%9E%E6%94%B6"><span class="nav-number">1.9.4.</span> <span class="nav-text">年轻代回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B9%B4%E8%BD%BB%E4%BB%A3%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86"><span class="nav-number">1.9.4.1.</span> <span class="nav-text">年轻代空间划分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%94%B3%E8%AF%B7%E7%A9%BA%E9%97%B4"><span class="nav-number">1.9.4.2.</span> <span class="nav-text">对象申请空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%A1%E8%A1%A8"><span class="nav-number">1.9.4.3.</span> <span class="nav-text">卡表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E8%A1%8C%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.9.4.4.</span> <span class="nav-text">缓存行实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.10.</span> <span class="nav-text">13Java内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.10.1.</span> <span class="nav-text">代码顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.10.2.</span> <span class="nav-text">内存模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E3%80%81volatile%EF%BC%8Cfinal"><span class="nav-number">1.10.2.1.</span> <span class="nav-text">锁、volatile，final</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sychronized%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.11.</span> <span class="nav-text">sychronized实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sychronized%E7%BC%96%E8%AF%91"><span class="nav-number">1.11.1.</span> <span class="nav-text">sychronized编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">1.11.2.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81"><span class="nav-number">1.11.3.</span> <span class="nav-text">轻量级锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E9%94%81%E6%93%8D%E4%BD%9C"><span class="nav-number">1.11.3.1.</span> <span class="nav-text">加锁操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E9%94%81%E6%93%8D%E4%BD%9C"><span class="nav-number">1.11.3.2.</span> <span class="nav-text">解锁操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E5%90%91%E9%94%81"><span class="nav-number">1.11.4.</span> <span class="nav-text">偏向锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%A4%E9%94%80"><span class="nav-number">1.11.4.1.</span> <span class="nav-text">撤销</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%81%8F%E5%90%91%E9%94%81%E5%A4%B1%E6%95%88-amp-%E6%92%A4%E9%94%80"><span class="nav-number">1.11.4.2.</span> <span class="nav-text">类偏向锁失效&amp;撤销</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-17%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91"><span class="nav-number">1.12.</span> <span class="nav-text">16-17即时编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E7%A7%8D%E7%BC%96%E8%AF%91"><span class="nav-number">1.12.1.</span> <span class="nav-text">五种编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.12.2.</span> <span class="nav-text">编译的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.12.3.</span> <span class="nav-text">编译的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graal-%E7%BC%96%E8%AF%91-todo"><span class="nav-number">1.12.4.</span> <span class="nav-text">Graal 编译 todo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#profilling%E6%94%B6%E9%9B%86%E7%A7%8D%E7%B1%BB"><span class="nav-number">1.12.5.</span> <span class="nav-text">profilling收集种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%B1%BB%E5%88%AB"><span class="nav-number">1.12.6.</span> <span class="nav-text">优化类别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%A4%B1%E8%B4%A5%E5%A4%84%E7%90%86"><span class="nav-number">1.12.7.</span> <span class="nav-text">优化失败处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#instanceof-%E5%88%A4%E6%96%AD"><span class="nav-number">1.12.8.</span> <span class="nav-text">instanceof 判断</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#18%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91%E5%99%A8%E7%9A%84%E4%B8%AD%E9%97%B4%E8%A1%A8%E8%BE%BE%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.13.</span> <span class="nav-text">18即时编译器的中间表达形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#19Java%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.</span> <span class="nav-text">19Java字节码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%A0%88%E7%9A%84%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.14.1.</span> <span class="nav-text">基于栈的计算模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%88"><span class="nav-number">1.14.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E8%A1%A8"><span class="nav-number">1.14.3.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.4.</span> <span class="nav-text">Java字节码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%88%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.5.</span> <span class="nav-text">操作数栈字节码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%8A%A0%E8%BD%BD-amp-%E5%AD%98%E5%82%A8%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.5.1.</span> <span class="nav-text">变量加载&amp;存储字节码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.5.2.</span> <span class="nav-text">方法调用字节码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.5.3.</span> <span class="nav-text">返回字节码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.5.4.</span> <span class="nav-text">计算字节码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-%E5%AD%97%E8%8A%82%E7%A0%81"><span class="nav-number">1.14.6.</span> <span class="nav-text">Java 字节码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#20-21%E6%96%B9%E6%B3%95%E5%86%85%E8%81%94"><span class="nav-number">1.15.</span> <span class="nav-text">20-21方法内联</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">1.15.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%86%85%E8%81%94%E8%A7%84%E5%88%99"><span class="nav-number">1.15.2.</span> <span class="nav-text">方法内联规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E8%99%9A%E5%8C%96%E8%A7%84%E5%88%99"><span class="nav-number">1.15.3.</span> <span class="nav-text">去虚化规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#22-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84intrinsic"><span class="nav-number">1.16.</span> <span class="nav-text">22 虚拟机的intrinsic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23-%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90"><span class="nav-number">1.17.</span> <span class="nav-text">23 逃逸分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#32JNI"><span class="nav-number">1.18.</span> <span class="nav-text">32JNI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.18.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.18.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.19.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%A2%84%E7%83%AD%E4%BD%9C%E7%94%A8"><span class="nav-number">1.19.1.</span> <span class="nav-text">系统预热作用</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

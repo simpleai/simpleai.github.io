@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="JavaSE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaSE">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2023/06/10/212Java%E8%AF%AD%E8%A8%80/JavaSE/2.1JavaSE/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="JavaSE">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/A1lMmGdBrfq5Op7.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/Y6QB1utqgMzTPaH.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/trKIAo2JmuThCYQ.png">
+<meta property="article:published_time" content="2023-06-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T00:46:52.821Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="hbuilderX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/A1lMmGdBrfq5Op7.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2023/06/10/212Java%E8%AF%AD%E8%A8%80/JavaSE/2.1JavaSE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaSE | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2023/06/10/212Java%E8%AF%AD%E8%A8%80/JavaSE/2.1JavaSE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaSE
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-10 00:00:00" itemprop="dateCreated datePublished" datetime="2023-06-10T00:00:00+08:00">2023-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 08:46:52" itemprop="dateModified" datetime="2024-03-15T08:46:52+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">Java语言</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2023/06/10/212Java%E8%AF%AD%E8%A8%80/JavaSE/2.1JavaSE/" class="post-meta-item leancloud_visitors" data-flag-title="JavaSE" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>JavaSE</p>
+<span id="more"></span>
+
+<h3 id="2-1JavaSE"><a href="#2-1JavaSE" class="headerlink" title="2.1JavaSE"></a>2.1JavaSE</h3><ol>
+<li><a href="#%E9%9D%A2%E5%AF%B9%E5%AF%B9%E8%B1%A1%E4%BA%94%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99">面对对象五大基本原则</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">数据类型</a></li>
+<li>对象引用</li>
+<li>关键字</li>
+<li>类与接口</li>
+<li>异常</li>
+<li>集合类</li>
+<li>反射</li>
+<li>多线程</li>
+<li>版本新特性</li>
+<li><a href="#JavaSE%E9%97%AE%E9%A2%98">JavaSE问题</a></li>
+</ol>
+<h4 id="面对对象五大基本原则"><a href="#面对对象五大基本原则" class="headerlink" title="面对对象五大基本原则"></a>面对对象五大基本原则</h4><ol>
+<li><p>单一职责原则</p>
+<p>一个类只负责一类事，不能包罗万象。</p>
+<p>实际操作中职责的大小根据自己的经验来。可尝试定义死板的规则，如：一个方法不能超过10行！</p>
+</li>
+<li><p>开放封闭原则</p>
+<p>对扩展开放，对修改封闭。即增加功能时，增加代码，而不是修改代码。目的：不影响原有代码</p>
+</li>
+<li><p>里氏替换原则</p>
+</li>
+<li><p>依赖倒置原则</p>
+</li>
+<li><p>接口分离原则</p>
+</li>
+</ol>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>基本数据类型，数据类型转型，基础数据类型与 wrapper 数据类型的自动装箱与拆箱，String类型（String，StringBuffer，StringBuilder）</p>
+<h5 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h5><p>基础类型堆上占用内存空间：<br>blooean<br>byte 1字节  -2的8次方~2的8次方-1<br>char 2字节<br>short 2字节<br>int 4字节<br>long 8字节<br>float<br>double</p>
+<p>boolean、byte、char、short 这四种类型，在栈上占用的空间和 int一样<br>32位机器，都是4个字节<br>64位机器，都是8个字节</p>
+<h5 id="String"><a href="#String" class="headerlink" title="String"></a>String</h5><h4 id="对象引用"><a href="#对象引用" class="headerlink" title="对象引用"></a>对象引用</h4><p>四种引用，强引用内存泄漏</p>
+<h5 id="四种引用介绍"><a href="#四种引用介绍" class="headerlink" title="四种引用介绍"></a>四种引用介绍</h5><p>四种：强引用、软引用、弱引用、虚引用。</p>
+<p>GC 时对四种引用处理策略不同。强引用不会被 GC 回收；软引用内存空间不足时会被 GC 回收；弱引用则在每次 GC 时被回收；虚引用必须和引用队列联合使用，主要用于跟踪一个对象被垃圾回收的过程。</p>
+<h5 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h5><p>场景：一般都使用强引用</p>
+<h5 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h5><p>场景：缓存，内存不足时<br>HashMap直接做缓存容易引发内存泄漏</p>
+<h5 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h5><p>场景：对象缓存，如：ThreadLocal，WeakHashMap</p>
+<p>WeakHashMap会在系统内存范围内，保存所有表项目，一旦内存不够，在每次GC时，没有被引用的表项很快会被清除掉，从而避免系统内存溢出。</p>
+<h5 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h5><p>用途：跟踪对象被垃圾回收的情况。<br>场景：对象被回收前执行某些清理操作。</p>
+<h4 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h4><p>static,final,finally,finilize(),volatile,this,supper</p>
+<h5 id="static"><a href="#static" class="headerlink" title="static"></a>static</h5><p>可以修饰类、变量、方法。<br>作用：形成静态代码块优化程序性能<br>特点：在类加载的时候执行一次<br>场景：字符串常量，枚举中的常量，factory对象赋值静态方法，单例对象，策略模式策略类查找定义</p>
+<h5 id="final-final关键字"><a href="#final-final关键字" class="headerlink" title="final ![[final关键字]]"></a>final ![[final关键字]]</h5><h5 id="finally"><a href="#finally" class="headerlink" title="finally"></a>finally</h5><p>finally代码块 中，表示不管是否出现异常，该代码块都会执行，一般用来存放一些关闭资源的代码</p>
+<h5 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h5><ul>
+<li>阻止指令重排序，这样就可以保证多线程变量读写的有序性。</li>
+<li>强制变量的赋值会同步刷新回主内存，强制变量的读取会从主内存重新加载，保证不同的线程总是能够看到该变量的最新值。</li>
+</ul>
+<h5 id="this"><a href="#this" class="headerlink" title="this"></a>this</h5><p>this表示当前对象引用。<br>只能在实例方法中使用，无法在静态方法中使用。</p>
+<h5 id="supper"><a href="#supper" class="headerlink" title="supper"></a>supper</h5><p>表示父类（超类）对象的引用。</p>
+<ol>
+<li><strong>调用父类的方法：</strong> 使用 <code>super</code> 关键字可以在子类中调用父类的方法。通常用于在子类中覆盖（重写）父类的方法，但又想在子类中调用父类的方法。</li>
+<li><strong>访问父类的实例变量</strong></li>
+</ol>
+<h5 id="transient"><a href="#transient" class="headerlink" title="transient"></a><code>transient</code></h5><p>用于标记类的成员变量，表示这些变量不应该被序列化。<br>场景：</p>
+<ol>
+<li>安全性，将密码、密钥等标记为 <code>transient</code>，可以防止它们被序列化。</li>
+<li>减少序列化的时间，有些字段可能包含大量的数据，但在某些情况下并不需要被序列化。<h4 id="类与接口"><a href="#类与接口" class="headerlink" title="类与接口"></a>类与接口</h4></li>
+</ol>
+<h5 id="接口与抽象方法"><a href="#接口与抽象方法" class="headerlink" title="接口与抽象方法"></a>接口与抽象方法</h5><table>
+<thead>
+<tr>
+<th></th>
+<th>接口</th>
+<th>抽象类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>1.8 增加了默认方法。可以在向现有接口添加方法，而不影响现有实现。</td>
+<td></td>
+</tr>
+<tr>
+<td>类继承</td>
+<td>多继承</td>
+<td>单继承</td>
+</tr>
+<tr>
+<td>构造器</td>
+<td>可以有构造器</td>
+<td>不能有构造器</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>更适合定义行为规范。</td>
+<td>更适合共享部分通用实现。</td>
+</tr>
+</tbody></table>
+<h4 id="异常-深入拆解Java虚拟机-Java虚拟机基本原理-6-异常"><a href="#异常-深入拆解Java虚拟机-Java虚拟机基本原理-6-异常" class="headerlink" title="异常 [[深入拆解Java虚拟机-Java虚拟机基本原理#6.异常]]"></a>异常 [[深入拆解Java虚拟机-Java虚拟机基本原理#6.异常]]</h4><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><p>hashmap，ArrayList，LinkedList</p>
+<h5 id="hashmap扩容原理"><a href="#hashmap扩容原理" class="headerlink" title="hashmap扩容原理"></a>hashmap扩容原理</h5><ul>
+<li><p>1.7</p>
+<ol>
+<li>生成新数组，长度为原数组两倍</li>
+<li>遍历原hashmap的每个元素，重新计算hash值，将其添加到新数组中</li>
+<li>转移完成后，将新数组赋值给HashMap的table属性</li>
+</ol>
+</li>
+<li><p>1.8</p>
+<ol>
+<li>元素个数超过了负载因子<code>*</code>当前容量时，触发扩容</li>
+<li>生成新数组，长度为原数组的两倍</li>
+<li>遍历老数组的所有元素，重新计算哈希码，将其放入新数组中。</li>
+<li>如果元素在新桶中的索引位置上已经有其他元素存在了，那么新的元素会以链表或红黑树的形式插入到该位置。如果桶中的元素数量小于等于 8（TREEIFY_THRESHOLD），则会以链表的形式存储，如果大于 8，则会将链表转换为红黑树并插入。</li>
+<li>转移完成后，将新数组赋值给HashMap的table属性。</li>
+</ol>
+</li>
+</ul>
+<h4 id="反射-深入拆解Java虚拟机-Java虚拟机基本原理-7-反射"><a href="#反射-深入拆解Java虚拟机-Java虚拟机基本原理-7-反射" class="headerlink" title="反射 [[深入拆解Java虚拟机-Java虚拟机基本原理#7.反射]]"></a>反射 [[深入拆解Java虚拟机-Java虚拟机基本原理#7.反射]]</h4><p>如何使用，使用场景</p>
+<h4 id="多线程-TODO"><a href="#多线程-TODO" class="headerlink" title="多线程 TODO"></a>多线程 TODO</h4><p>作用，场景，线程状态转换，同步机制（CAS，synchronized和lock），线程池，java并发工具包 JUC，其他概念，线程分析工具，实战</p>
+<h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>最大化利用 CPU 和 I/O。</p>
+<h5 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h5><ol>
+<li>web容器处理请求</li>
+<li>异步，记录日志，操作记录。</li>
+<li>同步数据，同步下游系统、企业微信数据。</li>
+<li>定时向大量（100w以上）的用户发送邮件</li>
+</ol>
+<h5 id="线程状态转换"><a href="#线程状态转换" class="headerlink" title="线程状态转换"></a>线程状态转换</h5><p>6种状态<br>sleep，wait<br>相同：都会暂停线程<br>不同：<br>    1.sleep是thread的静态方法，wait是object类的方法<br>    2.线程sleep期间，占有资源的锁，wait释放了资源锁<br>    3.sleep在指定时间后继续执行，wait需要调用notify方法唤醒。</p>
+<p>线程的状态：新建，就绪，运行，阻塞，死亡。</p>
+<p>线程的创建：1.thread类 2.runnable接口3.callable接口</p>
+<p>bug管理：mantis，ones<br><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/A1lMmGdBrfq5Op7.png" alt="image-20210615090422551"></p>
+<h5 id="同步机制"><a href="#同步机制" class="headerlink" title="同步机制"></a>同步机制</h5><p>锁概念，CAS，synchronized，Lock，volatile关键字</p>
+<h6 id="锁概念"><a href="#锁概念" class="headerlink" title="锁概念"></a>锁概念</h6><p>重量级锁、轻量级锁、自旋锁、偏向锁、重入锁、读写锁</p>
+<h6 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h6><p>乐观锁的一种实现方式。</p>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>并发高时CPU消耗大。并发高时，可能重复执行 读取数据→操作数据→值是否改变的过程，消耗CPU。</li>
+</ol>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/Y6QB1utqgMzTPaH.png" alt="CAS流程"></p>
+<p><strong>问题：</strong>CAS中的ABA</p>
+<p><strong>描述：</strong>线程 T1 读取值 A 之后；发生两次写入，先由线程 T2 写回了 B，又由 T3 写回了 A；此时 T1 在写回比较时，值还是 A。</p>
+<p><strong>解决：</strong></p>
+<ol>
+<li>状态位，版本号</li>
+<li>JUC中的相关类。</li>
+</ol>
+<h6 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h6><p>记录了对象信息。</p>
+<p>Java1.6为<code>Synchronized</code>做了优化，增加了从偏向锁到轻量级锁再到重量级锁的过度。</p>
+<p><strong>锁升级过程</strong>：</p>
+<p>第一个线程获得的是偏向锁。</p>
+<p>第二个线程获得的是轻量级锁，底层是在用自旋锁。</p>
+<p>自旋一定次数后，轻量级锁升级为重量级锁，线程进入blocked状态</p>
+<p><strong>性能低的原因</strong>：</p>
+<ol>
+<li>重量级锁的线程会进入<code>BLOCKED</code>状态，而后在争夺到锁资源后恢复为<code>RUNNABLE</code>状态，其中涉及到操作系统用户模式和内核模式的转换，代价比较高。</li>
+</ol>
+<h6 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h6><p>AQS，ReentrantLock</p>
+<p>synchronized与lock的区别？TODO<br>相同：都用来实现线程同步<br>不同：<br>    1.sy是Java中的关键字，lock是接口<br>    2.sy不会导致死锁，线程异常会释放锁。lock需要调用unlock主动释放。<br>    3.大量锁竞争时lock性能高很多。少量锁竞争性能差不多。</p>
+<p>sy和reentrantlock（可重入锁）的区别？<br>相同：都是可重入锁，支持一个线程对资源重复加锁。<br>不同：<br>    1.sy依赖jvm，re依赖Java的api<br>    2.re有高级功能。1.等待可中断。2.支持公平锁。3.选择性通知。</p>
+<h5 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h5><p>作用，特点和使用场景，线程池参数，线程池执行流程，工作原理</p>
+<h6 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h6><p>复用线程，创建线程、销毁线程都需要大量资源，用线程池复用线程节约资源，也提高了处理速度。</p>
+<h6 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h6><p>常见的线程池和使用场景？<br>    1.newCachedThreadPool：新建可缓存线程池，线程池中的线程数量超过处理需要时，可灵活回收。<br>    2.创建一个定长线程池，超出时在队列中等待。<br>线程池的工作队列？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Executors.newSingleThreadExecutor() // 单线程的线程池。保证顺序执行并且只有一个线程执行。定时拉取考勤。旧系统人员、部门、岗位数据</span><br><span class="line"></span><br><span class="line">Executors.newFixedThreadPool()// 固定大小的线程池。</span><br><span class="line">/* 1.cpu密集型。线程数=CPU核数+1（计算(CPU)密集型的线程恰好在某时因为发生一个页错误或者因其他原因而暂停，刚好有一个“额外”的线程，可以确保在这种情况下CPU周期不会中断工作）。</span><br><span class="line">	2.I/O 密集型。线程数=CPU核心数 * (1 + (I/O耗时 / CPU耗时))</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="线程池参数"><a href="#线程池参数" class="headerlink" title="线程池参数"></a>线程池参数</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Creates a new &#123;@code ThreadPoolExecutor&#125; with the given initial</span><br><span class="line">     * parameters.</span><br><span class="line">     *</span><br><span class="line">     * @param corePoolSize the number of threads to keep in the pool, even</span><br><span class="line">     *        if they are idle, unless &#123;@code allowCoreThreadTimeOut&#125; is set</span><br><span class="line">     * @param maximumPoolSize the maximum number of threads to allow in the</span><br><span class="line">     *        pool</span><br><span class="line">     * @param keepAliveTime when the number of threads is greater than</span><br><span class="line">     *        the core, this is the maximum time that excess idle threads</span><br><span class="line">     *        will wait for new tasks before terminating.</span><br><span class="line">     * @param unit the time unit for the &#123;@code keepAliveTime&#125; argument</span><br><span class="line">     * @param workQueue the queue to use for holding tasks before they are</span><br><span class="line">     *        executed.  This queue will hold only the &#123;@code Runnable&#125;</span><br><span class="line">     *        tasks submitted by the &#123;@code execute&#125; method.</span><br><span class="line">     * @param threadFactory the factory to use when the executor</span><br><span class="line">     *        creates a new thread</span><br><span class="line">     * @param handler the handler to use when execution is blocked</span><br><span class="line">     *        because the thread bounds and queue capacities are reached</span><br><span class="line">     */</span><br><span class="line">    public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                              int maximumPoolSize,</span><br><span class="line">                              long keepAliveTime,</span><br><span class="line">                              TimeUnit unit,</span><br><span class="line">                              BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                              ThreadFactory threadFactory,</span><br><span class="line">                              RejectedExecutionHandler handler) &#123;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="线程池执行流程"><a href="#线程池执行流程" class="headerlink" title="线程池执行流程"></a>线程池执行流程</h6><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/trKIAo2JmuThCYQ.png" alt="image-20210828095532683"></p>
+<h6 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h6><p>内部通过队列+线程实现，需要线程处理新的任务时：</p>
+<ol>
+<li>线程池中的线程数量小于corePoolSize时，创建新的线程处理。</li>
+<li>线程池的线程数量等于corePoolsize时，缓冲度列workQueue未满，任务加入缓冲队列。</li>
+<li>线程池的线程数量大于等于corePoolsize时，缓冲度列workQueue已满，线程池的数量小于maximumPoolSize，新建线程处理。</li>
+<li>线程池的线程数量等于corePoolsize时，缓冲度列workQueue已满，线程池的数量等于maximumPoolSize，通过handler指定策略处理。</li>
+<li>当线程池中的线程数量⼤于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终⽌。</li>
+</ol>
+<h6 id="线程池个数"><a href="#线程池个数" class="headerlink" title="线程池个数"></a>线程池个数</h6><ol>
+<li><p>计算操作需要5ms，DB操作需要 100ms，对于一台 8个CPU的服务器，怎么设置数据库连接池线程数呢？</p>
+<p>答：线程数=8*（1+100/5） = 168个。</p>
+</li>
+<li><p>上题的基础上如果DB的 QPS（Query Per Second）上限是1000，此时这个线程数又该设置为多大呢？</p>
+<p>答：1个线程每秒处理的任务数是 1000/105。  1000QPS / （1000/105） = 105 个线程。</p>
+</li>
+</ol>
+<h5 id="并发工具包：-JUC"><a href="#并发工具包：-JUC" class="headerlink" title="并发工具包： JUC"></a>并发工具包： JUC</h5><p>（concurrentHashMap，CopyOnWriteArrayList，Locks（Reentrantlock），AtomicXXX，Executor，Caller&amp;Future，Queue，LongAdder）</p>
+<h6 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h6><p>扩容原理</p>
+<ul>
+<li>1.7 <ol>
+<li>基于Segment分段实现</li>
+<li>每个Segment相当于一个小的Hashmap</li>
+<li>每个Segment内容会进行扩容，与HashMap扩容类似</li>
+</ol>
+</li>
+</ul>
+<p>segament</p>
+<ul>
+<li>1.8 <ol>
+<li>某个线程put时，发现别的线程在扩容，加入该线程一块扩容。</li>
+<li>某个线程put后，容量超过阈值，进行扩容。</li>
+<li>扩容时先复制数组，将数据分段给子线程分别扩容。</li>
+</ol>
+</li>
+</ul>
+<h6 id="Reentrantlock"><a href="#Reentrantlock" class="headerlink" title="Reentrantlock"></a>Reentrantlock</h6><p>特点：</p>
+<ul>
+<li><p>使用 int 标记加锁</p>
+</li>
+<li><p>可重入锁，有公平锁和非公平锁两种实现，公平和非公平是对获取锁，阻塞唤醒是一样的。</p>
+</li>
+<li><p>可以多次加锁，需要多次释放锁。</p>
+</li>
+<li><p>需要手动加解锁。</p>
+</li>
+</ul>
+<h6 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h6><p>底层原理：</p>
+<ol>
+<li>内部使用数组实现</li>
+<li>添加元素的实现，加Reentrantlock锁，复制数组为两倍容量，添加元素，旧数组指向新数组。</li>
+<li>添加元素时，写操作加锁，在新数组上进行，读操作在原数组进行</li>
+</ol>
+<p>总结：</p>
+<ul>
+<li><p>CopyOnWriteArrayList允许在写操作时来读取数据，⼤⼤提⾼了读的性能，因此适合读多写少的应 ⽤场景。</p>
+</li>
+<li><p>CopyOnWriteArrayList⽐较占内存，同时可能读到的数据不是实时最新的数据，所 以不适合实时性要求很⾼的场景 。</p>
+</li>
+</ul>
+<h5 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h5><p>死锁的4个基本条件，竞争条件与临界区，线程间通信方式，JAVA提供的多线程机制，线程同步与异步、阻塞与非阻塞</p>
+<h6 id="线程间通信方式"><a href="#线程间通信方式" class="headerlink" title="线程间通信方式"></a>线程间通信方式</h6><p>wait，notify，notifyAll</p>
+<h6 id="JAVA提供的多线程机制"><a href="#JAVA提供的多线程机制" class="headerlink" title="JAVA提供的多线程机制"></a>JAVA提供的多线程机制</h6><p>ThreadLocal 用来保存线程独享的数据，Fork/Join 机制用于大任务的分割与汇总，Volatile 对多线程数据可见性的保证，线程的中断机制</p>
+<h6 id="线程同步与异步，阻塞与非阻塞"><a href="#线程同步与异步，阻塞与非阻塞" class="headerlink" title="线程同步与异步，阻塞与非阻塞"></a>线程同步与异步，阻塞与非阻塞</h6><p>线程的同步与异步、阻塞与非阻塞，同步和异步的区别在于任务是否是同一个线程执行，阻塞与非阻塞的区别在于异步执行任务时，线程是会阻塞等待结果，还是会继续执行后续逻辑。</p>
+<h5 id="线程分析工具"><a href="#线程分析工具" class="headerlink" title="线程分析工具"></a>线程分析工具</h5><p>线程分析工具与方法，例如会用 jstack 分析线程的运行状态，查找锁对象持有状况等。</p>
+<h5 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h5><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/374561361">https://zhuanlan.zhihu.com/p/374561361</a></p>
+<h4 id="版本特性-TODO"><a href="#版本特性-TODO" class="headerlink" title="版本特性 TODO"></a>版本特性 TODO</h4><p>Java特性：函数式接口</p>
+<h5 id="V1-8"><a href="#V1-8" class="headerlink" title="V1.8"></a>V1.8</h5><p>Lambda表达式，Stream API，方法引用，接口默认方法，Metaspace（元空间）替换PermGen</p>
+<h5 id="V1-9"><a href="#V1-9" class="headerlink" title="V1.9"></a>V1.9</h5><p>模块系统，默认G1回收器（1.7推出），接口私有方法，局部变量推断，Graal编译器</p>
+<h5 id="V1-11"><a href="#V1-11" class="headerlink" title="V1.11"></a>V1.11</h5><p>ZGC，字符串API增强，内建HTTP Client</p>
+<h4 id="JavaSE问题"><a href="#JavaSE问题" class="headerlink" title="JavaSE问题"></a>JavaSE问题</h4><ol>
+<li><p>面向过程和面向对象的区别<br> 相同：都是解决问题的思路、方法<br> 不同：</p>
+<ol>
+<li>面向过程将解决问题拆解为一个个步骤，偏向底层和细节，强调对问题进行分解。</li>
+<li>面对对像是把一个个问题抽象为一个个对象，通过对象之间的交互来实现功能。 如：HR来负责协调面试时间。</li>
+</ol>
+</li>
+<li><p>类访问权限</p>
+</li>
+<li><p>重载与重写</p>
+<pre><code>方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。
+重载：发生在同一个类中，方法名相同参数列表不同（参数类型不同、个数不同、顺序不同），与方法返回值和访问修饰符无关，即重载的方法不能根据返回类型进行区分。比如：构造函数的重载，无参构造+有参构造；比如：字符串的截取，一个是从开始位置截取到最后；还有一个同名方法是指定开始位置和结束位置。有意思的是，JVM运行字节码可以区分不同的返回类型，但Java转字节码是不允许相同参数不同返回值的。
+重写：发生在父子类中，方法名、参数列表相同，如：对象重写equals、hashcode方法；  返回值小于等于父类，抛出的异常小于等于父类，访问修饰符大于等于父类（里氏代换原则）；如果父类方法访问修饰符为private则子类中就不是重写。
+</code></pre>
+</li>
+<li><p>equals，hashcode方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">默认情况下，equals()方法比较的是两个对象的引用是否相等，即是否指向同一个对象实例。</span><br><span class="line">默认情况下，hashCode()方法返回的是堆上的实例对象的哈希值。相同的对象实例内容，hashCode()返回不同。</span><br><span class="line">HashSet、HashMap、HashTable等集合类，都会先根据对象的hashCode()方法来判断对象是否相等，不相等时，放入集合中；相等时，再根据equals()方法来判断是否真的相等。</span><br><span class="line">我们日常比较对象一般也是希望比较对象内容是否相同</span><br></pre></td></tr></table></figure></li>
+<li><p>String、StringBuillder、StringBuffer</p>
+<ul>
+<li><p>介绍<br>String是线程安全的，不可被继承。会在静态区分配内存，new 对象时，会在堆上也分配。<br>StringBuilder是线程不安全的，比StringBuffer性能高10%-15%。在堆上分配<br>StringBuffer是线程安全的，在StringBuilder的基础上对方法增加了synchronized。</p>
+</li>
+<li><p>场景<br>单线程大量操作使用StringBuilder。<br>多线程大量操作使用StringBuffer。</p>
+</li>
+</ul>
+</li>
+<li><p>ArrayList和LinkedList的区别<br> ArrayList底层是数组，按占下标查找快，删除慢，需要移动删除位置之后的所有元素。我们一般查数据库返回的就是用ArrayList接收。<br> LinkedList底层是双向链表，查询慢，增删改快。以前使用Hutool导出excel数据无序使用过。</p>
+</li>
+<li><p>深拷贝和浅拷贝的区别是什么?<br> 浅拷贝:两个对象属性中的对象引用都指向同一个对象。修改一个对象的值，另一个也会改变。我们一般需要用深拷贝<br> 深拷贝:拷贝的时候，所有对象都会再new一次，会多占一些空间</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2023/06/10/212Java%E8%AF%AD%E8%A8%80/JavaSE/2.1JavaSE/" title="JavaSE">http://blog.xiaoruiit.com/2023/06/10/212Java语言/JavaSE/2.1JavaSE/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hbuilderX/" rel="tag"># hbuilderX</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/09/213Java%E6%A1%86%E6%9E%B6/XXLJOB/" rel="prev" title="XXLJOB使用">
+      <i class="fa fa-chevron-left"></i> XXLJOB使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/06/10/%E5%B7%A5%E5%85%B7/hbuilderX%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95/" rel="next" title="hbuilderX真机调试">
+      hbuilderX真机调试 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1JavaSE"><span class="nav-number">1.</span> <span class="nav-text">2.1JavaSE</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%A2%E5%AF%B9%E5%AF%B9%E8%B1%A1%E4%BA%94%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99"><span class="nav-number">1.1.</span> <span class="nav-text">面对对象五大基本原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">基本数据类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#String"><span class="nav-number">1.2.2.</span> <span class="nav-text">String</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">对象引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E5%BC%95%E7%94%A8%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.3.1.</span> <span class="nav-text">四种引用介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%BA%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">强引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BD%AF%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.3.</span> <span class="nav-text">软引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%B1%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">弱引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%99%9A%E5%BC%95%E7%94%A8"><span class="nav-number">1.3.5.</span> <span class="nav-text">虚引用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.4.</span> <span class="nav-text">关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#static"><span class="nav-number">1.4.1.</span> <span class="nav-text">static</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#final-final%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.4.2.</span> <span class="nav-text">final ![[final关键字]]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#finally"><span class="nav-number">1.4.3.</span> <span class="nav-text">finally</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#volatile"><span class="nav-number">1.4.4.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#this"><span class="nav-number">1.4.5.</span> <span class="nav-text">this</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#supper"><span class="nav-number">1.4.6.</span> <span class="nav-text">supper</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#transient"><span class="nav-number">1.4.7.</span> <span class="nav-text">transient</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.5.</span> <span class="nav-text">类与接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E4%B8%8E%E6%8A%BD%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.1.</span> <span class="nav-text">接口与抽象方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8-%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86-6-%E5%BC%82%E5%B8%B8"><span class="nav-number">1.6.</span> <span class="nav-text">异常 [[深入拆解Java虚拟机-Java虚拟机基本原理#6.异常]]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">1.7.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#hashmap%E6%89%A9%E5%AE%B9%E5%8E%9F%E7%90%86"><span class="nav-number">1.7.1.</span> <span class="nav-text">hashmap扩容原理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84-%E6%B7%B1%E5%85%A5%E6%8B%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86-7-%E5%8F%8D%E5%B0%84"><span class="nav-number">1.8.</span> <span class="nav-text">反射 [[深入拆解Java虚拟机-Java虚拟机基本原理#7.反射]]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B-TODO"><span class="nav-number">1.9.</span> <span class="nav-text">多线程 TODO</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">1.9.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.9.2.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.9.3.</span> <span class="nav-text">线程状态转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6"><span class="nav-number">1.9.4.</span> <span class="nav-text">同步机制</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%94%81%E6%A6%82%E5%BF%B5"><span class="nav-number">1.9.4.1.</span> <span class="nav-text">锁概念</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CAS"><span class="nav-number">1.9.4.2.</span> <span class="nav-text">CAS</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#synchronized"><span class="nav-number">1.9.4.3.</span> <span class="nav-text">synchronized</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Lock"><span class="nav-number">1.9.4.4.</span> <span class="nav-text">Lock</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.9.5.</span> <span class="nav-text">线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8-1"><span class="nav-number">1.9.5.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.9.5.2.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8F%82%E6%95%B0"><span class="nav-number">1.9.5.3.</span> <span class="nav-text">线程池参数</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.9.5.4.</span> <span class="nav-text">线程池执行流程</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.9.5.5.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AA%E6%95%B0"><span class="nav-number">1.9.5.6.</span> <span class="nav-text">线程池个数</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E5%8C%85%EF%BC%9A-JUC"><span class="nav-number">1.9.6.</span> <span class="nav-text">并发工具包： JUC</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ConcurrentHashMap"><span class="nav-number">1.9.6.1.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Reentrantlock"><span class="nav-number">1.9.6.2.</span> <span class="nav-text">Reentrantlock</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CopyOnWriteArrayList"><span class="nav-number">1.9.6.3.</span> <span class="nav-text">CopyOnWriteArrayList</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%A6%82%E5%BF%B5"><span class="nav-number">1.9.7.</span> <span class="nav-text">其他概念</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="nav-number">1.9.7.1.</span> <span class="nav-text">线程间通信方式</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#JAVA%E6%8F%90%E4%BE%9B%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6"><span class="nav-number">1.9.7.2.</span> <span class="nav-text">JAVA提供的多线程机制</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5%EF%BC%8C%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="nav-number">1.9.7.3.</span> <span class="nav-text">线程同步与异步，阻塞与非阻塞</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">1.9.8.</span> <span class="nav-text">线程分析工具</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">1.9.9.</span> <span class="nav-text">实战</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7-TODO"><span class="nav-number">1.10.</span> <span class="nav-text">版本特性 TODO</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#V1-8"><span class="nav-number">1.10.1.</span> <span class="nav-text">V1.8</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#V1-9"><span class="nav-number">1.10.2.</span> <span class="nav-text">V1.9</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#V1-11"><span class="nav-number">1.10.3.</span> <span class="nav-text">V1.11</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaSE%E9%97%AE%E9%A2%98"><span class="nav-number">1.11.</span> <span class="nav-text">JavaSE问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
