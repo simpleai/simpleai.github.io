@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="sql脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql脚本">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2020/01/07/214%E6%95%B0%E6%8D%AE%E5%BA%93/sql%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="sql脚本">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-18T01:24:32.315Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="脚本">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2020/01/07/214%E6%95%B0%E6%8D%AE%E5%BA%93/sql%E8%84%9A%E6%9C%AC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>sql脚本 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/01/07/214%E6%95%B0%E6%8D%AE%E5%BA%93/sql%E8%84%9A%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sql脚本
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-07 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-07T00:00:00+08:00">2020-01-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 09:24:32" itemprop="dateModified" datetime="2024-03-18T09:24:32+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/01/07/214%E6%95%B0%E6%8D%AE%E5%BA%93/sql%E8%84%9A%E6%9C%AC/" class="post-meta-item leancloud_visitors" data-flag-title="sql脚本" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>sql脚本</p>
+<span id="more"></span>
+
+<h1 id="sql使用-高级"><a href="#sql使用-高级" class="headerlink" title="sql使用-高级"></a>sql使用-高级</h1><h2 id="comment"><a href="#comment" class="headerlink" title="comment"></a>comment</h2><p>information_schema库的COLUMNS表，里面记录了mysql所有库中所有表的字段信息</p>
+<p>字段信息解释：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lkforce/article/details/79557482">https://blog.csdn.net/lkforce/article/details/79557482</a></p>
+<h3 id="查看某个库所有表的注释"><a href="#查看某个库所有表的注释" class="headerlink" title="查看某个库所有表的注释"></a>查看某个库所有表的注释</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	table_name 表名,</span><br><span class="line">	table_comment 表说明 </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	table_schema <span class="operator">=</span> <span class="string">&#x27;要查询的库&#x27;</span> </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br><span class="line">	table_name;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="rank"><a href="#rank" class="headerlink" title="rank"></a>rank</h2><h3 id="某个库所有表添加共同列"><a href="#某个库所有表添加共同列" class="headerlink" title="某个库所有表添加共同列"></a>某个库所有表添加共同列</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	concat( <span class="string">&#x27;ALTER TABLE &#x27;</span>, table_schema, <span class="string">&#x27;.&#x27;</span>, table_name, <span class="string">&#x27; ADD COLUMN te_id varchar(64) COMMENT &quot;租户id&quot;, </span></span><br><span class="line"><span class="string">	ADD COLUMN bran_id varchar(64) COMMENT &quot;品牌id&quot;;</span></span><br><span class="line"><span class="string">	&#x27;</span> ) </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES t</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	table_schema <span class="operator">=</span> <span class="string">&#x27;table_name&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="某个库的所有表共同列初始化值"><a href="#某个库的所有表共同列初始化值" class="headerlink" title="某个库的所有表共同列初始化值"></a>某个库的所有表共同列初始化值</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	concat( <span class="string">&#x27;update &#x27;</span>, table_schema, <span class="string">&#x27;.&#x27;</span>, table_name, <span class="string">&#x27; set te_id = &quot;C001&quot;,bran_id = 100;&#x27;</span> ) s</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES t </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	table_schema <span class="operator">=</span> <span class="string">&#x27;table_name&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="select"><a href="#select" class="headerlink" title="select"></a>select</h2><h3 id="根据值-条件）查不同字段（列）"><a href="#根据值-条件）查不同字段（列）" class="headerlink" title="根据值(条件）查不同字段（列）"></a>根据值(条件）查不同字段（列）</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span>   </span><br><span class="line">	sbi.goods_code,  </span><br><span class="line">	sbi.goods_name,  </span><br><span class="line">	<span class="keyword">case</span> sbi.is_review_stock <span class="keyword">when</span> <span class="number">1</span> <span class="keyword">then</span> sbi.review_theoretical_count <span class="keyword">when</span> <span class="number">0</span> <span class="keyword">then</span> sbi.theoretical_count <span class="keyword">end</span> theoretical_count</span><br><span class="line"><span class="keyword">FROM</span>  </span><br><span class="line">	sexytea_pss.t_item sbi   </span><br><span class="line"><span class="keyword">WHERE</span>  </span><br><span class="line">	<span class="keyword">AND</span> sb.`status` <span class="operator">=</span> &quot;FINISHED&quot;   </span><br><span class="line">	<span class="keyword">AND</span> sb.commit_time <span class="operator">&gt;</span> &quot;2022-10-31 12:00:00&quot;   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="对比两列值差集（A-B）"><a href="#对比两列值差集（A-B）" class="headerlink" title="对比两列值差集（A-B）"></a>对比两列值差集（A-B）</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">  a.code</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  a</span><br><span class="line">  <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> b <span class="keyword">ON</span> a.code <span class="operator">=</span> b.code </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">  b.code <span class="keyword">IS</span> <span class="keyword">NULL</span>；</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查询所有非系统库的表的注释"><a href="#查询所有非系统库的表的注释" class="headerlink" title="查询所有非系统库的表的注释"></a>查询所有非系统库的表的注释</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	table_schema 库名,</span><br><span class="line">	table_name 表名,</span><br><span class="line">	table_comment 表说明 </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	table_schema <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&#x27;mysql&#x27;</span>,<span class="string">&#x27;information_schema&#x27;</span>,<span class="string">&#x27;performance_schema&#x27;</span>,<span class="string">&#x27;sys&#x27;</span>)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br><span class="line">	table_name;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查询某个库所有表及字段的注释"><a href="#查询某个库所有表及字段的注释" class="headerlink" title="查询某个库所有表及字段的注释"></a>查询某个库所有表及字段的注释</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	a.table_name 表名,</span><br><span class="line">	a.table_comment 表说明,</span><br><span class="line">	b.COLUMN_NAME 字段名,</span><br><span class="line">	b.column_comment 字段说明,</span><br><span class="line">	b.column_type 字段类型,</span><br><span class="line">	b.column_key 约束 </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES a</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> information_schema.COLUMNS b <span class="keyword">ON</span> a.table_name <span class="operator">=</span> b.TABLE_NAME </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	a.table_schema <span class="operator">=</span> <span class="string">&#x27;要查询的库&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br><span class="line">	a.table_name</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询某表的所有字段的注释，按照字段顺序排列"><a href="#查询某表的所有字段的注释，按照字段顺序排列" class="headerlink" title="查询某表的所有字段的注释，按照字段顺序排列"></a>查询某表的所有字段的注释，按照字段顺序排列</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	COLUMN_NAME 列名,</span><br><span class="line">	COLUMN_COMMENT 描述,</span><br><span class="line">	COLUMN_TYPE 数据类型,</span><br><span class="line">	if(IS_NULLABLE <span class="operator">=</span> <span class="string">&#x27;NO&#x27;</span>, <span class="string">&#x27;NO&#x27;</span>,<span class="string">&#x27;&#x27;</span>) <span class="keyword">AS</span> <span class="string">&#x27;是否为空&#x27;</span>,</span><br><span class="line">	COLUMN_KEY <span class="keyword">AS</span> <span class="string">&#x27;约束条件&#x27;</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.COLUMNS </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;要查询的库&#x27;</span></span><br><span class="line">	<span class="keyword">AND</span> table_name <span class="operator">=</span> <span class="string">&#x27;要查询的表&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ORDINAL_POSITION;</span><br></pre></td></tr></table></figure>
+
+<h2 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h2><h3 id="插入另一张的内容"><a href="#插入另一张的内容" class="headerlink" title="插入另一张的内容"></a>插入另一张的内容</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span>	mdm_post_post_type;</span><br><span class="line"># 插入另一张表</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> mdm_post_post_type ( post_post_type_id, post_code, type_id, is_del )</span><br><span class="line"> <span class="keyword">SELECT</span> post_id, p.post_code, p.type_id, <span class="number">0</span> <span class="keyword">FROM</span> mdm_post p <span class="keyword">WHERE</span> p.type_id <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> ;</span><br><span class="line"># 修改雪花id前缀</span><br><span class="line">update mdm_post_post_type ppt1, mdm_post_post_type ppt2 <span class="keyword">set</span> ppt1.post_post_type_id <span class="operator">=</span> (concat(<span class="string">&#x27;PPTY&#x27;</span>,<span class="built_in">substring</span>(ppt1.post_post_type_id, <span class="number">4</span>) ) ) <span class="keyword">where</span> ppt1.post_post_type_id <span class="operator">=</span> ppt2.post_post_type_id;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="update"><a href="#update" class="headerlink" title="update"></a>update</h2><h3 id="修改表字段-名称和类型"><a href="#修改表字段-名称和类型" class="headerlink" title="修改表字段 名称和类型"></a>修改表字段 名称和类型</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 CHANGE 旧字段名 新字段名  <span class="type">VARCHAR</span> ( <span class="number">64</span> ) comment <span class="string">&#x27;主键&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据表字符集和排序规则"><a href="#修改数据表字符集和排序规则" class="headerlink" title="修改数据表字符集和排序规则"></a>修改数据表字符集和排序规则</h3><p>– 使用方法：先执行如下脚本生成修改数据表和表字段的脚本，然后再执行这些生成的脚本。<br>– 修改指定数据库中所有数据表的字符集为 utf8mb4，并将排序规则修改为 utf8mb4_unicode_ci</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	CONCAT( <span class="string">&#x27;ALTER TABLE &#x27;</span>, table_name, <span class="string">&#x27; CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;&#x27;</span> ) </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.TABLES </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;库名&#x27;</span> </span><br><span class="line">	<span class="keyword">AND</span> table_name <span class="keyword">IN</span> (</span><br><span class="line">		<span class="string">&#x27;hr_test&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;hr_test2&#x27;</span> </span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="修改字段的字符集和排序规则"><a href="#修改字段的字符集和排序规则" class="headerlink" title="修改字段的字符集和排序规则"></a>修改字段的字符集和排序规则</h3><p>– 使用方法：先执行如下脚本生成修改数据表和表字段的脚本，然后再执行这些生成的脚本。</p>
+<p>– 修改指定数据库中所有varchar类型的表字段的字符集为 utf8mb4，并将排序规则修改为utf8mb4_unicode_ci</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	CONCAT(</span><br><span class="line">		<span class="string">&#x27;ALTER TABLE `&#x27;</span>,</span><br><span class="line">		table_name,</span><br><span class="line">		<span class="string">&#x27;` MODIFY `&#x27;</span>,</span><br><span class="line">		column_name,</span><br><span class="line">		<span class="string">&#x27;` &#x27;</span>,</span><br><span class="line">		DATA_TYPE,</span><br><span class="line">		<span class="string">&#x27;(&#x27;</span>,</span><br><span class="line">		CHARACTER_MAXIMUM_LENGTH,</span><br><span class="line">		<span class="string">&#x27;) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci&#x27;</span>,</span><br><span class="line">		( <span class="keyword">CASE</span> <span class="keyword">WHEN</span> IS_NULLABLE <span class="operator">=</span> <span class="string">&#x27;NO&#x27;</span> <span class="keyword">THEN</span> <span class="string">&#x27; NOT NULL&#x27;</span> <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> ),</span><br><span class="line">		<span class="string">&#x27; comment &quot;&#x27;</span>, column_comment,<span class="string">&#x27;&quot;;&#x27;</span> </span><br><span class="line">) </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	information_schema.COLUMNS </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;库名&#x27;</span> </span><br><span class="line">	<span class="keyword">AND</span> DATA_TYPE <span class="operator">=</span> <span class="string">&#x27;varchar&#x27;</span> </span><br><span class="line">	<span class="keyword">AND</span> ( CHARACTER_SET_NAME <span class="operator">!=</span> <span class="string">&#x27;utf8mb4&#x27;</span> <span class="keyword">OR</span> COLLATION_NAME <span class="operator">!=</span> <span class="string">&#x27;utf8mb4_unicode_ci&#x27;</span> ) </span><br><span class="line">	<span class="keyword">AND</span> table_name <span class="keyword">in</span>( <span class="string">&#x27;test&#x27;</span> );</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改某个字段中的某些内容"><a href="#修改某个字段中的某些内容" class="headerlink" title="修改某个字段中的某些内容"></a>修改某个字段中的某些内容</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 将字段body_content_name中的,替换为<span class="operator">|</span></span><br><span class="line">update bpm_matrix_body <span class="keyword">set</span> body_content_name <span class="operator">=</span> replace(body_content_name,<span class="string">&#x27;,&#x27;</span>,<span class="string">&#x27;|&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="用一张表的字段更新另一张表的字段"><a href="#用一张表的字段更新另一张表的字段" class="headerlink" title="用一张表的字段更新另一张表的字段"></a>用一张表的字段更新另一张表的字段</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UPDATE mdm_uat.mdm_dept d1,</span><br><span class="line">test.mdm_dept d2 </span><br><span class="line"><span class="keyword">SET</span> d1.wx_dept_id <span class="operator">=</span> d2.wx_dept_id </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	d1.dept_code <span class="operator">=</span> d2.dept_code</span><br></pre></td></tr></table></figure>
+<h3 id="用一张表的数据修改另一张表的数据逐条生成sql语句"><a href="#用一张表的数据修改另一张表的数据逐条生成sql语句" class="headerlink" title="用一张表的数据修改另一张表的数据逐条生成sql语句"></a>用一张表的数据修改另一张表的数据逐条生成sql语句</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 角色id生成关闭用户<span class="keyword">sql</span></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">	concat( <span class="string">&#x27;update mds.user user u set u.status = 3 where u.id = &quot;&#x27;</span>, temp.u_id, <span class="string">&#x27;&quot;;&#x27;</span> ) </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	(</span><br><span class="line">	<span class="keyword">SELECT</span></span><br><span class="line">		r.u_id </span><br><span class="line">	<span class="keyword">FROM</span></span><br><span class="line">		role r</span><br><span class="line">	<span class="keyword">WHERE</span></span><br><span class="line">		r.id <span class="keyword">IN</span> ( &quot;12&quot; ) </span><br><span class="line">	) temp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="batch-update"><a href="#batch-update" class="headerlink" title="batch update"></a>batch update</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>update set when then</th>
+<th>insert into values on duplicate key update</th>
+<th>replace into values</th>
+<th>临时表 or 分区表</th>
+<th>for 循环</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>优点</td>
+<td>灵活性高，不会重置自增ID</td>
+<td></td>
+<td></td>
+<td></td>
+<td>SQL简单</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>sql复杂，速度比insert into 慢</td>
+<td>速度快</td>
+<td>1.唯一索引相同时，先删除再插入，重置自增ID 2.速度比insert略慢</td>
+<td>可能会增加查询复杂度</td>
+<td>速度慢</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>更新字段少</td>
+<td></td>
+<td></td>
+<td>大型表或需要高效批量更新</td>
+<td>？</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p>update set when then, set when then  where</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UPDATE users</span><br><span class="line"><span class="keyword">SET</span> last_name <span class="operator">=</span> <span class="keyword">CASE</span></span><br><span class="line">  <span class="keyword">WHEN</span> user_id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">THEN</span> <span class="string">&#x27;Doe&#x27;</span></span><br><span class="line">  <span class="keyword">WHEN</span> user_id <span class="operator">=</span> <span class="number">2</span> <span class="keyword">THEN</span> <span class="string">&#x27;Smith&#x27;</span></span><br><span class="line">  <span class="keyword">WHEN</span> user_id <span class="operator">=</span> <span class="number">3</span> <span class="keyword">THEN</span> <span class="string">&#x27;Johnson&#x27;</span></span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"><span class="keyword">WHERE</span> user_id <span class="keyword">IN</span> (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">update t_item</span><br><span class="line"><span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">&quot;set&quot;</span> <span class="attr">suffixOverrides</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">&quot;actual_receive = case&quot;</span> <span class="attr">suffix</span>=<span class="string">&quot;end,&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">index</span>=<span class="string">&quot;index&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;item.actualReceive != null&quot;</span>&gt;</span></span><br><span class="line">                when sku_code = #&#123;item.skuCode&#125; then #&#123;item.actualReceive&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">trim</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">trim</span>&gt;</span></span><br><span class="line">where</span><br><span class="line"><span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">index</span>=<span class="string">&quot;index&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;or&quot;</span>&gt;</span></span><br><span class="line">    order_id = #&#123;item.orderId&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>insert into values … on duplicate key update</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;batchUpdateUsers&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">    INSERT INTO user (id, name, age) VALUES </span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">index</span>=<span class="string">&quot;index&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">        (#&#123;item.id&#125;, #&#123;item.name&#125;, #&#123;item.age&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line">    ON DUPLICATE KEY UPDATE name=VALUES(name), age=VALUES(age)</span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>REPLACE INTO … VALUES</p>
+<p>是一个删除和插入的组合操作，当新记录与现有记录具有相同的唯一键值时，它会删除现有记录并插入新记录。</p>
+<p>在插入新记录时重置自增ID的值</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;batchReplaceUsers&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">    REPLACE INTO user (id, name, age) VALUES </span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">index</span>=<span class="string">&quot;index&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">        (#&#123;item.id&#125;, #&#123;item.name&#125;, #&#123;item.age&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>临时表</p>
+<p>减少原始表上的连接和过滤操作，从而提高效率。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> TEMPORARY <span class="keyword">TABLE</span> temp_users</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> users;</span><br><span class="line"></span><br><span class="line">UPDATE users</span><br><span class="line"><span class="keyword">SET</span> last_name <span class="operator">=</span> <span class="string">&#x27;Doe&#x27;</span></span><br><span class="line"><span class="keyword">WHERE</span> user_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> user_id <span class="keyword">FROM</span> temp_users);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> TEMPORARY <span class="keyword">TABLE</span> temp_users;</span><br></pre></td></tr></table></figure></li>
+<li><p>for循环</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateUserAge&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;user&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;;&quot;</span>&gt;</span></span><br><span class="line">        UPDATE user SET age = #&#123;user.age&#125; WHERE id = #&#123;user.id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><h3 id="WITH-RECURSIVE递归"><a href="#WITH-RECURSIVE递归" class="headerlink" title="WITH RECURSIVE递归"></a>WITH RECURSIVE递归</h3><p>通过 dept_id 获取 dept_id下的所有dept_id</p>
+<p>表结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> NAMES utf8mb4;</span><br><span class="line"><span class="keyword">SET</span> FOREIGN_KEY_CHECKS <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="comment">-- Table structure for dept</span></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `dept`;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `dept`  (</span><br><span class="line">  `dept_id` <span class="type">varchar</span>(<span class="number">64</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_unicode_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;部门唯一标识&#x27;</span>,</span><br><span class="line">  `dept_name` <span class="type">varchar</span>(<span class="number">64</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_unicode_ci <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;部门名称&#x27;</span>,</span><br><span class="line">  `parent_id` <span class="type">varchar</span>(<span class="number">64</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_unicode_ci <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;父部门id&#x27;</span>,</span><br><span class="line">  `is_del` tinyint(<span class="number">1</span>) <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;0未删除；1：已删除&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`dept_id`) <span class="keyword">USING</span> BTREE</span><br><span class="line">) ENGINE <span class="operator">=</span> InnoDB <span class="type">CHARACTER</span> <span class="keyword">SET</span> <span class="operator">=</span> utf8mb4 <span class="keyword">COLLATE</span> <span class="operator">=</span> utf8mb4_unicode_ci COMMENT <span class="operator">=</span> <span class="string">&#x27;部门&#x27;</span> ROW_FORMAT <span class="operator">=</span> <span class="keyword">Dynamic</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="comment">-- Records of dept</span></span><br><span class="line"><span class="comment">-- ----------------------------</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `dept` <span class="keyword">VALUES</span> (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;总部&#x27;</span>, <span class="string">&#x27;-1&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `dept` <span class="keyword">VALUES</span> (<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;北京&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `dept` <span class="keyword">VALUES</span> (<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;天津&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `dept` <span class="keyword">VALUES</span> (<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;昌平区&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> FOREIGN_KEY_CHECKS <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>查询语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> <span class="keyword">RECURSIVE</span> sys_dept_sub <span class="keyword">AS</span> (</span><br><span class="line">	<span class="keyword">SELECT</span></span><br><span class="line">		dept_id <span class="keyword">AS</span> rootId </span><br><span class="line">	<span class="keyword">FROM</span></span><br><span class="line">		dept </span><br><span class="line">	<span class="keyword">WHERE</span></span><br><span class="line">		dept_id <span class="operator">=</span> #&#123;deptId&#125; <span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line">	<span class="keyword">SELECT</span></span><br><span class="line">		dept_id </span><br><span class="line">	<span class="keyword">FROM</span></span><br><span class="line">		dept r,</span><br><span class="line">		sys_dept_sub d </span><br><span class="line">	<span class="keyword">WHERE</span></span><br><span class="line">		r.parent_id <span class="operator">=</span> d.rootId </span><br><span class="line">		<span class="keyword">AND</span> is_del <span class="operator">=</span> <span class="number">0</span> </span><br><span class="line">	) <span class="keyword">SELECT</span></span><br><span class="line">	dept_id </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">	dept </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">	<span class="keyword">EXISTS</span> (</span><br><span class="line">	<span class="keyword">SELECT</span></span><br><span class="line">		rootId </span><br><span class="line">	<span class="keyword">FROM</span></span><br><span class="line">		sys_dept_sub t </span><br><span class="line">	<span class="keyword">WHERE</span></span><br><span class="line">	rootId <span class="operator">=</span> dept_id </span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> <span class="keyword">RECURSIVE</span> temp <span class="keyword">AS</span> (</span><br><span class="line">        <span class="keyword">SELECT</span></span><br><span class="line">        <span class="operator">*</span></span><br><span class="line">        <span class="keyword">FROM</span></span><br><span class="line">        mdm_post</span><br><span class="line">        <span class="keyword">WHERE</span></span><br><span class="line">        post_code <span class="operator">=</span> #&#123;postCode&#125;</span><br><span class="line">        <span class="keyword">AND</span> is_del <span class="operator">=</span> <span class="number">0</span> <span class="keyword">UNION</span></span><br><span class="line">        <span class="keyword">DISTINCT</span> <span class="keyword">SELECT</span></span><br><span class="line">        d.<span class="operator">*</span></span><br><span class="line">        <span class="keyword">FROM</span></span><br><span class="line">        mdm_post d</span><br><span class="line">        <span class="keyword">INNER</span> <span class="keyword">JOIN</span> temp t <span class="keyword">ON</span> d.parent_code <span class="operator">=</span> t.post_code</span><br><span class="line">        <span class="keyword">AND</span> d.is_del <span class="operator">=</span> <span class="number">0</span></span><br><span class="line">        ) <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span></span><br><span class="line">        post_code</span><br><span class="line">        <span class="keyword">FROM</span></span><br><span class="line">        temp</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="local实现递归"><a href="#local实现递归" class="headerlink" title="local实现递归"></a>local实现递归</h3><ul>
+<li><p>local函数介绍</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span> 如果字符串 string 包含 subStr</span><br><span class="line">locate(subStr,string) <span class="operator">&gt;</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></li>
+<li><p>递归地实现</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">表中定义部门路径字段。dept_path</span><br></pre></td></tr></table></figure>
+
+<p>数据</p>
+<table>
+<thead>
+<tr>
+<th>dept_path</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>集团总部/人力资源</td>
+</tr>
+<tr>
+<td>集团总部/人力资源/财务</td>
+</tr>
+</tbody></table>
+<p>查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查询部门a和部门a下的所有部门。</span><br><span class="line">locate(a.name,dept_path)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="某张表卡死"><a href="#某张表卡死" class="headerlink" title="某张表卡死"></a>某张表卡死</h2><ul>
+<li><p>原因：因事务未提交锁表。例如：alter 表字段</p>
+</li>
+<li><p>解决：</p>
+<ol>
+<li><p>直接 -杀死未提交事务</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root权限下：</span><br><span class="line"># 查看未提交事务</span><br><span class="line"><span class="keyword">select</span> trx_state, trx_started, trx_mysql_thread_id, trx_query <span class="keyword">from</span> information_schema.innodb_trx;</span><br><span class="line"># 杀死未提交事务</span><br><span class="line">kill <span class="number">989465</span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>根本 - 调整锁超时阈值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># lock_wait_timeout 表示获取metadata lock的超时（单位为秒），允许的值范围为<span class="number">1</span>到<span class="number">31536000</span>（<span class="number">1</span>年）。 默认值为<span class="number">31536000</span>。</span><br><span class="line"><span class="keyword">set</span> session lock_wait_timeout <span class="operator">=</span> <span class="number">1800</span>;</span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> lock_wait_timeout <span class="operator">=</span> <span class="number">1800</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+<h2 id="逆向工程生成的实体类与表不一致"><a href="#逆向工程生成的实体类与表不一致" class="headerlink" title="逆向工程生成的实体类与表不一致"></a>逆向工程生成的实体类与表不一致</h2><ul>
+<li><p>原因</p>
+<ol>
+<li>逆向工程使用<code>information_schema.COLUMNS</code>，此表在某些情况下会有实际的表不一致。</li>
+<li>不同的库下有相同的表，另一个表中与本表不一致</li>
+</ol>
+</li>
+<li><p>解决</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># generatorConfig.xml 中配置忽视某列</span><br><span class="line"><span class="operator">&lt;</span><span class="keyword">table</span> tableName<span class="operator">=</span>&quot;bpm_matrix_body&quot;<span class="operator">&gt;</span></span><br><span class="line">            <span class="operator">&lt;</span>ignoreColumn <span class="keyword">column</span><span class="operator">=</span>&quot;header_code&quot;<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">/</span>ignoreColumn<span class="operator">&gt;</span></span><br><span class="line"><span class="operator">&lt;</span><span class="operator">/</span><span class="keyword">table</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2020/01/07/214%E6%95%B0%E6%8D%AE%E5%BA%93/sql%E8%84%9A%E6%9C%AC/" title="sql脚本">http://blog.xiaoruiit.com/2020/01/07/214数据库/sql脚本/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%84%9A%E6%9C%AC/" rel="tag"># 脚本</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/06/211%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F/" rel="prev" title="设计模式-模板模式">
+      <i class="fa fa-chevron-left"></i> 设计模式-模板模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/08/211%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" rel="next" title="设计模式-代理模式">
+      设计模式-代理模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sql%E4%BD%BF%E7%94%A8-%E9%AB%98%E7%BA%A7"><span class="nav-number">1.</span> <span class="nav-text">sql使用-高级</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#comment"><span class="nav-number">1.1.</span> <span class="nav-text">comment</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9F%90%E4%B8%AA%E5%BA%93%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E6%B3%A8%E9%87%8A"><span class="nav-number">1.1.1.</span> <span class="nav-text">查看某个库所有表的注释</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rank"><span class="nav-number">1.2.</span> <span class="nav-text">rank</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%90%E4%B8%AA%E5%BA%93%E6%89%80%E6%9C%89%E8%A1%A8%E6%B7%BB%E5%8A%A0%E5%85%B1%E5%90%8C%E5%88%97"><span class="nav-number">1.2.1.</span> <span class="nav-text">某个库所有表添加共同列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%90%E4%B8%AA%E5%BA%93%E7%9A%84%E6%89%80%E6%9C%89%E8%A1%A8%E5%85%B1%E5%90%8C%E5%88%97%E5%88%9D%E5%A7%8B%E5%8C%96%E5%80%BC"><span class="nav-number">1.2.2.</span> <span class="nav-text">某个库的所有表共同列初始化值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#select"><span class="nav-number">1.4.</span> <span class="nav-text">select</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%80%BC-%E6%9D%A1%E4%BB%B6%EF%BC%89%E6%9F%A5%E4%B8%8D%E5%90%8C%E5%AD%97%E6%AE%B5%EF%BC%88%E5%88%97%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">根据值(条件）查不同字段（列）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E4%B8%A4%E5%88%97%E5%80%BC%E5%B7%AE%E9%9B%86%EF%BC%88A-B%EF%BC%89"><span class="nav-number">1.4.2.</span> <span class="nav-text">对比两列值差集（A-B）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E9%9D%9E%E7%B3%BB%E7%BB%9F%E5%BA%93%E7%9A%84%E8%A1%A8%E7%9A%84%E6%B3%A8%E9%87%8A"><span class="nav-number">1.4.3.</span> <span class="nav-text">查询所有非系统库的表的注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E5%BA%93%E6%89%80%E6%9C%89%E8%A1%A8%E5%8F%8A%E5%AD%97%E6%AE%B5%E7%9A%84%E6%B3%A8%E9%87%8A"><span class="nav-number">1.4.4.</span> <span class="nav-text">查询某个库所有表及字段的注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%9F%90%E8%A1%A8%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5%E7%9A%84%E6%B3%A8%E9%87%8A%EF%BC%8C%E6%8C%89%E7%85%A7%E5%AD%97%E6%AE%B5%E9%A1%BA%E5%BA%8F%E6%8E%92%E5%88%97"><span class="nav-number">1.4.5.</span> <span class="nav-text">查询某表的所有字段的注释，按照字段顺序排列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#insert"><span class="nav-number">1.5.</span> <span class="nav-text">insert</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%8F%A6%E4%B8%80%E5%BC%A0%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">1.5.1.</span> <span class="nav-text">插入另一张的内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#update"><span class="nav-number">1.6.</span> <span class="nav-text">update</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%A1%A8%E5%AD%97%E6%AE%B5-%E5%90%8D%E7%A7%B0%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.6.1.</span> <span class="nav-text">修改表字段 名称和类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%8E%92%E5%BA%8F%E8%A7%84%E5%88%99"><span class="nav-number">1.6.2.</span> <span class="nav-text">修改数据表字符集和排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AD%97%E6%AE%B5%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%8E%92%E5%BA%8F%E8%A7%84%E5%88%99"><span class="nav-number">1.6.3.</span> <span class="nav-text">修改字段的字符集和排序规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%9F%90%E4%B8%AA%E5%AD%97%E6%AE%B5%E4%B8%AD%E7%9A%84%E6%9F%90%E4%BA%9B%E5%86%85%E5%AE%B9"><span class="nav-number">1.6.4.</span> <span class="nav-text">修改某个字段中的某些内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%B8%80%E5%BC%A0%E8%A1%A8%E7%9A%84%E5%AD%97%E6%AE%B5%E6%9B%B4%E6%96%B0%E5%8F%A6%E4%B8%80%E5%BC%A0%E8%A1%A8%E7%9A%84%E5%AD%97%E6%AE%B5"><span class="nav-number">1.6.5.</span> <span class="nav-text">用一张表的字段更新另一张表的字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%B8%80%E5%BC%A0%E8%A1%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BF%AE%E6%94%B9%E5%8F%A6%E4%B8%80%E5%BC%A0%E8%A1%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%80%90%E6%9D%A1%E7%94%9F%E6%88%90sql%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.6.6.</span> <span class="nav-text">用一张表的数据修改另一张表的数据逐条生成sql语句</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#batch-update"><span class="nav-number">1.7.</span> <span class="nav-text">batch update</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92"><span class="nav-number">1.8.</span> <span class="nav-text">递归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WITH-RECURSIVE%E9%80%92%E5%BD%92"><span class="nav-number">1.8.1.</span> <span class="nav-text">WITH RECURSIVE递归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local%E5%AE%9E%E7%8E%B0%E9%80%92%E5%BD%92"><span class="nav-number">1.8.2.</span> <span class="nav-text">local实现递归</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%90%E5%BC%A0%E8%A1%A8%E5%8D%A1%E6%AD%BB"><span class="nav-number">1.9.</span> <span class="nav-text">某张表卡死</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E7%94%9F%E6%88%90%E7%9A%84%E5%AE%9E%E4%BD%93%E7%B1%BB%E4%B8%8E%E8%A1%A8%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">1.10.</span> <span class="nav-text">逆向工程生成的实体类与表不一致</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">172</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

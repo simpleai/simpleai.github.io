@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="实现领域驱动设计-笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现领域驱动设计-笔记">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2022/06/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="实现领域驱动设计-笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/avNS5BEYPDeJKFz.png">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E7%AE%A1%E9%81%93%E5%92%8C%E8%BF%87%E6%BB%A4%E5%99%A8.png">
+<meta property="article:published_time" content="2022-06-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-18T01:10:13.944Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="领域驱动">
+<meta property="article:tag" content="DDD">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/avNS5BEYPDeJKFz.png">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2022/06/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>实现领域驱动设计-笔记 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2022/06/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          实现领域驱动设计-笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-09 00:00:00" itemprop="dateCreated datePublished" datetime="2022-06-09T00:00:00+08:00">2022-06-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 09:10:13" itemprop="dateModified" datetime="2024-03-18T09:10:13+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="实现领域驱动设计-笔记" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>实现领域驱动设计-笔记</p>
+<span id="more"></span>
+<h1 id="实现领域驱动设计-笔记"><a href="#实现领域驱动设计-笔记" class="headerlink" title="实现领域驱动设计-笔记"></a>实现领域驱动设计-笔记</h1><h2 id="关联"><a href="#关联" class="headerlink" title="关联"></a>关联</h2><p><a target="_blank" rel="noopener" href="http://www.vaughnvernon.com/">www.VaughnVernon.com</a><br>推特 @VaughnVernon</p>
+<h2 id="本书"><a href="#本书" class="headerlink" title="本书"></a>本书</h2><h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>领域模型一些概念。<br>    战略设计，通用语言，限界上下文，<br>    架构，六边形架构，rest，事件驱动，适配器<br>    战术设计，聚合，实体，值对象，资源库，领域服务，领域事件，模块</p>
+<h2 id="书章节安排"><a href="#书章节安排" class="headerlink" title="书章节安排"></a>书章节安排</h2><h2 id="阅读建议"><a href="#阅读建议" class="headerlink" title="阅读建议"></a>阅读建议</h2><h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><h3 id="第一章-DDD入门"><a href="#第一章-DDD入门" class="headerlink" title="第一章 DDD入门"></a>第一章 DDD入门</h3><h4 id="名词"><a href="#名词" class="headerlink" title="名词"></a>名词</h4><p>领域专家：</p>
+<p>统一建模语言UML(Unified Modeling Language)</p>
+<p>核心域：最重要的、复杂的业务场景。</p>
+<p>支撑子域：相对核心域次要的。</p>
+<h4 id="DDD的好处"><a href="#DDD的好处" class="headerlink" title="DDD的好处"></a>DDD的好处</h4><p>帮助开发人员面向业务。</p>
+<h4 id="为什么需要DDD"><a href="#为什么需要DDD" class="headerlink" title="为什么需要DDD"></a>为什么需要DDD</h4><p>梳理业务价值，集中业务知识；提升团队沟通、凝聚力；提升软件伸缩性；简化领域复杂性</p>
+<h5 id="梳理业务价值"><a href="#梳理业务价值" class="headerlink" title="梳理业务价值"></a>梳理业务价值</h5><h5 id="处理领域复杂性"><a href="#处理领域复杂性" class="headerlink" title="处理领域复杂性"></a>处理领域复杂性</h5><h5 id="系统复杂性评分"><a href="#系统复杂性评分" class="headerlink" title="系统复杂性评分"></a>系统复杂性评分</h5><h5 id="贫血对象"><a href="#贫血对象" class="headerlink" title="贫血对象"></a>贫血对象</h5><h4 id="DDD做了什么"><a href="#DDD做了什么" class="headerlink" title="DDD做了什么"></a>DDD做了什么</h4><ol>
+<li>将领域专家和开发人员聚集到一起。<ul>
+<li>所开发的软件能够反映出领域专家的思维模型。不是将精力花在了对“真实世界”的建模上，而是交付最具业务价值的软件。</li>
+<li>领域专家和开发人员一起创建适用于领域建模的通用语言。有助于沟通，有助于促使原本存在分歧的领域专家达成一致。团队更有凝聚力。</li>
+</ul>
+</li>
+<li>DDD关注业务战略</li>
+<li>战术设计建模后，满足了软件设计的技术需求。DDD的最佳时间包含了高层的架构性实践和底层设计实践。关注业务规则和数据不变形。技术优点：可测试，伸缩性强，允许分布式计算。</li>
+</ol>
+<h4 id="如何DDD"><a href="#如何DDD" class="headerlink" title="如何DDD"></a>如何DDD</h4><p>通用语言和限界上下文共同构成了DDD的两大支柱。</p>
+<p>步骤：建立通用语言，建立限界上下文</p>
+<h5 id="通用语言"><a href="#通用语言" class="headerlink" title="通用语言"></a>通用语言</h5><h5 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h5><ul>
+<li>同一个限界上下文中使用的语言；不同限界上下文中同一词语含义可能不同</li>
+<li>团队中使用相同的通用语言。</li>
+<li>通用语言是关于如何思考和运作业务本身的。</li>
+<li>通用语言是持续演化改变成长壮大的。</li>
+<li>领域专家和开发人员共同创建。<ul>
+<li>通用语言最初来自领域专家，他们最了解业务，并且深受工业标准的影响。</li>
+<li>不同领域专家会在概念和术语上产生分歧，甚至犯错。</li>
+<li>团队成员对于通用语言有时会做出妥协，妥协的是概念、术语、定义，而不是质量。质量？</li>
+</ul>
+</li>
+</ul>
+<h5 id="通用语言建模-amp-根据建模编写的代码案例"><a href="#通用语言建模-amp-根据建模编写的代码案例" class="headerlink" title="通用语言建模&amp;根据建模编写的代码案例"></a>通用语言建模&amp;根据建模编写的代码案例</h5><p>patient 病人</p>
+<p>Shot 注射</p>
+<p>flu 流感</p>
+<p>dose 一剂</p>
+<p>Nurse 护士</p>
+<p>Vaccine 疫苗</p>
+<p>Adult 成人</p>
+<table>
+<thead>
+<tr>
+<th>业务描述</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“谁管呢？写代码就行了”</td>
+<td>patient.setShotType(ShotTypes.TYPE_FLU); patient.setDose (dose); patient.setNurse (nurse);</td>
+</tr>
+<tr>
+<td>我们给病人注射流感疫苗</td>
+<td>patient.giveFluShot();</td>
+</tr>
+<tr>
+<td>护士给病人打了标准剂量的流感疫苗</td>
+<td>Vaccine vaccine = vaccines.standardAdultFluDose (); nurse.administerFluVaccine (patient, vaccine);</td>
+</tr>
+</tbody></table>
+<h5 id="如何建立通用语言"><a href="#如何建立通用语言" class="headerlink" title="如何建立通用语言"></a>如何建立通用语言</h5><ul>
+<li><p>最初来自领域专家。</p>
+</li>
+<li><p>创建一个包含简单定义的术语表，或者文档。罗列术语，包括好的和不好的，并注明好与不好的原因。</p>
+</li>
+<li><p>找团队其他人员检查成果。对于分歧做一些准备。</p>
+</li>
+<li><p>面对分歧。</p>
+<ul>
+<li>团队成员讨论</li>
+<li>查阅参考资料，词典</li>
+<li>引用标准</li>
+</ul>
+</li>
+<li><p>绘制物理模型图和概念模型图，并标注名字和行为。</p>
+</li>
+<li><p>经过一段时间，通用语言文档将过时，只有团队交流和代码持续到最后。慢慢抛弃模型图、术语表和文档。</p>
+</li>
+</ul>
+<h5 id="通用语言的局限性"><a href="#通用语言的局限性" class="headerlink" title="通用语言的局限性"></a>通用语言的局限性</h5><h4 id="使用DDD的业务价值-详细-原书总结-自己的观点"><a href="#使用DDD的业务价值-详细-原书总结-自己的观点" class="headerlink" title="使用DDD的业务价值-详细-原书总结+自己的观点"></a>使用DDD的业务价值-详细-原书总结+自己的观点</h4><ol>
+<li>区分核心域、支撑子域，来帮助区分业务重要与次要，进而帮助公司把重点放在重要的业务上。</li>
+<li>通过业务模型完善，明确业务模型内细节，掌握更多业务价值。</li>
+<li>让各个领域专家就分歧达成一致；</li>
+<li>让掌握业务的人数更多；</li>
+<li>将分散在各个业务人员上的业务知识集中到领域模型、软件中。</li>
+<li>更贴合用户，减少使用系统培训。</li>
+<li>项目人员对上下文边界、关系明晰的过程可以了解企业架构。</li>
+<li>辅助持续迭代业务。敏捷可应用到DDD中，持续迭代领域模型，迭代业务。</li>
+</ol>
+<h4 id="团队中DDD的使用"><a href="#团队中DDD的使用" class="headerlink" title="团队中DDD的使用"></a>团队中DDD的使用</h4><p>在 单个 限界 上下 文中 团队 成员 共享 一套 通用 语言。 </p>
+<p>不同 的 团队 有时 各自 负责 一个 限界 上下文，</p>
+<p>团队之间对接限界上下文</p>
+<p>一个上下文中，使用战术建模工具： 聚合（ Aggregate， 10）、 实体（ Entity， 5）、 值 对象（ Value Object， 6）、 领域 服务（ Domain Service， 7）和领域 事件（ Domain Event， 8） 等。</p>
+<h3 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h3><p>建模：列出建模元素，分组，找出语言边界</p>
+<h3 id="第三章-上下文映射图"><a href="#第三章-上下文映射图" class="headerlink" title="第三章 上下文映射图"></a>第三章 上下文映射图</h3><p>介绍：业务方面：属于解决方案空间的一部分，帮助梳理清楚一个解决方案对外界的依赖。<br>用途：可以让团队成员知道自己做的内容范围。</p>
+<p>上下文之间的映射关系种类：</p>
+<pre><code> 客户方供应方
+
+ 遵奉者
+
+ 另谋他路，即无关系
+
+ 大泥球
+
+ 共享内核
+</code></pre>
+<p>团队关系：合作关系<br>限界上下文接口之间：防腐层，开放主机服务（http），发布语言（json，xml）。</p>
+<p>上下文映射图首先用来表示当前的项目状态。边界和关系。</p>
+<p>不是系统拓扑图，不是企业架构。</p>
+<p>图中的元素：</p>
+<p>  U：上游</p>
+<p>  D：下游</p>
+<p>建议：上下文映射图贴在项目组墙上；放在wiki中并不会去看。</p>
+<p>为不同限界上下文中的Dsicusion采用强类型？</p>
+<h3 id="第四章-架构"><a href="#第四章-架构" class="headerlink" title="第四章 架构"></a>第四章 架构</h3><p>DDD无需绑定特定的架构。<br>核心域位于限界上下中，可以采用多种架构。</p>
+<p>架构风格受到功能需求的限制。<br>DDD无需结合分层架构。<br>一个项目无需采用所有的架构。</p>
+<h4 id="名词-1"><a href="#名词-1" class="headerlink" title="名词"></a>名词</h4><ul>
+<li>架构风格：阐述如何实现某种架构</li>
+<li>应用架构：</li>
+<li>架构模式：关注一种架构的某个方面，比设计模式更宽泛。</li>
+<li>六边形架构：端口和适配器。 也称Onion架构。</li>
+<li>defect：缺陷</li>
+</ul>
+<h4 id="项目回顾"><a href="#项目回顾" class="headerlink" title="项目回顾"></a>项目回顾</h4><ol>
+<li>因为桌面应用程序的应用层+中央数据库；采用了分层架构中的客户端-服务器风格。</li>
+<li>募集了充足资金后，在开发敏捷项目管理系统前，先开发了协作工具。协作工具的好处：加入了火热的协作工具市场，为敏捷项目提供了附加功能（提高敏捷+协作提供支付能力）。</li>
+<li>增加了单元测试和功能测试保证软件质量。在分层架构中使用了依赖倒置，方便的替换UI层和基础设施层。</li>
+<li>开始盈利，增加移动端；软件使用REST，提供联合身份验证，项目和时间管理工具。</li>
+<li>转向六边形架构来应对新需求，增加NoSQL，增加消息机制。</li>
+<li>每个月新增几百个租户，添加了一个服务将协作工具中的遗留数据迁移到云上。</li>
+<li>增加功能，如：TeackOvation，defect。客户要求分布式处理功能，引入CRES架构模式。使用了Pipe and Filter（管道和过滤器）完成CRES。</li>
+<li>被RoaringCloud收购，突增了大量的订阅用户；将管道和过滤器分部化和并行化，加入长时处理过程和Sagas(分布式事务)</li>
+</ol>
+<h4 id="依赖注入-amp-六边形架构对分层架构的改进"><a href="#依赖注入-amp-六边形架构对分层架构的改进" class="headerlink" title="依赖注入&amp;六边形架构对分层架构的改进"></a>依赖注入&amp;六边形架构对分层架构的改进</h4><h4 id="REST-todo"><a href="#REST-todo" class="headerlink" title="REST todo"></a>REST todo</h4><h4 id="六边形架构对SOA和REST的支持-todo"><a href="#六边形架构对SOA和REST的支持-todo" class="headerlink" title="六边形架构对SOA和REST的支持 todo"></a>六边形架构对SOA和REST的支持 todo</h4><h4 id="cqrs架构"><a href="#cqrs架构" class="headerlink" title="cqrs架构"></a>cqrs架构</h4><h5 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h5><p>命令与查询分离。修改不返回数据，只有查询返回数据</p>
+<h5 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h5><p>解决数据显示复杂性</p>
+<ul>
+<li>缺点：编写更多的代码</li>
+<li>优点：查询与命令隔离的优点：查询与命令占用资源不同，可以优化查询。<h5 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h5>mapper的查询与增删改分离；<br>聚合的查询也与增删改分离<pre><code> 命令（写）模型：增删改+通过ID查询
+ 查询（读）模型：其他查询
+</code></pre>
+</li>
+</ul>
+<h5 id="cqrs各个方面的联系"><a href="#cqrs各个方面的联系" class="headerlink" title="cqrs各个方面的联系"></a>cqrs各个方面的联系</h5><h6 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h6><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/avNS5BEYPDeJKFz.png" alt="CQRS各个方面之间的联系"></p>
+<p>查询模型不反映领域行为，只用于数据显示。视图对于查询模型有帮助</p>
+<h6 id="客户端驱动命令"><a href="#客户端驱动命令" class="headerlink" title="客户端驱动命令"></a>客户端驱动命令</h6><p>  客户端向服务器发送命令，服务器在聚合上执行相应的行为。<br>  用户界面需要：1.收集足够的信息；2.演绎式的引导用户正确提交命令。</p>
+<h6 id="命令处理器"><a href="#命令处理器" class="headerlink" title="命令处理器"></a>命令处理器</h6><ul>
+<li>风格种类：<br>   分类。一个类，多个方法。<pre><code>      简单，易于理解
+</code></pre>
+   专属；一个类，一个方法<pre><code>     职责单一，处理器直接独立。
+</code></pre>
+   消息风格；<pre><code>     异步。复杂。伸缩性强
+</code></pre>
+一个处理器不应该依赖另一个处理器</li>
+</ul>
+<p>使用事件源时，修改Java内存中的聚合实例后，发布领域事件。然后消费领域事件，持久化聚合实例。</p>
+<p>发布领域事件，可以用sping的事件或mq。</p>
+<p>事件源与cqrs一块？ 事件日志包含在业务需求。</p>
+<h6 id="命令修改对查询模型的影响"><a href="#命令修改对查询模型的影响" class="headerlink" title="命令修改对查询模型的影响"></a>命令修改对查询模型的影响</h6><ul>
+<li><p>同步。</p>
+<ul>
+<li>方式：需要在一个事务中修改，命令和查询的存储位置需要一致（同一个数据库，同一缓存）</li>
+<li>优点：用户看到的东西一致；</li>
+<li>缺点：长事务耗费系统资源，命令和查询的存储位置需要一致。</li>
+</ul>
+</li>
+<li><p>异步。</p>
+<ul>
+<li><p>方式：@Async;MQ</p>
+</li>
+<li><p>缺点：更新延迟时间不可预测。MQ提升系统复杂性</p>
+</li>
+<li><p>优点：</p>
+<ol>
+<li>满足其他的服务层协议。</li>
+<li>利用MQ存储历史事件，则可以回放事件。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<p>异步数据一致性：</p>
+<ol>
+<li>前端提前展示未来修改后的内容。</li>
+<li>展示数据的来源时间，让用户自己判断数据的实时性，用户可刷新。</li>
+<li>通知用户请求已经正在处理，全部处理完还需时间。</li>
+</ol>
+<h4 id="事件驱动架构"><a href="#事件驱动架构" class="headerlink" title="事件驱动架构"></a>事件驱动架构</h4><h5 id="介绍-2"><a href="#介绍-2" class="headerlink" title="介绍"></a>介绍</h5><p>处理事件的生成，发现，处理的软件架构。</p>
+<ul>
+<li><p>六边形架构，遵循AMQP，不同于http的接收返回</p>
+</li>
+<li><p>事件驱动结合六边形架构：输入事件，输出事件，不同接口</p>
+</li>
+<li><p>事件类型：</p>
+<ol>
+<li>领域事件</li>
+<li>日志事件</li>
+<li>系统监控事件</li>
+</ol>
+</li>
+<li><p>事件驱动架构带来的问题：<br> 长时处理过程，过程如何开始？如何分布在整个企业范围内？如何跟踪处理进度？</p>
+<h5 id="管道和过滤器"><a href="#管道和过滤器" class="headerlink" title="管道和过滤器"></a>管道和过滤器</h5></li>
+</ul>
+<ul>
+<li><p>Linux命令示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在 phone_ numbers. txt 文件 中统 计 含有 电话 区号“ 303” 的 所有 文本 行的 数量。</span></span><br><span class="line">cat phone_numbers.txt | grep 303 | wc -l # cat:向标准输出流输出文本内容 |：管道； grep 303：过滤得到含有 电话 区号“ 303”的文本行； wc -l:统计文本行数量</span><br></pre></td></tr></table></figure></li>
+<li><p>示例转为Java事件驱动</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E7%AE%A1%E9%81%93%E5%92%8C%E8%BF%87%E6%BB%A4%E5%99%A8.png" alt="事件驱动管道和过滤器"></p>
+</li>
+</ul>
+<h5 id="长时处理过程-saga"><a href="#长时处理过程-saga" class="headerlink" title="长时处理过程 saga"></a>长时处理过程 saga</h5><p>长时并行处理流程图</p>
+<ul>
+<li>三种设计方法</li>
+</ul>
+<p>1.组合任务，每一步持久化<br>2.一组聚合？<br>3.无状态，每一步都对消息扩充</p>
+<p>引入的问题：无法知道两个不同流程的事件是同一个处理过程。需引入事件唯一标识</p>
+<h5 id="事件源"><a href="#事件源" class="headerlink" title="事件源"></a>事件源</h5><h6 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h6><ul>
+<li>跟踪领域对象的修改；</li>
+<li>审计日志；</li>
+<li>方便调试；</li>
+<li>方便对系统bug进行补偿；</li>
+<li>辅助业务做：如果……会怎么样？</li>
+</ul>
+<p>与事件源类似的东西，例如：git跟踪对文件的修改</p>
+<h6 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h6><p>每次操作，至少发布一个领域事件，每个领域事件都进行存储。<br>如何消除成百上千事件重放对系统的压力：每隔50-100个事件进行一次聚合的快照存储。<br>查询模型的数据源可以在事件存储更新之后得到静默更新？</p>
+<h5 id="数据网织和基于网格的分布式计算"><a href="#数据网织和基于网格的分布式计算" class="headerlink" title="数据网织和基于网格的分布式计算"></a>数据网织和基于网格的分布式计算</h5><p>数据网织定义？聚合是基于图的缓存中的值部分</p>
+<h6 id="存"><a href="#存" class="headerlink" title="存"></a>存</h6><p>分布式缓存可以容易的对领域模型进行持久化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">String key = product.productId().id();</span><br><span class="line"><span class="comment">// 序列化</span></span><br><span class="line"><span class="keyword">byte</span>[] value = Serializer.serialize(product);</span><br><span class="line"><span class="comment">// region(GemFire) or cache(Coherence)</span></span><br><span class="line">region.put(key,value);</span><br></pre></td></tr></table></figure>
+<h6 id="高性能，高可用"><a href="#高性能，高可用" class="headerlink" title="高性能，高可用"></a>高性能，高可用</h6><p>多节点部署.<br><strong>缓存冗余性的工作机制</strong>: 这里 有一个 例子： 其中 一个 节点 作为 主 缓存， 其他 节点 作为 二级 缓存。 如果 主 缓存 失效， 其中 一个 二级 缓存 将会 成为 新的 主 缓存。 当先 前 失效 的 主 缓存 恢复 之后， 新 主 缓存 中的 数据 将被 复制 到 恢复 后的 缓存 中， 此时 该 恢复 后的 缓存 将 变为 二级 缓存。</p>
+<h6 id="结合领域事件？"><a href="#结合领域事件？" class="headerlink" title="结合领域事件？"></a>结合领域事件？</h6><p>大多数数据网 织可 以对 <strong>缓存 层面</strong> 和 <strong>入口 层面</strong> 上 所发 生的 操作 自动 地 <strong>发出 事件 通知</strong>。 这些 事件 不应该 和 领域 事件 产生 混淆。<br><strong>从 聚合 中直 接 发布 领域 事件</strong>， 领域 事件 可能 需要 继承 框架 中的 某种 事件 类型， 比如 GemFire 中的 EntryEvent， 但是 相比 起 这些 领域 事件 所 提供 的 强大 功能 来说， 这种 继承 只是 很小 的 代价。继承有什么代价？谁继承谁？<br><strong>如何 在数据网织 中 使用 领域 事件 呢？</strong> 聚合使用一个简单的DomainEventPublisher组件。对于数据网织的缓存来说，这个发布组件只是将事件放在某个特定的缓存中。<br>此后，数据网织将缓存事件通过同步或异步的方式发送给订阅方。为了不浪费内存，可以在得到所有订阅方的应答后，将缓存事件从缓存图移除。</p>
+<h6 id="如何支持持续查询"><a href="#如何支持持续查询" class="headerlink" title="如何支持持续查询"></a>如何支持持续查询</h6><p>查询模型在领域事件存储后静默更新？<br>前端对可能发生的更改进行监听。</p>
+<h3 id="第五章-实体"><a href="#第五章-实体" class="headerlink" title="第五章 实体"></a>第五章 实体</h3><h4 id="为什么使用实体"><a href="#为什么使用实体" class="headerlink" title="为什么使用实体"></a>为什么使用实体</h4><h6 id="名词-2"><a href="#名词-2" class="headerlink" title="名词"></a>名词</h6><p><strong>实体</strong>：<br>作用：衡量一个对象的个性特征，区分不同对象，找到相同对象。<br>同一个实体对象：一段时间内持续变化的对象拥有相同的唯一标识。<br>实体对象和值对象的区别：实体对象又唯一的身份标识和可变性特征。</p>
+<p>有时，值对象比实体对象更适合建模。DDD并不总能满足我们的业务需求。</p>
+<p>我们 通过 标识 对对 象 进行 区分， 而 不是 属性， 此时 我们 应该 将 标识 作为 主要 的 模型 定义。 同时 我们 需要 保持 简单 的 类 定义， 并且 关注 对象 在 其生 命 周期 中的 连续性 和 唯一 标识 性。 我们 不应该 通过 对象 的 状态 形式 和 历史 来 区分 不同 的 实体 对象…… 对于 什么 是 相同 的 东西， 模型 应该 给出 定义。？</p>
+<h4 id="如何生成实体唯一标识"><a href="#如何生成实体唯一标识" class="headerlink" title="如何生成实体唯一标识"></a>如何生成实体唯一标识</h4><p>实体 设计 早期， 我们将 刻意 地 把 关注 点 放在能 体现 实体 身份 唯一 性的 主要 属性 和 行为 上， 同时 还将 关注 如何 对 实体 进行 查询。 另外， 我们 还会 刻意 地 忽略 掉 那些 次要 的 属性 和 行为。</p>
+<p>在 设计 实体 时， 我们 首先 需要 考虑 实体 的 本质 特征， 特别是 实体 的 唯一 标识 和 对 实体 的 查找， 而 不是 一 开始 便 关注 实体 的 属性 和 行为。 只有 在 对 实体 的 本质 特征 有用 的 情况下， 才 加入 相应 的 属性 和 行为。</p>
+<p>值 对象 可以 用于 存放 实体 的 唯一 标识。 值 对象 是 不变（ immutable） 的， 这可 以 保证 实体 身份 的 稳定性， 并且 与 身份 标识 相关 的 行为 也可以 得到 集中 处理。 这样， 我们 便 可以避免 将 身份 标识 相关 的 行为 泄漏 到 模型 的 其他 部分 或者 客户 端 中。?</p>
+<h5 id="创建-实体-身份-标识-的-策略"><a href="#创建-实体-身份-标识-的-策略" class="headerlink" title="创建 实体 身份 标识 的 策略"></a>创建 实体 身份 标识 的 策略</h5><ol>
+<li>用户提供一个或多个初始唯一值作为程序输入，程序保证这些初始值是唯一的。</li>
+<li>程序内部通过某种算法生成身份标识</li>
+<li>依赖持久化存储，比如数据库来生成唯一标识。</li>
+<li>另一个限界上下文已经决定了唯一标识，这作为程序输入。<h5 id="对创建唯一标识策略副作用的衡量"><a href="#对创建唯一标识策略副作用的衡量" class="headerlink" title="对创建唯一标识策略副作用的衡量"></a>对创建唯一标识策略副作用的衡量</h5>将 关系 型 数据库 用于 对象 持久 化时，泄漏到领域模型。<br>标识 生成 的 时间、<br>关系 型 数据 的 引用 标识<br>ORM 在 标识 创建 过程 中的 作用，<br>唯一标识的稳定性。<h5 id="用户提供唯一标识策略"><a href="#用户提供唯一标识策略" class="headerlink" title="用户提供唯一标识策略"></a>用户提供唯一标识策略</h5>直接，看起来简单。<br>复杂性：</li>
+</ol>
+<ul>
+<li>需要用户生成高质量的标识，标识唯一，不可变。<h5 id="程序生成唯一标识策略"><a href="#程序生成唯一标识策略" class="headerlink" title="程序生成唯一标识策略"></a>程序生成唯一标识策略</h5>如果 应用 程序 处于 集群 环境 或者 分布 在 不同 的 计算 节点 中需要注意。<br>衡量唯一标识：可读性，递增性，严格递增性，标识生成与实体生成的早晚<h6 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h6></li>
+</ul>
+<ol>
+<li>计算节点的当前时间，以毫秒记</li>
+<li>计算节点的IP地址</li>
+<li>虚拟机中工厂对象实例的对象标识</li>
+<li>虚拟机中由同一个随机数生成器生成的随机数<h6 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h6>java. util. UUID。<h6 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h6>自己实现，mysql+redis<h5 id="标识的维护"><a href="#标识的维护" class="headerlink" title="标识的维护"></a>标识的维护</h5>用值对象维护更好<h5 id="数据库生成唯一标识策略"><a href="#数据库生成唯一标识策略" class="headerlink" title="数据库生成唯一标识策略"></a>数据库生成唯一标识策略</h5></li>
+</ol>
+<h5 id="其他限界上下文提供唯一标识策略"><a href="#其他限界上下文提供唯一标识策略" class="headerlink" title="其他限界上下文提供唯一标识策略"></a>其他限界上下文提供唯一标识策略</h5><h4 id="如何从实体设计中捕获通用语言"><a href="#如何从实体设计中捕获通用语言" class="headerlink" title="如何从实体设计中捕获通用语言"></a>如何从实体设计中捕获通用语言</h4><h4 id="实体本质特征"><a href="#实体本质特征" class="headerlink" title="实体本质特征"></a>实体本质特征</h4><p>实体：<br>关注数据库，表，列，和对象映射，得到的是贫血模型。<br>通用语言：<br>       名词：概念<br>       形容词：描述概念<br>       动词：可以完成的操作</p>
+<pre><code>   简单的通用语言：术语+用例
+   通用语言不只包括术语和用例。
+   通用语言应该直接反映在代码中。
+</code></pre>
+<p>一个领域场景今后还要使用，可以用轻量化的文档记录下来。<br>领域模型：不只是组类和类上定义的操作。</p>
+<h4 id="如何表达实体的角色和职责"><a href="#如何表达实体的角色和职责" class="headerlink" title="如何表达实体的角色和职责"></a>如何表达实体的角色和职责</h4><h4 id="如何对实体进行验证和持久化"><a href="#如何对实体进行验证和持久化" class="headerlink" title="如何对实体进行验证和持久化"></a>如何对实体进行验证和持久化</h4><h2 id="其他知识点"><a href="#其他知识点" class="headerlink" title="其他知识点"></a>其他知识点</h2><h3 id="系统复杂性"><a href="#系统复杂性" class="headerlink" title="系统复杂性"></a>系统复杂性</h3><ol>
+<li>dto和dto组装器会增加系统复杂性。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2022/06/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0/" title="实现领域驱动设计-笔记">http://blog.xiaoruiit.com/2022/06/09/程序设计/实现领域驱动设计-笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/" rel="tag"># 领域驱动</a>
+              <a href="/tags/DDD/" rel="tag"># DDD</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/01/%E5%B7%A5%E5%85%B7/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B0%83%E8%AF%95/" rel="prev" title="Google浏览器调试">
+      <i class="fa fa-chevron-left"></i> Google浏览器调试
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/15/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E6%88%98%E6%9C%AF%E6%A8%A1%E5%BC%8F%E4%BB%A3%E7%A0%81%E6%8B%86%E8%A7%A3demo/" rel="next" title="领域驱动战术模式代码结构">
+      领域驱动战术模式代码结构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">实现领域驱动设计-笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E8%81%94"><span class="nav-number">1.1.</span> <span class="nav-text">关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E4%B9%A6"><span class="nav-number">1.2.</span> <span class="nav-text">本书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E6%8F%90"><span class="nav-number">1.3.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A6%E7%AB%A0%E8%8A%82%E5%AE%89%E6%8E%92"><span class="nav-number">1.4.</span> <span class="nav-text">书章节安排</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%85%E8%AF%BB%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.5.</span> <span class="nav-text">阅读建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9"><span class="nav-number">1.6.</span> <span class="nav-text">内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-DDD%E5%85%A5%E9%97%A8"><span class="nav-number">1.6.1.</span> <span class="nav-text">第一章 DDD入门</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">名词</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DDD%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">DDD的好处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81DDD"><span class="nav-number">1.6.1.3.</span> <span class="nav-text">为什么需要DDD</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A2%B3%E7%90%86%E4%B8%9A%E5%8A%A1%E4%BB%B7%E5%80%BC"><span class="nav-number">1.6.1.3.1.</span> <span class="nav-text">梳理业务价值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E9%A2%86%E5%9F%9F%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">1.6.1.3.2.</span> <span class="nav-text">处理领域复杂性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%A4%8D%E6%9D%82%E6%80%A7%E8%AF%84%E5%88%86"><span class="nav-number">1.6.1.3.3.</span> <span class="nav-text">系统复杂性评分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B4%AB%E8%A1%80%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.6.1.3.4.</span> <span class="nav-text">贫血对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DDD%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.6.1.4.</span> <span class="nav-text">DDD做了什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95DDD"><span class="nav-number">1.6.1.5.</span> <span class="nav-text">如何DDD</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80"><span class="nav-number">1.6.1.5.1.</span> <span class="nav-text">通用语言</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.6.1.5.2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80%E5%BB%BA%E6%A8%A1-amp-%E6%A0%B9%E6%8D%AE%E5%BB%BA%E6%A8%A1%E7%BC%96%E5%86%99%E7%9A%84%E4%BB%A3%E7%A0%81%E6%A1%88%E4%BE%8B"><span class="nav-number">1.6.1.5.3.</span> <span class="nav-text">通用语言建模&amp;根据建模编写的代码案例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80"><span class="nav-number">1.6.1.5.4.</span> <span class="nav-text">如何建立通用语言</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.6.1.5.5.</span> <span class="nav-text">通用语言的局限性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8DDD%E7%9A%84%E4%B8%9A%E5%8A%A1%E4%BB%B7%E5%80%BC-%E8%AF%A6%E7%BB%86-%E5%8E%9F%E4%B9%A6%E6%80%BB%E7%BB%93-%E8%87%AA%E5%B7%B1%E7%9A%84%E8%A7%82%E7%82%B9"><span class="nav-number">1.6.1.6.</span> <span class="nav-text">使用DDD的业务价值-详细-原书总结+自己的观点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%A2%E9%98%9F%E4%B8%ADDDD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.6.1.7.</span> <span class="nav-text">团队中DDD的使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0"><span class="nav-number">1.6.2.</span> <span class="nav-text">第二章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E4%B8%8A%E4%B8%8B%E6%96%87%E6%98%A0%E5%B0%84%E5%9B%BE"><span class="nav-number">1.6.3.</span> <span class="nav-text">第三章 上下文映射图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.4.</span> <span class="nav-text">第四章 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D-1"><span class="nav-number">1.6.4.1.</span> <span class="nav-text">名词</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.6.4.2.</span> <span class="nav-text">项目回顾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5-amp-%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84%E5%AF%B9%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%E7%9A%84%E6%94%B9%E8%BF%9B"><span class="nav-number">1.6.4.3.</span> <span class="nav-text">依赖注入&amp;六边形架构对分层架构的改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REST-todo"><span class="nav-number">1.6.4.4.</span> <span class="nav-text">REST todo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84%E5%AF%B9SOA%E5%92%8CREST%E7%9A%84%E6%94%AF%E6%8C%81-todo"><span class="nav-number">1.6.4.5.</span> <span class="nav-text">六边形架构对SOA和REST的支持 todo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cqrs%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.4.6.</span> <span class="nav-text">cqrs架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">1.6.4.6.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E9%80%94"><span class="nav-number">1.6.4.6.2.</span> <span class="nav-text">用途</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.6.4.6.3.</span> <span class="nav-text">实践</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cqrs%E5%90%84%E4%B8%AA%E6%96%B9%E9%9D%A2%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">1.6.4.6.4.</span> <span class="nav-text">cqrs各个方面的联系</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">1.6.4.6.4.1.</span> <span class="nav-text">关系图</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%A9%B1%E5%8A%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.6.4.6.4.2.</span> <span class="nav-text">客户端驱动命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">1.6.4.6.4.3.</span> <span class="nav-text">命令处理器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E4%BF%AE%E6%94%B9%E5%AF%B9%E6%9F%A5%E8%AF%A2%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.6.4.6.4.4.</span> <span class="nav-text">命令修改对查询模型的影响</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.4.7.</span> <span class="nav-text">事件驱动架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-2"><span class="nav-number">1.6.4.7.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E5%92%8C%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">1.6.4.7.2.</span> <span class="nav-text">管道和过滤器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%95%BF%E6%97%B6%E5%A4%84%E7%90%86%E8%BF%87%E7%A8%8B-saga"><span class="nav-number">1.6.4.7.3.</span> <span class="nav-text">长时处理过程 saga</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E6%BA%90"><span class="nav-number">1.6.4.7.4.</span> <span class="nav-text">事件源</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">1.6.4.7.4.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">1.6.4.7.4.2.</span> <span class="nav-text">实现原理</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BD%91%E7%BB%87%E5%92%8C%E5%9F%BA%E4%BA%8E%E7%BD%91%E6%A0%BC%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="nav-number">1.6.4.7.5.</span> <span class="nav-text">数据网织和基于网格的分布式计算</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%AD%98"><span class="nav-number">1.6.4.7.5.1.</span> <span class="nav-text">存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%EF%BC%8C%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.6.4.7.5.2.</span> <span class="nav-text">高性能，高可用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%BB%93%E5%90%88%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%EF%BC%9F"><span class="nav-number">1.6.4.7.5.3.</span> <span class="nav-text">结合领域事件？</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81%E6%8C%81%E7%BB%AD%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.6.4.7.5.4.</span> <span class="nav-text">如何支持持续查询</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%AE%9E%E4%BD%93"><span class="nav-number">1.6.5.</span> <span class="nav-text">第五章 实体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BD%93"><span class="nav-number">1.6.5.1.</span> <span class="nav-text">为什么使用实体</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D-2"><span class="nav-number">1.6.5.1.0.1.</span> <span class="nav-text">名词</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86"><span class="nav-number">1.6.5.2.</span> <span class="nav-text">如何生成实体唯一标识</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-%E5%AE%9E%E4%BD%93-%E8%BA%AB%E4%BB%BD-%E6%A0%87%E8%AF%86-%E7%9A%84-%E7%AD%96%E7%95%A5"><span class="nav-number">1.6.5.2.1.</span> <span class="nav-text">创建 实体 身份 标识 的 策略</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E5%88%9B%E5%BB%BA%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86%E7%AD%96%E7%95%A5%E5%89%AF%E4%BD%9C%E7%94%A8%E7%9A%84%E8%A1%A1%E9%87%8F"><span class="nav-number">1.6.5.2.2.</span> <span class="nav-text">对创建唯一标识策略副作用的衡量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8F%90%E4%BE%9B%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.6.5.2.3.</span> <span class="nav-text">用户提供唯一标识策略</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%94%9F%E6%88%90%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.6.5.2.4.</span> <span class="nav-text">程序生成唯一标识策略</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="nav-number">1.6.5.2.4.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="nav-number">1.6.5.2.4.2.</span> <span class="nav-text">方法二</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89"><span class="nav-number">1.6.5.2.4.3.</span> <span class="nav-text">方法三</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%87%E8%AF%86%E7%9A%84%E7%BB%B4%E6%8A%A4"><span class="nav-number">1.6.5.2.5.</span> <span class="nav-text">标识的维护</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%9F%E6%88%90%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.6.5.2.6.</span> <span class="nav-text">数据库生成唯一标识策略</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%8F%90%E4%BE%9B%E5%94%AF%E4%B8%80%E6%A0%87%E8%AF%86%E7%AD%96%E7%95%A5"><span class="nav-number">1.6.5.2.7.</span> <span class="nav-text">其他限界上下文提供唯一标识策略</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BB%8E%E5%AE%9E%E4%BD%93%E8%AE%BE%E8%AE%A1%E4%B8%AD%E6%8D%95%E8%8E%B7%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80"><span class="nav-number">1.6.5.3.</span> <span class="nav-text">如何从实体设计中捕获通用语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93%E6%9C%AC%E8%B4%A8%E7%89%B9%E5%BE%81"><span class="nav-number">1.6.5.4.</span> <span class="nav-text">实体本质特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A1%A8%E8%BE%BE%E5%AE%9E%E4%BD%93%E7%9A%84%E8%A7%92%E8%89%B2%E5%92%8C%E8%81%8C%E8%B4%A3"><span class="nav-number">1.6.5.5.</span> <span class="nav-text">如何表达实体的角色和职责</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AF%B9%E5%AE%9E%E4%BD%93%E8%BF%9B%E8%A1%8C%E9%AA%8C%E8%AF%81%E5%92%8C%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.6.5.6.</span> <span class="nav-text">如何对实体进行验证和持久化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.7.</span> <span class="nav-text">其他知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">1.7.1.</span> <span class="nav-text">系统复杂性</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">172</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

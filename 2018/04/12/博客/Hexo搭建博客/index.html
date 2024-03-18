@@ -46,10 +46,9 @@
 <meta property="og:image" content="http://blog.xiaoruiit.com/2018/04/12/%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/8-2.png">
 <meta property="og:image" content="http://blog.xiaoruiit.com/2018/04/12/%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/8-3.png">
 <meta property="article:published_time" content="2018-04-12T02:11:00.000Z">
-<meta property="article:modified_time" content="2020-09-12T00:51:38.781Z">
+<meta property="article:modified_time" content="2024-03-17T15:24:50.388Z">
 <meta property="article:author" content="追逐">
 <meta property="article:tag" content="hexo">
-<meta property="article:tag" content="博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://blog.xiaoruiit.com/2018/04/12/%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/3-1.png">
 
@@ -244,7 +243,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-12 08:51:38" itemprop="dateModified" datetime="2020-09-12T08:51:38+08:00">2020-09-12</time>
+                <time title="修改时间：2024-03-17 23:24:50" itemprop="dateModified" datetime="2024-03-17T23:24:50+08:00">2024-03-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,7 +251,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
+                  <a href="/categories/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
                 </span>
             </span>
 
@@ -321,7 +320,7 @@
 <h2 id="7-4Git-与-Github-进行身份验证"><a href="#7-4Git-与-Github-进行身份验证" class="headerlink" title="7.4Git 与 Github 进行身份验证"></a>7.4Git 与 Github 进行身份验证</h2><p>这一整章，我们的最终目的是实现在终端中敲入 hexo deploy （部署本地文件到网站）后，Hexo 会将我们本地的 public 文件夹下的东西上传到 Github 服务器，这样我们就可以通过 <em>your_name.github.io</em> 这个域名（your_name 是你的 Github 用户名）看到我们已经上网的博客网站了。为了实现这个目的，首先我们先要让本地的电脑和 Github 服务器建立起某种联系，也就是让 Github 服务器信任由我这台电脑提交的东西，接受，并存放到 your_name.github.io 这个 Repo 下面，与 Github 服务器建立信任的这个环节就是身份认证（Authenticating ）。根据 Github 的官方文档 <a target="_blank" rel="noopener" href="https://help.github.com/articles/set-up-git/#next-steps-authenticating-with-github-from-git">Authenticating with GitHub from Git</a> 这里，我们选择 <a target="_blank" rel="noopener" href="https://help.github.com/articles/set-up-git/#connecting-over-ssh">Connecting over SSH</a> 这一种方式。在 Github 的官方文档 <a target="_blank" rel="noopener" href="https://help.github.com/categories/ssh/">Categories / SSH</a> 下，我们能找到关于 Github 与 SSH 的资料。</p>
 <h3 id="7-4-1-生成新的-SSH-key"><a href="#7-4-1-生成新的-SSH-key" class="headerlink" title="7.4.1 生成新的 SSH key"></a>7.4.1 生成新的 SSH key</h3><p>根据 Github 的官方文档 <a target="_blank" rel="noopener" href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#generating-a-new-ssh-key">Generating a new SSH key</a> ， 我们在 Git Bash 下执行如下命令，生成 SSH key：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure>
-<p>其中，<a href="mailto:&#x79;&#111;&#x75;&#x72;&#95;&#x65;&#x6d;&#97;&#x69;&#108;&#x40;&#101;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#109;">&#x79;&#111;&#x75;&#x72;&#95;&#x65;&#x6d;&#97;&#x69;&#108;&#x40;&#101;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#109;</a> 是你的 Github 注册邮箱。然后，Git Bash 中会出现<em>Generating public/private rsa key pair.</em></p>
+<p>其中，<a href="mailto:&#121;&#111;&#x75;&#x72;&#x5f;&#x65;&#109;&#97;&#105;&#x6c;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#46;&#x63;&#x6f;&#109;">&#121;&#111;&#x75;&#x72;&#x5f;&#x65;&#109;&#97;&#105;&#x6c;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#46;&#x63;&#x6f;&#109;</a> 是你的 Github 注册邮箱。然后，Git Bash 中会出现<em>Generating public/private rsa key pair.</em></p>
 <p>表示新的 SSH 已经生成了。随后会出现<br><em>Enter file in which to save the key (/c/Users/han/.ssh/id_rsa):</em><br>*Created directory ‘/c/Users/han/.ssh’.*这里 <em>id_rsa</em>是生成的 key 文件的文件名，默认都是这个；如果不是，在后面用到 <em>id_rsa</em> 的地方请替换成出现的名字。这条信息是让你选择 SSH key 存放的地点，按回车选择默认的即可。回车后，还会出现<br><em>Enter passphrase (empty for no passphrase):</em><br><em>Enter same passphrase again:</em><br>让你设置使用 SSH 密钥时的密码，由于我们都是在自己个人的电脑上操作，所以仍然回车，不设置密码即可。<br><img src="Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/7-2.png"></p>
 <h3 id="7-4-2-将-SSH-key-添加到-ssh-agent"><a href="#7-4-2-将-SSH-key-添加到-ssh-agent" class="headerlink" title="7.4.2 将 SSH key 添加到 ssh-agent"></a>7.4.2 将 SSH key 添加到 ssh-agent</h3><p>根据 Wikipedia，ssh-agent 是一个在本地登录会话持续时间内，将未加密的密钥存储在内存中，并使用 Unix 域套接字与 SSH 客户端进行通信的程序。根据 Github 的官方文档 <a target="_blank" rel="noopener" href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#adding-your-ssh-key-to-the-ssh-agent">Adding your SSH key to the ssh-agent</a> ， 我们在 Git Bash 下执行如下命令，开启 ssh-agent</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ eval &quot;$(ssh-agent -s)&quot;</span><br></pre></td></tr></table></figure>
@@ -401,7 +400,6 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/hexo/" rel="tag"># hexo</a>
-              <a href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"># 博客</a>
           </div>
 
         
@@ -494,20 +492,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">158</span>
+          <span class="site-state-item-count">172</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">59</span>
+        <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">112</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="参数校验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="参数校验">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2021/06/10/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="参数校验">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-10T14:20:17.297Z">
+<meta property="article:modified_time" content="2024-03-17T15:51:11.482Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="参数校验">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2021/06/10/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>参数校验 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2021/06/10/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          参数校验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-10 22:20:17" itemprop="dateCreated datePublished" datetime="2021-06-10T22:20:17+08:00">2021-06-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-17 23:51:11" itemprop="dateModified" datetime="2024-03-17T23:51:11+08:00">2024-03-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">技术功能</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/06/10/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/" class="post-meta-item leancloud_visitors" data-flag-title="参数校验" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参数校验</p>
+<span id="more"></span>
+
+<h1 id="参数校验"><a href="#参数校验" class="headerlink" title="参数校验"></a>参数校验</h1><p>客户端校验和服务端校验</p>
+<h2 id="客户端校验"><a href="#客户端校验" class="headerlink" title="客户端校验"></a>客户端校验</h2><p>客户端校验：提示用户正确输入，密码的输入等准确性来加强用户体验。</p>
+<h2 id="服务端校验"><a href="#服务端校验" class="headerlink" title="服务端校验"></a>服务端校验</h2><p>服务端校验即接口校验：更多的是为了接口安全，数据库安全，防止非法用户。</p>
+<p>java规范:JSR-303</p>
+<h3 id="为什么对接口参数校验"><a href="#为什么对接口参数校验" class="headerlink" title="为什么对接口参数校验"></a>为什么对接口参数校验</h3><ul>
+<li><p>数据库汇中字段对应的数据，应该遵循业务要求和数据库设计</p>
+</li>
+<li><p>防止（减小）范围外的输入的数据入库后影响业务正常运行的风险</p>
+</li>
+<li><p>数据来源是接口，从入口处（接口）进行校验。</p>
+</li>
+</ul>
+<h3 id="如何进行接口参数校验实现"><a href="#如何进行接口参数校验实现" class="headerlink" title="如何进行接口参数校验实现"></a>如何进行接口参数校验实现</h3><h4 id="使用-Valid"><a href="#使用-Valid" class="headerlink" title="使用@Valid"></a>使用@Valid</h4><p>spring基于规范的实现：@Valid，对@Valid的扩展：@Validated</p>
+<p>注解 springboot中@Validated @Valid，通过注解的方法，在实体上加注解。</p>
+<ol>
+<li><p>非实体校验</p>
+<p>   形参校验注解（@NotBlank、@NotNull等）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Result delete(@RequestParam @NotBlank(message = &quot;主键不能为空&quot;) String id)&#123;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>实体校验</p>
+<p>   @Validated + 属性校验注解（@NotBlank、@NotNull等）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Result update(@RequestBody @Validated UserUpdateVO data) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class UserUpdateVO &#123;</span><br><span class="line">   </span><br><span class="line">    @NotBlank(message = &quot;id不能为空&quot;)</span><br><span class="line">    private String id;</span><br><span class="line">   </span><br><span class="line">    @NotNull(message = &quot;小数位数不能为空&quot;)</span><br><span class="line"> @Max(value = 2,message = &quot;小数位数格式错误&quot;)</span><br><span class="line">    @Min(value = 0, message = &quot;小数位数格式错误&quot;)</span><br><span class="line">    private Integer decimalDigits;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>List<Bean>校验</p>
+<p>@Valid + ValidList</p>
+<p>@Valid 起嵌套校验的作用</p>
+<p>原Controller方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Result add(@RequestBody List&lt;实体&gt; data) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>List是jdk的接口。@Valid，@Validated 无法校验非实体Bean.</p>
+<p>校验List&lt;实体&gt;的方法。 定义ValidList 实现List接口。List&lt;实体&gt; → ValidList&lt;实体&gt;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Result add( @RequestBody @Valid ValidList&lt;实体&gt; data) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line">public class ValidList&lt;E&gt; implements List&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Valid</span><br><span class="line">    private List&lt;E&gt; list;</span><br><span class="line"></span><br><span class="line">    public ValidList() &#123;</span><br><span class="line">        this.list = new ArrayList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public ValidList(List&lt;E&gt; list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public List&lt;E&gt; getList() &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setList(List&lt;E&gt; list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return list.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean isEmpty() &#123;</span><br><span class="line">        return list.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean contains(Object o) &#123;</span><br><span class="line">        return list.contains(o);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return list.iterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Object[] toArray() &#123;</span><br><span class="line">        return list.toArray();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">        return list.toArray(a);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        return list.add(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean remove(Object o) &#123;</span><br><span class="line">        return list.remove(o);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean containsAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        return list.containsAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean addAll(Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">        return list.addAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean addAll(int index, Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">        return list.addAll(index, c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean removeAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        return list.removeAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean retainAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        return list.retainAll(c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        list.clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E get(int index) &#123;</span><br><span class="line">        return list.get(index);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E set(int index, E element) &#123;</span><br><span class="line">        return list.set(index, element);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void add(int index, E element) &#123;</span><br><span class="line">        list.add(index, element);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E remove(int index) &#123;</span><br><span class="line">        return list.remove(index);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int indexOf(Object o) &#123;</span><br><span class="line">        return list.indexOf(o);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int lastIndexOf(Object o) &#123;</span><br><span class="line">        return list.lastIndexOf(o);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ListIterator&lt;E&gt; listIterator() &#123;</span><br><span class="line">        return list.listIterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public ListIterator&lt;E&gt; listIterator(int index) &#123;</span><br><span class="line">        return list.listIterator(index);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;E&gt; subList(int fromIndex, int toIndex) &#123;</span><br><span class="line">        return list.subList(fromIndex, toIndex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>实体内List校验</p>
+   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public Result update(@RequestBody @Validated UserUpdateVO data) &#123;&#125;</span><br><span class="line"></span><br><span class="line">@Data</span><br><span class="line">public class UserUpdateVO &#123;</span><br><span class="line"></span><br><span class="line">	@NotBlank(message = &quot;id不能为空&quot;)</span><br><span class="line">	private String id;</span><br><span class="line"></span><br><span class="line">	@NotNull(message = &quot;小数位数不能为空&quot;)</span><br><span class="line">	@Max(value = 2,message = &quot;小数位数格式错误&quot;)</span><br><span class="line">	@Min(value = 0, message = &quot;小数位数格式错误&quot;)</span><br><span class="line">	private Integer decimalDigits;</span><br><span class="line">	</span><br><span class="line">	@Size(min = 1,message = &quot;角色不能为空&quot;)</span><br><span class="line">    @Valid</span><br><span class="line">    // @Valid 开启递归校验Role</span><br><span class="line">	private List&lt;Role&gt; roles;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Data</span><br><span class="line">public class Role&#123;</span><br><span class="line">	</span><br><span class="line">	@NotBlank(message = &quot;角色不能为空&quot;)</span><br><span class="line">	private String roleId;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">   </span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="通过工具类"><a href="#通过工具类" class="headerlink" title="通过工具类"></a>通过工具类</h4><p>RegexUtils.java</p>
+<p>将常用的校验方法放在一个类中，然后哪个参数需要校验，就调用工具类中的方法。</p>
+<h3 id="校验失败处理"><a href="#校验失败处理" class="headerlink" title="校验失败处理"></a>校验失败处理</h3><p>使用全局异常捕获。 使用 @ControllerAdvice 分别定义方法，捕获并处理MethodArgumentNotValidException、BindException、ConstraintViolationException</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.hibernate.validator.internal.engine.path.PathImpl;</span><br><span class="line">import org.springframework.validation.BindException;</span><br><span class="line">import org.springframework.validation.BindingResult;</span><br><span class="line">import org.springframework.validation.FieldError;</span><br><span class="line">import org.springframework.web.bind.MethodArgumentNotValidException;</span><br><span class="line">import org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line">import org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line">import org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line">import javax.validation.ConstraintViolation;</span><br><span class="line">import javax.validation.ConstraintViolationException;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 参数异常处理</span><br><span class="line"> */</span><br><span class="line">@Slf4j</span><br><span class="line">@ControllerAdvice</span><br><span class="line">public class GlobalExceptionHandler &#123;</span><br><span class="line"></span><br><span class="line">    @ResponseBody</span><br><span class="line">    @ExceptionHandler(value = MethodArgumentNotValidException.class)</span><br><span class="line">    public Result handleValidException(MethodArgumentNotValidException e) &#123;</span><br><span class="line">        BindingResult bindingResult = e.getBindingResult();</span><br><span class="line">        String message = null;</span><br><span class="line">        if (bindingResult.hasErrors()) &#123;</span><br><span class="line">            FieldError fieldError = bindingResult.getFieldError();</span><br><span class="line">            if (fieldError != null) &#123;</span><br><span class="line">                message = fieldError.getField() + fieldError.getDefaultMessage();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return Result.validateFailed(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @ResponseBody</span><br><span class="line">    @ExceptionHandler(value = BindException.class)</span><br><span class="line">    public Result handleValidException(BindException e) &#123;</span><br><span class="line">        BindingResult bindingResult = e.getBindingResult();</span><br><span class="line">        String message = null;</span><br><span class="line">        if (bindingResult.hasErrors()) &#123;</span><br><span class="line">            FieldError fieldError = bindingResult.getFieldError();</span><br><span class="line">            if (fieldError != null) &#123;</span><br><span class="line">                message = fieldError.getField() + fieldError.getDefaultMessage();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return Result.validateFailed(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @ResponseBody</span><br><span class="line">    @ExceptionHandler(value = ConstraintViolationException.class)</span><br><span class="line">    public Result handleValidException(ConstraintViolationException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        log.info(&quot;全局异常捕获：&#123;&#125;&quot;, e.getStackTrace());</span><br><span class="line">        Set&lt;ConstraintViolation&lt;?&gt;&gt; constraintViolations = e.getConstraintViolations();</span><br><span class="line">        for (ConstraintViolation&lt;?&gt; constraintViolation : constraintViolations) &#123;</span><br><span class="line">            PathImpl pathImpl = (PathImpl) constraintViolation.getPropertyPath();</span><br><span class="line">            // 读取参数字段，constraintViolation.getMessage() 读取验证注解中的message值</span><br><span class="line">            String paramName = pathImpl.getLeafNode().getName();</span><br><span class="line">            String message = constraintViolation.getMessage();</span><br><span class="line">            return Result.validateFailed(message);</span><br><span class="line">        &#125;</span><br><span class="line">        return Result.validateFailed(e.getMessage());</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用校验注解"><a href="#常用校验注解" class="headerlink" title="常用校验注解"></a>常用校验注解</h3><table>
+<thead>
+<tr>
+<th>空校验</th>
+<th>针对类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Null</td>
+<td>任何类型</td>
+<td>校验对象必须为空</td>
+</tr>
+<tr>
+<td>@NotNull</td>
+<td>任何类型</td>
+<td>校验对象不为空，不能校验字符串长度为0的对象</td>
+</tr>
+<tr>
+<td>@NotBlank</td>
+<td>字符串</td>
+<td>只对字符串有效，校验字符串去掉前后空格后长度不为0</td>
+</tr>
+<tr>
+<td>@NotEmpty</td>
+<td>字符串、集合、数组</td>
+<td>校验对象不能为空 (字符串长度不为0、集合大小不为0)</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>boolean校验</th>
+<th>针对类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@AssertTrue</td>
+<td>布尔</td>
+<td>校验boolean类型必须为true</td>
+</tr>
+<tr>
+<td>@AssertFalse</td>
+<td>布尔</td>
+<td>校验boolean类型必须为false</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>日期校验</th>
+<th>针对类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Past</td>
+<td>日期类型</td>
+<td>校验必须是一个过去的日期</td>
+</tr>
+<tr>
+<td>@Future</td>
+<td>日期类型</td>
+<td>校验必须是一个将来的日期</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>数值校验</th>
+<th>针对类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Min</td>
+<td>数字类型</td>
+<td>校验必须是一个数字，其值必须大于或等于指定的最小值</td>
+</tr>
+<tr>
+<td>@Max</td>
+<td>数字类型</td>
+<td>校验必须是一个数字，其值必须小于或等于指定的最大值</td>
+</tr>
+<tr>
+<td>@DecimalMin</td>
+<td>数字类型</td>
+<td>校验必须是一个数字，其值必须大于或等于指定的最小值</td>
+</tr>
+<tr>
+<td>@DecimalMax</td>
+<td>数字类型</td>
+<td>校验必须是一个数字，其值必须小于或等于指定的最大值</td>
+</tr>
+<tr>
+<td>@Digits(integer=,fraction=)</td>
+<td>数字类型</td>
+<td>校验必须是一个数字，interger指定整数精度，fraction指定小数精度</td>
+</tr>
+<tr>
+<td>@Range(min =,max = )</td>
+<td>数字类型、字符串</td>
+<td>校验对象的值在min和max区间内</td>
+</tr>
+<tr>
+<td>@Length(min =,max = )</td>
+<td>字符串</td>
+<td>校验对象的值的长度在min和max区间内</td>
+</tr>
+<tr>
+<td>@Size(min =,max = )</td>
+<td>字符串、集合、数组</td>
+<td>校验对象的值在min和max区间内，如字符长度、集合大小</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>其他校验</th>
+<th>针对类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Email</td>
+<td>字符串</td>
+<td>校验对象的值必须是Email类型，也可以通过regexp和flag指定自定义的email格式</td>
+</tr>
+<tr>
+<td>@Pattern</td>
+<td>字符串</td>
+<td>校验对象的值必须符合指定的正则表达式</td>
+</tr>
+<tr>
+<td>@CreditCardNumber</td>
+<td>数字类型、字符串</td>
+<td>校验对象的值必须是信用卡类型</td>
+</tr>
+<tr>
+<td>@URL</td>
+<td>字符串</td>
+<td>校验对象的值必须是URL地址</td>
+</tr>
+</tbody></table>
+<h3 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h3><ol>
+<li>自己写注解类。</li>
+<li>约束规则“分组”（group）</li>
+<li>校验方法的返回值</li>
+<li>约束规则支持正则表达式</li>
+<li>支持跨参数校验 ？</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sj13074480550/article/details/103399503">https://blog.csdn.net/sj13074480550/article/details/103399503</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2021/06/10/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/" title="参数校验">http://blog.xiaoruiit.com/2021/06/10/技术功能/参数校验/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/" rel="tag"># 参数校验</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/10/214%E6%95%B0%E6%8D%AE%E5%BA%93/Redis%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84Hash/" rel="prev" title="Redis的数据结构Hash">
+      <i class="fa fa-chevron-left"></i> Redis的数据结构Hash
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/30/%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E5%90%8C%E6%AD%A5%E9%80%9A%E8%AE%AF%E5%BD%95%E5%88%B0%E6%9C%AC%E5%9C%B0%E7%B3%BB%E7%BB%9F/" rel="next" title="企业微信通讯录变更时同步到本地系统">
+      企业微信通讯录变更时同步到本地系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.</span> <span class="nav-text">参数校验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.1.</span> <span class="nav-text">客户端校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">服务端校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AF%B9%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C"><span class="nav-number">1.2.1.</span> <span class="nav-text">为什么对接口参数校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">如何进行接口参数校验实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Valid"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">使用@Valid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">通过工具类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E5%A4%B1%E8%B4%A5%E5%A4%84%E7%90%86"><span class="nav-number">1.2.3.</span> <span class="nav-text">校验失败处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%A0%A1%E9%AA%8C%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.2.4.</span> <span class="nav-text">常用校验注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95"><span class="nav-number">1.2.5.</span> <span class="nav-text">进阶用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.3.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">172</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
