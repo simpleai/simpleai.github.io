@@ -14943,7 +14943,7 @@ or 导致branch_code失效。<br>order by id desc limit 20 使create_time失效�
   </entry>
   <entry>
     <title>动态列的实现</title>
-    <url>/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+    <url>/2020/06/03/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[<p>动态列的实现</p>
 <span id="more"></span>
 
