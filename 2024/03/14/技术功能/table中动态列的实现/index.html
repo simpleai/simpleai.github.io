@@ -20,22 +20,22 @@
     var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="mysql优化.包括软件、硬件、SQL语句">
+  <meta name="description" content="动态列的实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql-性能分析和优化">
-<meta property="og:url" content="http://blog.xiaoruiit.com/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:title" content="动态列的实现">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Go after">
-<meta property="og:description" content="mysql优化.包括软件、硬件、SQL语句">
+<meta property="og:description" content="动态列的实现">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-08-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-10-31T02:21:58.679Z">
+<meta property="og:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/DPk5ohdXMtRFQp3.png">
+<meta property="article:published_time" content="2024-03-14T00:41:07.923Z">
+<meta property="article:modified_time" content="2024-03-18T14:38:26.547Z">
 <meta property="article:author" content="追逐">
-<meta property="article:tag" content="Mysql">
-<meta property="article:tag" content="性能分析">
-<meta property="article:tag" content="优化">
+<meta property="article:tag" content="动态列">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/DPk5ohdXMtRFQp3.png">
 
-<link rel="canonical" href="http://blog.xiaoruiit.com/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/">
+<link rel="canonical" href="http://blog.xiaoruiit.com/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/">
 
 
 <script id="page-configurations">
@@ -48,7 +48,7 @@
   };
 </script>
 
-  <title>Mysql-性能分析和优化 | Go after</title>
+  <title>动态列的实现 | Go after</title>
   
 
 
@@ -196,7 +196,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -209,7 +209,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Mysql-性能分析和优化
+          动态列的实现
         </h1>
 
         <div class="post-meta">
@@ -219,14 +219,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-08-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-08-09T00:00:00+08:00">2020-08-09</time>
+              <time title="创建时间：2024-03-14 08:41:07" itemprop="dateCreated datePublished" datetime="2024-03-14T08:41:07+08:00">2024-03-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-31 10:21:58" itemprop="dateModified" datetime="2020-10-31T10:21:58+08:00">2020-10-31</time>
+                <time title="修改时间：2024-03-18 22:38:26" itemprop="dateModified" datetime="2024-03-18T22:38:26+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,12 +234,12 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">技术功能</span></a>
                 </span>
             </span>
 
           
-            <span id="/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="Mysql-性能分析和优化" title="阅读次数">
+            <span id="/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="post-meta-item leancloud_visitors" data-flag-title="动态列的实现" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -251,7 +251,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>699</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -270,72 +270,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>mysql优化.包括软件、硬件、SQL语句</p>
+        <p>动态列的实现</p>
 <span id="more"></span>
 
-<h1 id="Mysql-性能分析和优化"><a href="#Mysql-性能分析和优化" class="headerlink" title="Mysql-性能分析和优化"></a>Mysql-性能分析和优化</h1><h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><h3 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h3><p>分析：</p>
-<ol>
-<li>通过慢查询日志获取查询时间较长的SQL</li>
-<li>查看SQL的执行计划explain</li>
-<li>使用show profile[s] 查看SQL的性能使用情况</li>
+<h1 id="table中动态列的实现"><a href="#table中动态列的实现" class="headerlink" title="table中动态列的实现"></a>table中动态列的实现</h1><h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/DPk5ohdXMtRFQp3.png" alt="image-20210104183203013"></p>
+<h2 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h2><ol>
+<li>mysql行存储，取出时多行转1行。</li>
+<li>MongoDB</li>
+<li>存为json</li>
+<li>动态修改表字段</li>
 </ol>
-<p>注意：开启慢查询日志影响mysql性能，排查问题时再开启。</p>
-<h4 id="开启慢查询日志："><a href="#开启慢查询日志：" class="headerlink" title="开启慢查询日志："></a>开启慢查询日志：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=ON </span><br><span class="line">long_query_time=3 </span><br><span class="line">slow_query_log_file=/var/lib/mysql/slow-log.log</span><br></pre></td></tr></table></figure>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="mysql行存储"><a href="#mysql行存储" class="headerlink" title="mysql行存储"></a>mysql行存储</h3><p>优点：统一数据库，InnoDB有事务支持</p>
+<p>缺点：增删改都是批量操作，复杂。</p>
+<h3 id="后端逻辑"><a href="#后端逻辑" class="headerlink" title="后端逻辑"></a>后端逻辑</h3><h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 新增</span><br><span class="line">List&lt;HrSalaryStandardConfigurationAddVO&gt; listAdd = new ArrayList&lt;HrSalaryStandardConfigurationAddVO&gt;();</span><br><span class="line">// 修改</span><br><span class="line">List&lt;HrSalaryStandardConfigurationUpdateVO&gt; listUpdate = new ArrayList&lt;HrSalaryStandardConfigurationUpdateVO&gt;();</span><br><span class="line">// 删除</span><br><span class="line">List&lt;String&gt; listLogialDelete = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">// 确定 money = null值是否传了薪档id</span><br><span class="line">// 修改前查询库中的薪资标准配置</span><br><span class="line">List&lt;String&gt; previousList =  hrSalaryStandardConfigurationMapper.getByDeptAndPost(data.get(0).getDeptId(), data.get(0).getPostId());</span><br><span class="line">// 库中与页面对比出 1.新增集合  2.修改集合  3.删除集合</span><br><span class="line"></span><br><span class="line">// 执行新增、修改、删除</span><br></pre></td></tr></table></figure>
 
-<h4 id="慢查询工具"><a href="#慢查询工具" class="headerlink" title="慢查询工具"></a>慢查询工具</h4><h5 id="mysqldumpslow"><a href="#mysqldumpslow" class="headerlink" title="mysqldumpslow"></a>mysqldumpslow</h5><p>mysql自带的慢查询日志工具。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">到按照时间排序的前10条里面含有左连接的查询语句：</span><br><span class="line">mysqldumpslow -s t -t 10 -g “left join”  /var/log/mysql/slow.log </span><br></pre></td></tr></table></figure>
-
-<h5 id="percona-toolkit"><a href="#percona-toolkit" class="headerlink" title="percona-toolkit"></a>percona-toolkit</h5><p>高级命令行工具的集合，可以查看当前服务的摘要信息，磁盘检测，分析慢查询日志，查找重复索引，实现表同步等等。</p>
-<p>linux:</p>
-<p><a target="_blank" rel="noopener" href="https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz">https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz</a></p>
-<h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><h4 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h4><p>默认128M，修改为系统内存的4/5，尽量从内存中读取。</p>
-<p>buffer pool越大和存储引擎I/O次数越少。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show global status like &#x27;innodb_buffer_pool_pages_%&#x27;; </span><br><span class="line">| Innodb_buffer_pool_pages_free | 0 | 0 表示已经被用光</span><br></pre></td></tr></table></figure>
-
-<p>修改 my.cnf</p>
-<p>innodb_buffffer_pool_size =3000M</p>
-<h4 id="redo-log-file"><a href="#redo-log-file" class="headerlink" title="redo log file"></a>redo log file</h4><p>默认8M,修改为Buffer的1/4.降低磁盘写入次数。</p>
-<h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><p>普通硬盘更换为SSD，提高磁盘读写，SSD寻道时间很短。</p>
-<h3 id="内存预热"><a href="#内存预热" class="headerlink" title="内存预热"></a>内存预热</h3><h3 id="表和字段设计"><a href="#表和字段设计" class="headerlink" title="表和字段设计"></a>表和字段设计</h3><ul>
-<li>减少关联查询，创建合理的冗余字段</li>
-<li>字段太多的大表，拆表</li>
-<li>表中不常用的字段或者存储数据比较多的字段，拆表。（商品表中的商品介绍字段单独拆解到另一个表中，使用ID关联）</li>
-<li>每张表都要有主键，主键最好是int类型。</li>
-</ul>
-<h3 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h3><h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p>数量不要超过6个。通过索引返回的数据量需要小于1/3才有效。</p>
-<ul>
-<li><p><strong>建立索引：</strong></p>
-<ol>
-<li>on两边，where字段</li>
-<li>组合索引（最左前缀）</li>
-<li>order排序</li>
-<li>group by分组统计</li>
-</ol>
-</li>
-<li><p><strong>避免索引失效：</strong></p>
-<ol>
-<li>or，is null,is not null</li>
-<li>between右边</li>
-<li> where 子句中的“=”左边进行函数、算术运算或其他表达式运算</li>
-<li>不遵循组合索引最左前缀</li>
-<li>字符串不加’’(单引号)</li>
-<li>like (%abc)，可通过组合索引解决</li>
-</ol>
-</li>
-</ul>
-<h4 id="左连接"><a href="#左连接" class="headerlink" title="左连接"></a>左连接</h4><p>注意sql执行顺序</p>
-<ol>
-<li>小表驱动大表</li>
-<li>使用条件缩小左表后再连接右表，会有数量级的提升</li>
-</ol>
-<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>有截断效果（停止全表扫描），但还是在server层处理数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user limit 10</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 一千万条数据</span><br><span class="line"># 速度很慢 10</span><br><span class="line">select * from user limit 9000000 for 10</span><br><span class="line"># 速度很快 0.03</span><br><span class="line">select * from user where id &gt; 9000000 limit 10</span><br></pre></td></tr></table></figure>
-
-<h4 id="count"><a href="#count" class="headerlink" title="count"></a>count</h4><p>count（*）找普通索引，即去最小的索引树遍历，包含null</p>
-<p>count（字段） ，走缓存，不包含null</p>
-<p>count（1） 包含null</p>
+<h3 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB"></a>MongoDB</h3><p>单文档事务支持</p>
+<h3 id="json"><a href="#json" class="headerlink" title="json"></a>json</h3><p>优点：存储方便</p>
+<p>缺点：无法用sql进行条件查询</p>
+<h3 id="动态修改表字段"><a href="#动态修改表字段" class="headerlink" title="动态修改表字段"></a>动态修改表字段</h3><p>缺点：不安全</p>
 
     </div>
 
@@ -371,7 +323,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://blog.xiaoruiit.com/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/" title="Mysql-性能分析和优化">http://blog.xiaoruiit.com/2020/08/09/214数据库/Mysql-性能分析和优化/</a>
+    <a href="http://blog.xiaoruiit.com/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/" title="动态列的实现">http://blog.xiaoruiit.com/2024/03/14/技术功能/table中动态列的实现/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
@@ -382,9 +334,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Mysql/" rel="tag"># Mysql</a>
-              <a href="/tags/%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" rel="tag"># 性能分析</a>
-              <a href="/tags/%E4%BC%98%E5%8C%96/" rel="tag"># 优化</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E5%88%97/" rel="tag"># 动态列</a>
           </div>
 
         
@@ -393,13 +343,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/08/07/%E5%89%8D%E7%AB%AF/localStorage-%E5%86%85%E5%AE%B9%E6%B6%88%E5%A4%B1/" rel="prev" title="localStorage-内容消失">
-      <i class="fa fa-chevron-left"></i> localStorage-内容消失
+    <a href="/2024/02/10/215%E6%9E%B6%E6%9E%84/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E5%AD%A6%E6%9E%B6%E6%9E%84-%E6%9E%B6%E6%9E%84/" rel="prev" title="架构">
+      <i class="fa fa-chevron-left"></i> 架构
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/08/10/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E9%9B%86%E7%BE%A4%E3%80%81%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E3%80%81%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/" rel="next" title="Mysql-集群、主从复制、读写分离">
-      Mysql-集群、主从复制、读写分离 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -463,7 +410,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">Mysql-性能分析和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">性能分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-number">1.1.1.</span> <span class="nav-text">慢查询日志</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">开启慢查询日志：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">慢查询工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mysqldumpslow"><span class="nav-number">1.1.1.2.1.</span> <span class="nav-text">mysqldumpslow</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#percona-toolkit"><span class="nav-number">1.1.1.2.2.</span> <span class="nav-text">percona-toolkit</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Pool"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Buffer Pool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log-file"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">redo log file</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E9%A2%84%E7%83%AD"><span class="nav-number">1.2.3.</span> <span class="nav-text">内存预热</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E5%92%8C%E5%AD%97%E6%AE%B5%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.4.</span> <span class="nav-text">表和字段设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.2.5.</span> <span class="nav-text">SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B7%A6%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">左连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#limit"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">limit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#count"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">count</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">table中动态列的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql%E8%A1%8C%E5%AD%98%E5%82%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">mysql行存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E9%80%BB%E8%BE%91"><span class="nav-number">1.3.2.</span> <span class="nav-text">后端逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">修改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MongoDB"><span class="nav-number">1.3.3.</span> <span class="nav-text">MongoDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#json"><span class="nav-number">1.3.4.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%BF%AE%E6%94%B9%E8%A1%A8%E5%AD%97%E6%AE%B5"><span class="nav-number">1.3.5.</span> <span class="nav-text">动态修改表字段</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -477,7 +424,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">172</span>
+          <span class="site-state-item-count">176</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -490,7 +437,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-count">139</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.xiaoruiit.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="《渴望生活》即梵高传，描写了温森特·梵高青年到37岁时的生活。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的逻辑学-读书笔记">
+<meta property="og:url" content="http://blog.xiaoruiit.com/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Go after">
+<meta property="og:description" content="《渴望生活》即梵高传，描写了温森特·梵高青年到37岁时的生活。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-18T15:09:53.959Z">
+<meta property="article:author" content="追逐">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="简单的逻辑学">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.xiaoruiit.com/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>简单的逻辑学-读书笔记 | Go after</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Go after</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.xiaoruiit.com/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="追逐">
+      <meta itemprop="description" content="技术融于生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Go after">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简单的逻辑学-读书笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-04 00:00:00" itemprop="dateCreated datePublished" datetime="2022-06-04T00:00:00+08:00">2022-06-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 23:09:53" itemprop="dateModified" datetime="2024-03-18T23:09:53+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/" class="post-meta-item leancloud_visitors" data-flag-title="简单的逻辑学-读书笔记" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《渴望生活》即梵高传，描写了温森特·梵高青年到37岁时的生活。</p>
+<span id="more"></span>
+
+<h1 id="简单的逻辑学-读书笔记"><a href="#简单的逻辑学-读书笔记" class="headerlink" title="简单的逻辑学-读书笔记"></a>简单的逻辑学-读书笔记</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>聪明伶俐只是逻辑思考的潜能高。</p>
+<h2 id="本书"><a href="#本书" class="headerlink" title="本书"></a>本书</h2><p>逻辑学的基本原理和技巧。<br>第一次 遇到 严肃 的 逻辑 学问 题的 读者， 可能 会对 大量 的 专业 术语 和 频繁 使用 的 象征性 符号 反感。 我们没 必要 被 这种 第一 印象 吓倒。<br>为了 更好 地 服务于 日常 实践， 在 叙述 中， 有些 地方 我 采取 了 不是 那么 委婉 的 方式。 很多 时候， 我 更 像 一个 教练 或是 班主任， 用 教导 的 口吻 告诉 我的 读者 应该 怎么 做。</p>
+<h2 id="书内容安排"><a href="#书内容安排" class="headerlink" title="书内容安排"></a>书内容安排</h2><ol>
+<li>作为逻辑思考者搭建思想框架。</li>
+<li>逻辑思维的基本原理</li>
+<li>逻辑思维的具体表现形式</li>
+<li>非逻辑思维的根源。</li>
+<li>谬误（miu4wu4），非逻辑的表现形式</li>
+</ol>
+<h2 id="阅读建议"><a href="#阅读建议" class="headerlink" title="阅读建议"></a>阅读建议</h2><h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><h3 id="1-学习逻辑学的思想准备"><a href="#1-学习逻辑学的思想准备" class="headerlink" title="1.学习逻辑学的思想准备"></a>1.学习逻辑学的思想准备</h3><h4 id="1-全神贯注"><a href="#1-全神贯注" class="headerlink" title="1.全神贯注"></a>1.全神贯注</h4><p>许多错误的产生源自我们注意力不集中。<br>从严格意义上来讲，世界上没有两片相同的叶子。每个情景都有它的特殊性。<br>我们需要注意力帮助我们对所处的环境以及环境中的每个要素都作出敏捷主动的反应。<br>全神贯注和被动接受是不兼容的，对周边的事物要用心去看，用心去听。</p>
+<h4 id="2-确认事实"><a href="#2-确认事实" class="headerlink" title="2.确认事实"></a>2.确认事实</h4><p>事实的客观表现形式是事物和事件。<br>有形的事物是客观存在，无形的事件基本构成是事物。<br>确认事件的真实性。</p>
+<ul>
+<li>最直接有效确认事物的方法是亲自实地去看。也可以从值得信赖的人口中证实，或者照片作为证据。</li>
+<li>过去的事件，如林肯被杀，无法直接去看，那就得间接通过官方记录（警察案件记录）/当时的报纸/照片/国会档案等证实。<br>主观事实是指带有人的想法的事件。个人亲身经历或间接通过别人的经历确认的事实。<br>由于人脑中的自我错觉或理性化思维机制，人们可能无法确认关于自身的事实。<br>主观事实确认的基础是对其他当事人的完全信任。<h4 id="3-观念与对象"><a href="#3-观念与对象" class="headerlink" title="3.观念与对象"></a>3.观念与对象</h4>观念是我们对客观世界的描摹，被描摹的对象是客观存在的。<br>正确的观念反映其对象的客观秩序。<br>错误的观念是对客观世界的wai q歪曲表达。<br>观念与其对应的对象关系是扭曲脆弱的，那这个观念是错误的。<br>观念是了解外界的工具，观念不是目的，观念是桥梁。<br>我们不仅仅只能把握观念。<br>我们需要通过观念去观察其表现的对象。<h4 id="4-留意观念的本源"><a href="#4-留意观念的本源" class="headerlink" title="4.留意观念的本源"></a>4.留意观念的本源</h4>观念是大脑观察其对象在外部世界的机遇产生的。<br>与事物接触的越多，对其理解越深刻。<br>观念的客观根源是客观世界的对象。<h4 id="5-观念与事实"><a href="#5-观念与事实" class="headerlink" title="5.观念与事实"></a>5.观念与事实</h4></li>
+</ul>
+<p><strong>人类认知的组成</strong>：</p>
+<ol>
+<li>客观存在的事物</li>
+<li>事物在大脑中的反映</li>
+<li>我们为其创造的语言，介之，我们才能与他人交流。<br>先有事物，人根据事物形成观念，最后用语言表达观念。</li>
+</ol>
+<p><strong>简单观念</strong>：观念与事物之间的联系简单明了。例如：猫。简单观念容易验证，因为所对应的客观事物只有一个。包含的意思明确具体。<br><strong>复杂观念</strong>：指的是哪些与客观事物并非一一对应的观念。例如：民主，我们可以把它联系到客观世界。但民主的内涵有丰富的来源：人物、事件、宪法、立法行动、旧制度、新制度。讨论民主避免陷入主观主义，需要说现实中大家都明白的事物，必须不断涉及现实中的种种事件，这些事件都是民主内涵的现实土壤。</p>
+<p><strong>错误观念如何产生：</strong><br>错误观念即对客观事物作出偏离其本源的错误反映。<br>没有任何观念可以完全脱离客观世界。<br>观念和客观世界的联系可以变得遥远而难以捉摸。<br>错误观念偏离了事物的本源，它或许不能提供客观事物的真实情况，但可以反映错误观念人的精神状态。</p>
+<h4 id="6-将观念付诸语言（用语言表达观念）"><a href="#6-将观念付诸语言（用语言表达观念）" class="headerlink" title="6.将观念付诸语言（用语言表达观念）"></a>6.将观念付诸语言（用语言表达观念）</h4><p>观念必须与语言紧密结合，是顺畅交流的一个条件。<br>如何确认找到了合适的语言？重新审视观念的外在来源，理清思路。<br>语言要忠实表达出客观事物的本来面貌，从而使我们的沟通有坚实的事实基础。<br>主观事实不是现实得真实情况，主观事实揭示了思想状态。</p>
+<h4 id="7-有效沟通"><a href="#7-有效沟通" class="headerlink" title="7.有效沟通"></a>7.有效沟通</h4><p>在逻辑学中，陈述只针对可以判断真假的命题。<br>词语是语言的基石，逻辑的基础是命题。</p>
+<ol>
+<li>观念清晰，思维有条理。思维混乱带不来有效沟通。</li>
+<li>观念正确</li>
+<li>语言准确表达观念</li>
+<li>不要想当然地认为听众会领悟我们没有直接表达的意思。比如：背景信息。唠唠叨叨比挂一漏万强。</li>
+<li>别人无法把握所要讨论的问题跑题时，得把话题往回收。</li>
+<li>说完整的语句。</li>
+<li>不要将主观事实当做客观事实。想让主观命题被大家接收，必须为它论证。</li>
+<li>避免使用双重否定。容易有歧义。</li>
+<li>根据对象选择合适的语言。讲述方与对象对讲述的语言理解相同。专业人士之间可讲名词，专业人士给普通人讲通俗语言。</li>
+<li>避免使用模糊和多义的语言。范围不要过大。如：不喜欢那种音乐（摇滚），这个椅子（躺椅）挺好的。</li>
+<li>避免使用闪避式语言<h4 id="10-真相"><a href="#10-真相" class="headerlink" title="10.真相"></a>10.真相</h4>有些情况下，真相难以捉摸。但我们不能放弃追寻真相。<br>真相有两种基本形态：</li>
+</ol>
+<ul>
+<li>本体真相。本体真相更基础。指的是关乎存在的真相。</li>
+<li>逻辑真相。逻辑学家直接关注的真相形式。仅仅是关乎命题的真理性。<br>命题的定义：可以做出真假判断的语言表述。<br>一个命题如果真实的反映了客观世界，那就为真。<br>真命题的作用：将大脑中的观念（主观事实）以语言为媒介，对应到相应事物的真实状态（客观事实）。</li>
+</ul>
+<p>在任 何 情况下， 对 真相 的 确认 都要 去 检查 别人 所 认定 或 推测 所得 的 真相 在 现实 中 是否 存在 依据。 确认 真相 就是 要 达到 主观 与 客观 的 统一。</p>
+<p>语言描述是否与客观事实对应。对应即真相。<br><strong>谎言</strong>：脑子里清楚现实世界的真相，也能够用语言去表达，表述时却有意的欺瞒篡改。<br>符合论，语言是否与客观事实对应。<br>融贯学，语言描述是否与已被证明的思想、学说对应。<br>    即使已被证明，思想和学说仍可能是错的。<br>    可能某一理论已经过时，不符合现实世界。</p>
+<h3 id="1-学习逻辑学的思想准备-总结"><a href="#1-学习逻辑学的思想准备-总结" class="headerlink" title="1.学习逻辑学的思想准备-总结"></a>1.学习逻辑学的思想准备-总结</h3><p>人与外界连接过程：<br>精神活动 ➡️  观念 ➡️  语言 ➡️   事物</p>
+<h3 id="2-逻辑的基本原理"><a href="#2-逻辑的基本原理" class="headerlink" title="2.逻辑的基本原理"></a>2.逻辑的基本原理</h3><p>四个基本原理。</p>
+<h4 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1.基本原理"></a>1.基本原理</h4><p>同一律<br>排中律<br>充足理由律<br>矛盾律</p>
+<h4 id="2-灰色地带及人为灰色地带"><a href="#2-灰色地带及人为灰色地带" class="headerlink" title="2.灰色地带及人为灰色地带"></a>2.灰色地带及人为灰色地带</h4><p>不要把灰色地带当成世界的全部。<br>灰色地带只是因为我们没有看清楚。<br>灰色地带是短暂的。</p>
+<h4 id="3-万物终有其根源"><a href="#3-万物终有其根源" class="headerlink" title="3.万物终有其根源"></a>3.万物终有其根源</h4><p>原因和结果之间有一部分特性是相同的。</p>
+<h4 id="4-对原因的探寻不要半途而废"><a href="#4-对原因的探寻不要半途而废" class="headerlink" title="4.对原因的探寻不要半途而废"></a>4.对原因的探寻不要半途而废</h4><h4 id="5-区分原因"><a href="#5-区分原因" class="headerlink" title="5.区分原因"></a>5.区分原因</h4><p>动力因。背景<br>目的因。即作用<br>质料因。组成原料<br>形式因。特性</p>
+<h4 id="6-定义术语"><a href="#6-定义术语" class="headerlink" title="6.定义术语"></a>6.定义术语</h4><p>如何定义：</p>
+<ol>
+<li>先把其归类到最相近的分类。</li>
+<li>再指出本类中与其他事物的不同。<h4 id="7-直言命题"><a href="#7-直言命题" class="headerlink" title="7.直言命题"></a>7.直言命题</h4></li>
+</ol>
+<h4 id="8-普遍命题"><a href="#8-普遍命题" class="headerlink" title="8.普遍命题"></a>8.普遍命题</h4><h3 id="3-逻辑表现形式"><a href="#3-逻辑表现形式" class="headerlink" title="3.逻辑表现形式"></a>3.逻辑表现形式</h3><h4 id="1-创建一个论证"><a href="#1-创建一个论证" class="headerlink" title="1.创建一个论证"></a>1.创建一个论证</h4><p>一个命题是前提，另一个是结论</p>
+<h4 id="2-全称到特称"><a href="#2-全称到特称" class="headerlink" title="2.全称到特称"></a>2.全称到特称</h4><p>全称可以到特称。马都是脊椎动物。➡️   有些马是脊椎动物。</p>
+<h4 id="3-特称到全称"><a href="#3-特称到全称" class="headerlink" title="3.特称到全称"></a>3.特称到全称</h4><p>特称不可以到全称。<br>特称到全称可以加模糊词。全村的人<strong>可能</strong>都是黄头发，蓝眼睛。</p>
+<h4 id="4-断言"><a href="#4-断言" class="headerlink" title="4.断言"></a>4.断言</h4><p>断言描述事实关联性的过程。</p>
+<h4 id="5-否定命题"><a href="#5-否定命题" class="headerlink" title="5.否定命题"></a>5.否定命题</h4><p>缺点：不够直观。<br>优点：委婉。 这个事不是不行。</p>
+<h4 id="6-比较"><a href="#6-比较" class="headerlink" title="6.比较"></a>6.比较</h4><p>比较，判断，反映。<br>判断是一种精神活动，通过观念的链接，使我们对客观世界作出连贯的描述。<br>判断是命题的基础。<br>一个判断真实反映了客观世界事物之间的联系，这个判断是正确的。<br>反映在命题中是基础，将观念联结在一起反映事物之间联系。<br>比较任何两个事物，起决定作用的是特征的重要性，特征的数量次要一些。主要特性被遗漏，不能得出可靠结论。</p>
+<h4 id="7-比较和论证"><a href="#7-比较和论证" class="headerlink" title="7.比较和论证"></a>7.比较和论证</h4><p>将论证放到比较中。<br>类比论<br>用在哪？<br>    - A与B，无法直接得出B；<br>    - 未来要发生的，如：根据越南战争推测美国怎样做也会发生战争。<br>定义：基于两个事物拥有大量相同特性的事实，当其中一个事物具有其他某个特性时，很可能另一个事物也同时具有。</p>
+<h4 id="8-正确论证"><a href="#8-正确论证" class="headerlink" title="8.正确论证"></a>8.正确论证</h4><p>正确论证的两个基本要素：前提和结论。<br>论证提供给我们知识的可靠性远远高于权威。<br>正确论证，我们依靠自己知道了一些东西是正确的。我们知其然，也知其所以然。<br>正确论证依靠事实（内容）和形式（结构）。<br>真实性针对命题的内容，有效性针对命题的形式。</p>
+<p>三种简单的论证形式：<br>联言论证、选言论证、条件论证。</p>
+<ul>
+<li>联言论证。<br>  A·B<br>  安娜是明尼苏达大学二年级的学生，主修生物学。</li>
+<li>选言论证。<br>  AvB<br>  阿迪尔昨晚或者是坐火车去了华盛顿，或者是坐飞机。</li>
+<li>条件论证<h4 id="9-条件论证"><a href="#9-条件论证" class="headerlink" title="9.条件论证"></a>9.条件论证</h4>条件论证又称假言论证。<br>A→B，A，所以B<br>A-&gt;B，-B，所以-A<br>大前提A→B告诉我们如果A（无论它是什么）成立，那么B也必然成立。</li>
+</ul>
+<p>现实生活中，严格逻辑学意义上的条件论证真的很少。在我们的论证中，鲜有在前提和结论之间存在必然联系的情况。这样造成的结果是，即使前提实现，我们也不一定能得到论证中的结论。但这并不意味着条件论证是没有意义的，即使它看起来并不总是带来必然的结果。在我们大量使用的条件论证中，结论只是众多可能性中的一个。我们的目标是尽可能严谨地建立我们的论证，保证结论出现的最大可能性。</p>
+<p>条件论证是具有前瞻性的，可靠的预言来自于对过去事实的积累。</p>
+<h4 id="10-三段论"><a href="#10-三段论" class="headerlink" title="10.三段论"></a>10.三段论</h4><p>每一个M都是P。每一个S都是M。所以，每一个S都是P。<br>第一个命题是大前提，第二个命题是小前提，第三个是结论。<br>M代表中项，P代表大项，S代表小项。<br>M是桥梁。</p>
+<h4 id="11-前提的真实性"><a href="#11-前提的真实性" class="headerlink" title="11.前提的真实性"></a>11.前提的真实性</h4><p>错误的前提会带来错误的结论。</p>
+<h4 id="12-前提的相关性"><a href="#12-前提的相关性" class="headerlink" title="12.前提的相关性"></a>12.前提的相关性</h4><p>前提与结论的相关性。前提不支持结论，前提会失去作用。</p>
+<h4 id="13-事实命题，价值命题"><a href="#13-事实命题，价值命题" class="headerlink" title="13.事实命题，价值命题"></a>13.事实命题，价值命题</h4><p>音乐家是演奏音乐的人”，是个千真万确的命题。<br>音乐家都是杰出的人”，这个命题不是关于事实而是关于价值的，它反映了提出命题的人的观点（主观）。</p>
+<h4 id="14-论证结构"><a href="#14-论证结构" class="headerlink" title="14.论证结构"></a>14.论证结构</h4><p>主项、谓项；周延性</p>
+<h4 id="15-结论必须反映前提的量"><a href="#15-结论必须反映前提的量" class="headerlink" title="15.结论必须反映前提的量"></a>15.结论必须反映前提的量</h4><p>命题的量指的是它是全称还是特称。命题的量取决于它的主项。</p>
+<p>在结论中，命题的量必须以更绝对的量展现出来。结论是全称，则前提必须是全称。<br>两个特称前提无法得出必然结果。中项无法联结大项和小项。</p>
+<h4 id="16-结论必须反映前提的质"><a href="#16-结论必须反映前提的质" class="headerlink" title="16.结论必须反映前提的质"></a>16.结论必须反映前提的质</h4><p>命题的质指的是肯定还是否定。</p>
+<p>两个否定前提无法得出肯定结论。<br>两个肯定前提无法得出否定结论。</p>
+<h4 id="17-归纳论证-总结"><a href="#17-归纳论证-总结" class="headerlink" title="17.归纳论证-总结"></a>17.归纳论证-总结</h4><p>演绎论证：一般到个别。全称到特称；整体到部分；普遍的事实到组成等部分。<br>演绎论证的前提：通常是全称命题。<br>演绎论证结论：必然性结论。<br>演绎论证的基本原理：从一个我们知道的命题（大前提）开始，经过抽丝剥茧的分析（通过小前提得出结论）得出原始命题后隐含的是什么。</p>
+<p>归纳论证：个别到一般。特称到全称；部分到整体。<br>归纳论证的前提：一系列特称命题。<br>归纳论证的结论：可能性结论。</p>
+<p>归纳论证的步骤：<br>    1.假设，假设事物是什么样子的推测。假设来源：1.某次偶然观察；2.长期研究测算<br>    2.以整体中的某一部分作为样本研究，以此代替整体。样本范围的大小决定了它的代表性。<br>归纳论证作用（目的）：举一反三，对大量的事物做出可信的一般性结论。</p>
+<h4 id="18-评定论证-记录"><a href="#18-评定论证-记录" class="headerlink" title="18.评定论证-记录"></a>18.评定论证-记录</h4><p>？前提：证据不充足的前提只是观点。<br>实体生活中的前提：经常会遇到部分为真。</p>
+<h4 id="18-评定论证-总结"><a href="#18-评定论证-总结" class="headerlink" title="18.评定论证-总结"></a>18.评定论证-总结</h4><p>评定步骤：</p>
+<ol>
+<li>是否有明确的前提和结论</li>
+<li>前提是否证据充足</li>
+<li>前提是否正确</li>
+<li>前提与结论是否强相关</li>
+<li>论证结构是否合理<ol>
+<li>必然性结论</li>
+<li>可能性结论。可靠性评定：前提信息的可靠程度。</li>
+</ol>
+</li>
+<li>论证力量评定：论证对客观规律的反映程度<h4 id="19-构造一个论证-记录"><a href="#19-构造一个论证-记录" class="headerlink" title="19.构造一个论证-记录"></a>19.构造一个论证-记录</h4>论证的目的：得出正确的结论，说服听众接受。<br>说服听众接受，在论证时，需要选择适合于听众的方式。<h3 id="3-逻辑学的语言总结"><a href="#3-逻辑学的语言总结" class="headerlink" title="3.逻辑学的语言总结"></a>3.逻辑学的语言总结</h3>思维导图位置：有道云笔记-430思维-简单的逻辑学<h4 id="19-构造一个论证-总结"><a href="#19-构造一个论证-总结" class="headerlink" title="19.构造一个论证-总结"></a>19.构造一个论证-总结</h4>两个要素：前提和结论。<br>前提：<ul>
+<li>真实性。是否可判断命题真假，命题是否为真</li>
+<li>是否可被对方接受。<ul>
+<li>语言描述。例如：我想告诉一个 老奶奶我是自由职业者，我说：“ 我是soho一族。”</li>
+<li>逻辑描述。</li>
+</ul>
+</li>
+<li>力度。<ul>
+<li>对结论支持程度。</li>
+<li>听众接收到的力度：<ul>
+<li>如果几个前提同时支持一个结论，可能没必要全部用上。<br>   原因：前提多了会分散接收人的关注度。<pre><code>  - 去掉支持力度弱的前提，可让接收着关注支持力度强的前提，效果会更好。
+  - 多个前提的相关度都很强，也最好不要全部使用，少量前提可让论证重点突出。
+</code></pre>
+</li>
+<li>某些前提对某些特殊的听众有不同寻常的意义，这时候使用特殊前提。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-非逻辑思维的根源"><a href="#4-非逻辑思维的根源" class="headerlink" title="4.非逻辑思维的根源"></a>4.非逻辑思维的根源</h3><h4 id="1-怀疑论-记录"><a href="#1-怀疑论-记录" class="headerlink" title="1.怀疑论-记录"></a>1.怀疑论-记录</h4><p>积极作用：前提有争议时，不接受结论。<br>错误：<br>    极端怀疑论：世界没有真相<br>    中度怀疑论：世界有真相，但人无法探知真相</p>
+<h4 id="2-逃避型不可知论-记录"><a href="#2-逃避型不可知论-记录" class="headerlink" title="2.逃避型不可知论-记录"></a>2.逃避型不可知论-记录</h4><p>没有足够的证据可以对某个事物作出确定的判断。<br>既不 否定 真相 的 存在 也不 认为 它可 望而 不可 即。<br>人们对任何确定的事物的真相都所知甚少。</p>
+<h4 id="3-悲观和盲目乐观主义-记录"><a href="#3-悲观和盲目乐观主义-记录" class="headerlink" title="3.悲观和盲目乐观主义-记录"></a>3.悲观和盲目乐观主义-记录</h4><p>悲观者假设：<br>    （1） 要 辩论 的 问题是 荒谬 的；<br>    （2） 他的 对手 很 愚蠢；<br>    （3） 辩论 本身 不能 带来 任何 好处。</p>
+<h4 id="5-情感和论证-记录"><a href="#5-情感和论证-记录" class="headerlink" title="5.情感和论证-记录"></a>5.情感和论证-记录</h4><p>情绪越紧张，越难有清晰的思维，冷静行动的难度越大。<br>在辩论中，我们必须使论证远离情绪的影响。但成功做到这点很难。事实上，即使我们成功 了， 这也不见得会是一件好事。</p>
+<h4 id="6-推理的原因-记录"><a href="#6-推理的原因-记录" class="headerlink" title="6.推理的原因-记录"></a>6.推理的原因-记录</h4><p> 如果 一个 人的 思维 起点 本身 是 扭曲 的（ 即 不 反映 物质 世界 的 客观规律）， 那么 即使 推理 做到 了 和他 的 思维 保持 统一， 同样是 不合逻辑 的。</p>
+<h4 id="7-论证不是争吵-记录"><a href="#7-论证不是争吵-记录" class="headerlink" title="7.论证不是争吵-记录"></a>7.论证不是争吵-记录</h4><p>论证 是 理性 的 探讨， 不要 将它 和 争吵 混为一谈。<br>论证 的 目的 是 发现 真相， 争吵 的 目的 是 击败 你的 对手。<br>    有 许多人， 虽然 他们 愿意 和你 争吵， 但却 不愿意 或者 没能 力 和你 进行 论证。 不要 浪费时间、 精力 和 这种 人进行 争论。</p>
+<h4 id="9-常识-记录"><a href="#9-常识-记录" class="headerlink" title="9.常识-记录"></a>9.常识-记录</h4><p>逻辑， 生于 常识， 但又 高于 常识。 逻辑思维 的 出现 以及 对 非逻辑 思维 的 避免， 都 根植 于 常识 的 某 一面。 常识 是对 日常生活 中 显而易见 的 事物 的 敏锐 洞悉。 它以 可靠 的 辨别 力 为 标志， 以 语言 作为 首要 的 揭示 事物 的 方式， 不 欺瞒， 将 语言 的 作用 定位 于 表达 而 不是 炫耀。 常识 更 接近 本源， 服务于 推理 的 基本原则。</p>
+<h3 id="5-非逻辑思维的主要形式"><a href="#5-非逻辑思维的主要形式" class="headerlink" title="5.非逻辑思维的主要形式"></a>5.非逻辑思维的主要形式</h3><p>错误推理可通过直接作用于人的情感的方式来战胜正确推理。</p>
+<h4 id="1-否定前件"><a href="#1-否定前件" class="headerlink" title="1.否定前件"></a>1.否定前件</h4><p>条件论证中的无效形式：否定前件得出否定后件<br>举例：<br>    如果路易斯在跑步，那么他在移动。<br>    路易斯没有跑步。<br>    结论：他没有移动。</p>
+<pre><code>路易斯跑步是他移动的充分非必要条件。否定A得不出否定B。
+</code></pre>
+<h4 id="2-肯定后件"><a href="#2-肯定后件" class="headerlink" title="2.肯定后件"></a>2.肯定后件</h4><p>条件论证中的无效形式：肯定后件得出肯定前件。<br>举例：<br>    如果路易斯在跑步，那么他在移动。<br>    路易斯在移动。<br>    结论：他在跑步。</p>
+<pre><code>大前提是A → B，例子中却是 B → A。
+</code></pre>
+<h4 id="3-中项不周延"><a href="#3-中项不周延" class="headerlink" title="3.中项不周延"></a>3.中项不周延</h4><p>三段论中的大前提和小前提中的中项不是全称。<br>举例：<br>    几个纳粹党人是恺撒俱乐部的成员。<br>    张三是恺撒俱乐部的成员。<br>    结论：张三是纳粹党人。<br>    中项：恺撒俱乐部在大前提中的纳粹党人是特称，没有周延性</p>
+<h4 id="4-偷换概念"><a href="#4-偷换概念" class="headerlink" title="4.偷换概念"></a>4.偷换概念</h4><p>三段论中的中项用了多义词、多义字、有广泛含义的词、有广泛含义的字。<br>举例：<br>    鬼是迷信的人所说的人死后的灵魂。<br>    他目标闪烁，心里有鬼。<br>    所以，他心里有人死后的灵魂。</p>
+<pre><code>小前提心里有鬼的鬼的含义是不光明的事物，和大前提中的鬼的含义不同。
+</code></pre>
+<p>有意使用多义词不一定都是恶意的，可能只是为了幽默。</p>
+<p>举例：<br>    关爱他人是利他主义的标志。<br>    唐璜是博爱者。<br>    所以，唐璜是利他主义者。</p>
+<pre><code>爱的含义太广泛，此处小前提的爱是花花公子的意思。
+</code></pre>
+<h4 id="5-窃取论题"><a href="#5-窃取论题" class="headerlink" title="5.窃取论题"></a>5.窃取论题</h4><p>前提和结论意思相同。相当于用结论推导结论。<br>举例：<br>    因为雪梨撒过谎，<br>    所以，雪梨是个撒谎者。</p>
+<h4 id="6-虚假假设"><a href="#6-虚假假设" class="headerlink" title="6.虚假假设"></a>6.虚假假设</h4><p>用假设推导结论，后来发现假设是错误的。</p>
+<h4 id="7-稻草人谬误"><a href="#7-稻草人谬误" class="headerlink" title="7.稻草人谬误"></a>7.稻草人谬误</h4><p>与人争辩，为了削弱对方的论点而故意扭曲其论证过程。？？？</p>
+<h4 id="8-误用传统"><a href="#8-误用传统" class="headerlink" title="8.误用传统"></a>8.误用传统</h4><p>以前的事情都是这么处理的，并不能成为强制后来者遵循老方法的充分理由。</p>
+<p>但对于 传统， 如果 将 历史 悠久 作为 坚持 传统 的 唯一 原因 是 不合逻辑 的，那么 将 历史 悠久 作为 拒绝 传统 的 唯一 理由 同样 也 不合逻辑。</p>
+<h4 id="9-以暴制暴"><a href="#9-以暴制暴" class="headerlink" title="9.以暴制暴"></a>9.以暴制暴</h4><p>他们先做了，我们应该以牙还牙。</p>
+<h4 id="10-民主谬误"><a href="#10-民主谬误" class="headerlink" title="10.民主谬误"></a>10.民主谬误</h4><p>解释：一个给定的社会中，大多数人认为是正确的命题。自己也认为是正确的。<br>民主谬误在情感上有很强的说服力。</p>
+<h4 id="11-对人不对事"><a href="#11-对人不对事" class="headerlink" title="11.对人不对事"></a>11.对人不对事</h4><p>解释：与他人辩论时，通过想观众传达对手与论证无关的信息，比如生活中的负面信息，以此达到击败对手的目的。</p>
+<p>如果论证的目的只是为了获胜，对人不对事谬误将会有效地发挥作用。<br>这种胜利并非源于观点的价值，而是扰乱观众视听的能力。</p>
+<h4 id="12-压制理性"><a href="#12-压制理性" class="headerlink" title="12.压制理性"></a>12.压制理性</h4><p>通过强制而不是理性说服他人，强迫别人想不愿去想的事情。<br>人只有在独立思考、独立判断的情况下才能确定什么是真。</p>
+<h4 id="13-滥用专家意见"><a href="#13-滥用专家意见" class="headerlink" title="13.滥用专家意见"></a>13.滥用专家意见</h4><p>专家给了意见，我们需要追问给出意见的理由。<br>对于专家给的意见，我们需要论证。<br>如果 我们 仅仅 满足于 专家 的 话， 那么 本质上 就是：“ 不要 问 任何 问题， 按照 我们 的 话 去做。”<br>一个专家只有在其已经建立微信的领域内做出的主张，才是值得我们关注的。</p>
+<h4 id="14-质的量化错误"><a href="#14-质的量化错误" class="headerlink" title="14.质的量化错误"></a>14.质的量化错误</h4><p>举例1：<br>    将体感温度量化，体感温度包含：温度、风力、湿度。<br>    假设昨天是39℃，今天是40℃。只以温度量化体感温度今天比昨天热，但实际因为别的因素，可能今天比昨天凉快。<br>举例2：<br>    对爱、美丽、善良、公正、自由、正义、和平量化是对它们的亵渎。</p>
+<p>从严格意义上质无法准确量化。如果质量可以完美的被数量表示，那么数量和质量之间界限的基础就会消失。<br>我们 在 纵容 一种 关于 精度 的 假象， 似乎 只要 质量 被 量化 了， 我们 就能 更好 地 了解 它。</p>
+<h4 id="15-以出身论英雄"><a href="#15-以出身论英雄" class="headerlink" title="15.以出身论英雄"></a>15.以出身论英雄</h4><p>某个学校出的学生大部分都不好。这个学校的学生投了简历给我，我认为学生不好。<br>这个学生不好不是必然成立。</p>
+<p>实际情况下，我们应该认为的是，不值得判断这个学生好不好花费很多时间和精力。</p>
+<h4 id="16-分析不到位"><a href="#16-分析不到位" class="headerlink" title="16.分析不到位"></a>16.分析不到位</h4><p>分解只能针对合成的产物，仅仅分解是不够的，还要能把他们重新组装成整体。</p>
+<p>分析除了要分析出整体中的每一个部分，还要了解部分之间的相互作用、相互联系，最终组装成一个整体。</p>
+<h4 id="17-简化主义"><a href="#17-简化主义" class="headerlink" title="17.简化主义"></a>17.简化主义</h4><p>一个整体大于其组成部分的和。<br>举例：<br>    人的身体可以根据化学元素被分解，生成称人的身体等同于一堆化学元素。<br>这种谬误发生于我们只对整体的一部分加以关注。</p>
+<h4 id="18-分类错误"><a href="#18-分类错误" class="headerlink" title="18.分类错误"></a>18.分类错误</h4><p>举例：<br>    苹果当成橙子。<br>    图书馆中书的错误分类可能导致几年找不到。</p>
+<h4 id="19-混淆视听"><a href="#19-混淆视听" class="headerlink" title="19.混淆视听"></a>19.混淆视听</h4><p>故意提出一些无关的情感信息来分散对方的注意力。<br>    1.直接诉诸情感，而不是推理。<br>    2.所提供的信息与所要进行的论证毫不相关。</p>
+<h4 id="20-以笑饰非"><a href="#20-以笑饰非" class="headerlink" title="20.以笑饰非"></a>20.以笑饰非</h4><p>无法应对论证时，让人们嘲笑每个论证。</p>
+<p>让人们嘲笑论证是反对论证强有力的方式。</p>
+<h4 id="21-以泪掩过"><a href="#21-以泪掩过" class="headerlink" title="21.以泪掩过"></a>21.以泪掩过</h4><p>转移注意力到主论证的外围问题，并博取同情，达到听众支持主论证的目的</p>
+<h4 id="22-无法反驳"><a href="#22-无法反驳" class="headerlink" title="22.无法反驳"></a>22.无法反驳</h4><p>无法反驳也无法证明的命题是猜想，而不是正确论点。</p>
+<h4 id="23-两难陷阱"><a href="#23-两难陷阱" class="headerlink" title="23.两难陷阱"></a>23.两难陷阱</h4><h4 id="24-以先后论因果"><a href="#24-以先后论因果" class="headerlink" title="24.以先后论因果"></a>24.以先后论因果</h4><p>举例：<br>    鸟先唱歌，太阳后升起来。<br>    得出鸟唱歌是太阳升起的条件。</p>
+<h4 id="25-情感误导"><a href="#25-情感误导" class="headerlink" title="25.情感误导"></a>25.情感误导</h4><p>忽略与我们的信仰或喜欢的东西负面的信息。</p>
+<h4 id="26-功利误导"><a href="#26-功利误导" class="headerlink" title="26.功利误导"></a>26.功利误导</h4><p>为达目的，不择手段。仅仅关注一个方法对想要得到结果的作用，而不考虑其他方面。</p>
+<h4 id="27-避免结论"><a href="#27-避免结论" class="headerlink" title="27.避免结论"></a>27.避免结论</h4><p>人们推理的目的，发现问题，研究其解决之道。<br>若果论证的目的只是为了使自己听到自己在说什么，那是将论证庸俗化的。</p>
+<h4 id="28-简化推理-记录"><a href="#28-简化推理-记录" class="headerlink" title="28.简化推理-记录"></a>28.简化推理-记录</h4><p>同17简化主义<br>一部分人的接受能力只在自己想听的范围内。一部分人只想听自己喜欢的答案，这往往是愤世嫉俗者的特点。</p>
+<h2 id="其他书"><a href="#其他书" class="headerlink" title="其他书"></a>其他书</h2><p>影响力。作者西奥迪尼将社会现象通过基础逻辑串联起来， 就解释了人们互相影响的基本 规律。<br>风格的要素-写作</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="追逐 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="追逐 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>追逐
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.xiaoruiit.com/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/" title="简单的逻辑学-读书笔记">http://blog.xiaoruiit.com/2022/06/04/读书笔记/简单的逻辑学-笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa%204.0/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6/" rel="tag"># 简单的逻辑学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/01/%E5%B7%A5%E5%85%B7/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B0%83%E8%AF%95/" rel="prev" title="Google浏览器调试">
+      <i class="fa fa-chevron-left"></i> Google浏览器调试
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/09/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E8%AE%A4%E7%9F%A5%E8%A7%89%E9%86%92-%E7%AC%94%E8%AE%B0/" rel="next" title="认知觉醒-笔记">
+      认知觉醒-笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zNTcwNC8xMjI0MA=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">简单的逻辑学-读书笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E4%B9%A6"><span class="nav-number">1.2.</span> <span class="nav-text">本书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A6%E5%86%85%E5%AE%B9%E5%AE%89%E6%8E%92"><span class="nav-number">1.3.</span> <span class="nav-text">书内容安排</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%85%E8%AF%BB%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.4.</span> <span class="nav-text">阅读建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9"><span class="nav-number">1.5.</span> <span class="nav-text">内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AD%A6%E4%B9%A0%E9%80%BB%E8%BE%91%E5%AD%A6%E7%9A%84%E6%80%9D%E6%83%B3%E5%87%86%E5%A4%87"><span class="nav-number">1.5.1.</span> <span class="nav-text">1.学习逻辑学的思想准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%A8%E7%A5%9E%E8%B4%AF%E6%B3%A8"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">1.全神贯注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%A1%AE%E8%AE%A4%E4%BA%8B%E5%AE%9E"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">2.确认事实</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%A7%82%E5%BF%B5%E4%B8%8E%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">3.观念与对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E7%95%99%E6%84%8F%E8%A7%82%E5%BF%B5%E7%9A%84%E6%9C%AC%E6%BA%90"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">4.留意观念的本源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E8%A7%82%E5%BF%B5%E4%B8%8E%E4%BA%8B%E5%AE%9E"><span class="nav-number">1.5.1.5.</span> <span class="nav-text">5.观念与事实</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%B0%86%E8%A7%82%E5%BF%B5%E4%BB%98%E8%AF%B8%E8%AF%AD%E8%A8%80%EF%BC%88%E7%94%A8%E8%AF%AD%E8%A8%80%E8%A1%A8%E8%BE%BE%E8%A7%82%E5%BF%B5%EF%BC%89"><span class="nav-number">1.5.1.6.</span> <span class="nav-text">6.将观念付诸语言（用语言表达观念）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E6%9C%89%E6%95%88%E6%B2%9F%E9%80%9A"><span class="nav-number">1.5.1.7.</span> <span class="nav-text">7.有效沟通</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-%E7%9C%9F%E7%9B%B8"><span class="nav-number">1.5.1.8.</span> <span class="nav-text">10.真相</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AD%A6%E4%B9%A0%E9%80%BB%E8%BE%91%E5%AD%A6%E7%9A%84%E6%80%9D%E6%83%B3%E5%87%86%E5%A4%87-%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.2.</span> <span class="nav-text">1.学习逻辑学的思想准备-总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%BB%E8%BE%91%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.3.</span> <span class="nav-text">2.逻辑的基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">1.基本原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%81%B0%E8%89%B2%E5%9C%B0%E5%B8%A6%E5%8F%8A%E4%BA%BA%E4%B8%BA%E7%81%B0%E8%89%B2%E5%9C%B0%E5%B8%A6"><span class="nav-number">1.5.3.2.</span> <span class="nav-text">2.灰色地带及人为灰色地带</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%B8%87%E7%89%A9%E7%BB%88%E6%9C%89%E5%85%B6%E6%A0%B9%E6%BA%90"><span class="nav-number">1.5.3.3.</span> <span class="nav-text">3.万物终有其根源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%AF%B9%E5%8E%9F%E5%9B%A0%E7%9A%84%E6%8E%A2%E5%AF%BB%E4%B8%8D%E8%A6%81%E5%8D%8A%E9%80%94%E8%80%8C%E5%BA%9F"><span class="nav-number">1.5.3.4.</span> <span class="nav-text">4.对原因的探寻不要半途而废</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%8C%BA%E5%88%86%E5%8E%9F%E5%9B%A0"><span class="nav-number">1.5.3.5.</span> <span class="nav-text">5.区分原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%AE%9A%E4%B9%89%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.5.3.6.</span> <span class="nav-text">6.定义术语</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E7%9B%B4%E8%A8%80%E5%91%BD%E9%A2%98"><span class="nav-number">1.5.3.7.</span> <span class="nav-text">7.直言命题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E6%99%AE%E9%81%8D%E5%91%BD%E9%A2%98"><span class="nav-number">1.5.3.8.</span> <span class="nav-text">8.普遍命题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%BB%E8%BE%91%E8%A1%A8%E7%8E%B0%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.5.4.</span> <span class="nav-text">3.逻辑表现形式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%AE%BA%E8%AF%81"><span class="nav-number">1.5.4.1.</span> <span class="nav-text">1.创建一个论证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%A8%E7%A7%B0%E5%88%B0%E7%89%B9%E7%A7%B0"><span class="nav-number">1.5.4.2.</span> <span class="nav-text">2.全称到特称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%89%B9%E7%A7%B0%E5%88%B0%E5%85%A8%E7%A7%B0"><span class="nav-number">1.5.4.3.</span> <span class="nav-text">3.特称到全称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%96%AD%E8%A8%80"><span class="nav-number">1.5.4.4.</span> <span class="nav-text">4.断言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%90%A6%E5%AE%9A%E5%91%BD%E9%A2%98"><span class="nav-number">1.5.4.5.</span> <span class="nav-text">5.否定命题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E6%AF%94%E8%BE%83"><span class="nav-number">1.5.4.6.</span> <span class="nav-text">6.比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E6%AF%94%E8%BE%83%E5%92%8C%E8%AE%BA%E8%AF%81"><span class="nav-number">1.5.4.7.</span> <span class="nav-text">7.比较和论证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E6%AD%A3%E7%A1%AE%E8%AE%BA%E8%AF%81"><span class="nav-number">1.5.4.8.</span> <span class="nav-text">8.正确论证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-%E6%9D%A1%E4%BB%B6%E8%AE%BA%E8%AF%81"><span class="nav-number">1.5.4.9.</span> <span class="nav-text">9.条件论证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-%E4%B8%89%E6%AE%B5%E8%AE%BA"><span class="nav-number">1.5.4.10.</span> <span class="nav-text">10.三段论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-%E5%89%8D%E6%8F%90%E7%9A%84%E7%9C%9F%E5%AE%9E%E6%80%A7"><span class="nav-number">1.5.4.11.</span> <span class="nav-text">11.前提的真实性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-%E5%89%8D%E6%8F%90%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">1.5.4.12.</span> <span class="nav-text">12.前提的相关性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-%E4%BA%8B%E5%AE%9E%E5%91%BD%E9%A2%98%EF%BC%8C%E4%BB%B7%E5%80%BC%E5%91%BD%E9%A2%98"><span class="nav-number">1.5.4.13.</span> <span class="nav-text">13.事实命题，价值命题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-%E8%AE%BA%E8%AF%81%E7%BB%93%E6%9E%84"><span class="nav-number">1.5.4.14.</span> <span class="nav-text">14.论证结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15-%E7%BB%93%E8%AE%BA%E5%BF%85%E9%A1%BB%E5%8F%8D%E6%98%A0%E5%89%8D%E6%8F%90%E7%9A%84%E9%87%8F"><span class="nav-number">1.5.4.15.</span> <span class="nav-text">15.结论必须反映前提的量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#16-%E7%BB%93%E8%AE%BA%E5%BF%85%E9%A1%BB%E5%8F%8D%E6%98%A0%E5%89%8D%E6%8F%90%E7%9A%84%E8%B4%A8"><span class="nav-number">1.5.4.16.</span> <span class="nav-text">16.结论必须反映前提的质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#17-%E5%BD%92%E7%BA%B3%E8%AE%BA%E8%AF%81-%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.4.17.</span> <span class="nav-text">17.归纳论证-总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18-%E8%AF%84%E5%AE%9A%E8%AE%BA%E8%AF%81-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.4.18.</span> <span class="nav-text">18.评定论证-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18-%E8%AF%84%E5%AE%9A%E8%AE%BA%E8%AF%81-%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.4.19.</span> <span class="nav-text">18.评定论证-总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#19-%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E8%AE%BA%E8%AF%81-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.4.20.</span> <span class="nav-text">19.构造一个论证-记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%80%BB%E8%BE%91%E5%AD%A6%E7%9A%84%E8%AF%AD%E8%A8%80%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.5.</span> <span class="nav-text">3.逻辑学的语言总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#19-%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E8%AE%BA%E8%AF%81-%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.5.1.</span> <span class="nav-text">19.构造一个论证-总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%9D%9E%E9%80%BB%E8%BE%91%E6%80%9D%E7%BB%B4%E7%9A%84%E6%A0%B9%E6%BA%90"><span class="nav-number">1.5.6.</span> <span class="nav-text">4.非逻辑思维的根源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%80%80%E7%96%91%E8%AE%BA-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.1.</span> <span class="nav-text">1.怀疑论-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E9%80%83%E9%81%BF%E5%9E%8B%E4%B8%8D%E5%8F%AF%E7%9F%A5%E8%AE%BA-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.2.</span> <span class="nav-text">2.逃避型不可知论-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%82%B2%E8%A7%82%E5%92%8C%E7%9B%B2%E7%9B%AE%E4%B9%90%E8%A7%82%E4%B8%BB%E4%B9%89-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.3.</span> <span class="nav-text">3.悲观和盲目乐观主义-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%83%85%E6%84%9F%E5%92%8C%E8%AE%BA%E8%AF%81-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.4.</span> <span class="nav-text">5.情感和论证-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E6%8E%A8%E7%90%86%E7%9A%84%E5%8E%9F%E5%9B%A0-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.5.</span> <span class="nav-text">6.推理的原因-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E8%AE%BA%E8%AF%81%E4%B8%8D%E6%98%AF%E4%BA%89%E5%90%B5-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.6.</span> <span class="nav-text">7.论证不是争吵-记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-%E5%B8%B8%E8%AF%86-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.6.7.</span> <span class="nav-text">9.常识-记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%9D%9E%E9%80%BB%E8%BE%91%E6%80%9D%E7%BB%B4%E7%9A%84%E4%B8%BB%E8%A6%81%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.5.7.</span> <span class="nav-text">5.非逻辑思维的主要形式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%90%A6%E5%AE%9A%E5%89%8D%E4%BB%B6"><span class="nav-number">1.5.7.1.</span> <span class="nav-text">1.否定前件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%82%AF%E5%AE%9A%E5%90%8E%E4%BB%B6"><span class="nav-number">1.5.7.2.</span> <span class="nav-text">2.肯定后件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%B8%AD%E9%A1%B9%E4%B8%8D%E5%91%A8%E5%BB%B6"><span class="nav-number">1.5.7.3.</span> <span class="nav-text">3.中项不周延</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%81%B7%E6%8D%A2%E6%A6%82%E5%BF%B5"><span class="nav-number">1.5.7.4.</span> <span class="nav-text">4.偷换概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E7%AA%83%E5%8F%96%E8%AE%BA%E9%A2%98"><span class="nav-number">1.5.7.5.</span> <span class="nav-text">5.窃取论题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E8%99%9A%E5%81%87%E5%81%87%E8%AE%BE"><span class="nav-number">1.5.7.6.</span> <span class="nav-text">6.虚假假设</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E7%A8%BB%E8%8D%89%E4%BA%BA%E8%B0%AC%E8%AF%AF"><span class="nav-number">1.5.7.7.</span> <span class="nav-text">7.稻草人谬误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E8%AF%AF%E7%94%A8%E4%BC%A0%E7%BB%9F"><span class="nav-number">1.5.7.8.</span> <span class="nav-text">8.误用传统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-%E4%BB%A5%E6%9A%B4%E5%88%B6%E6%9A%B4"><span class="nav-number">1.5.7.9.</span> <span class="nav-text">9.以暴制暴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-%E6%B0%91%E4%B8%BB%E8%B0%AC%E8%AF%AF"><span class="nav-number">1.5.7.10.</span> <span class="nav-text">10.民主谬误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-%E5%AF%B9%E4%BA%BA%E4%B8%8D%E5%AF%B9%E4%BA%8B"><span class="nav-number">1.5.7.11.</span> <span class="nav-text">11.对人不对事</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-%E5%8E%8B%E5%88%B6%E7%90%86%E6%80%A7"><span class="nav-number">1.5.7.12.</span> <span class="nav-text">12.压制理性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-%E6%BB%A5%E7%94%A8%E4%B8%93%E5%AE%B6%E6%84%8F%E8%A7%81"><span class="nav-number">1.5.7.13.</span> <span class="nav-text">13.滥用专家意见</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14-%E8%B4%A8%E7%9A%84%E9%87%8F%E5%8C%96%E9%94%99%E8%AF%AF"><span class="nav-number">1.5.7.14.</span> <span class="nav-text">14.质的量化错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15-%E4%BB%A5%E5%87%BA%E8%BA%AB%E8%AE%BA%E8%8B%B1%E9%9B%84"><span class="nav-number">1.5.7.15.</span> <span class="nav-text">15.以出身论英雄</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#16-%E5%88%86%E6%9E%90%E4%B8%8D%E5%88%B0%E4%BD%8D"><span class="nav-number">1.5.7.16.</span> <span class="nav-text">16.分析不到位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#17-%E7%AE%80%E5%8C%96%E4%B8%BB%E4%B9%89"><span class="nav-number">1.5.7.17.</span> <span class="nav-text">17.简化主义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18-%E5%88%86%E7%B1%BB%E9%94%99%E8%AF%AF"><span class="nav-number">1.5.7.18.</span> <span class="nav-text">18.分类错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#19-%E6%B7%B7%E6%B7%86%E8%A7%86%E5%90%AC"><span class="nav-number">1.5.7.19.</span> <span class="nav-text">19.混淆视听</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#20-%E4%BB%A5%E7%AC%91%E9%A5%B0%E9%9D%9E"><span class="nav-number">1.5.7.20.</span> <span class="nav-text">20.以笑饰非</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#21-%E4%BB%A5%E6%B3%AA%E6%8E%A9%E8%BF%87"><span class="nav-number">1.5.7.21.</span> <span class="nav-text">21.以泪掩过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#22-%E6%97%A0%E6%B3%95%E5%8F%8D%E9%A9%B3"><span class="nav-number">1.5.7.22.</span> <span class="nav-text">22.无法反驳</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#23-%E4%B8%A4%E9%9A%BE%E9%99%B7%E9%98%B1"><span class="nav-number">1.5.7.23.</span> <span class="nav-text">23.两难陷阱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#24-%E4%BB%A5%E5%85%88%E5%90%8E%E8%AE%BA%E5%9B%A0%E6%9E%9C"><span class="nav-number">1.5.7.24.</span> <span class="nav-text">24.以先后论因果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#25-%E6%83%85%E6%84%9F%E8%AF%AF%E5%AF%BC"><span class="nav-number">1.5.7.25.</span> <span class="nav-text">25.情感误导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#26-%E5%8A%9F%E5%88%A9%E8%AF%AF%E5%AF%BC"><span class="nav-number">1.5.7.26.</span> <span class="nav-text">26.功利误导</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#27-%E9%81%BF%E5%85%8D%E7%BB%93%E8%AE%BA"><span class="nav-number">1.5.7.27.</span> <span class="nav-text">27.避免结论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#28-%E7%AE%80%E5%8C%96%E6%8E%A8%E7%90%86-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.5.7.28.</span> <span class="nav-text">28.简化推理-记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%B9%A6"><span class="nav-number">1.6.</span> <span class="nav-text">其他书</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">追逐</p>
+  <div class="site-description" itemprop="description">技术融于生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">176</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">139</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">追逐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"S5VAuYJ1IwlShaxWk8a4FHBc-gzGzoHsz","app_key":"4uuoVMQeqKxIXcX7xwgWjGat","server_url":null,"security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

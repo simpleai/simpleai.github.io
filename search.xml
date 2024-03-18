@@ -5495,85 +5495,6 @@ public interface Strategy &#123;
       </tags>
   </entry>
   <entry>
-    <title>Mysql-性能分析和优化</title>
-    <url>/2020/08/09/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/</url>
-    <content><![CDATA[<p>mysql优化.包括软件、硬件、SQL语句</p>
-<span id="more"></span>
-
-<h1 id="Mysql-性能分析和优化"><a href="#Mysql-性能分析和优化" class="headerlink" title="Mysql-性能分析和优化"></a>Mysql-性能分析和优化</h1><h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><h3 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h3><p>分析：</p>
-<ol>
-<li>通过慢查询日志获取查询时间较长的SQL</li>
-<li>查看SQL的执行计划explain</li>
-<li>使用show profile[s] 查看SQL的性能使用情况</li>
-</ol>
-<p>注意：开启慢查询日志影响mysql性能，排查问题时再开启。</p>
-<h4 id="开启慢查询日志："><a href="#开启慢查询日志：" class="headerlink" title="开启慢查询日志："></a>开启慢查询日志：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">slow_query_log=ON </span><br><span class="line">long_query_time=3 </span><br><span class="line">slow_query_log_file=/var/lib/mysql/slow-log.log</span><br></pre></td></tr></table></figure>
-
-<h4 id="慢查询工具"><a href="#慢查询工具" class="headerlink" title="慢查询工具"></a>慢查询工具</h4><h5 id="mysqldumpslow"><a href="#mysqldumpslow" class="headerlink" title="mysqldumpslow"></a>mysqldumpslow</h5><p>mysql自带的慢查询日志工具。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">到按照时间排序的前10条里面含有左连接的查询语句：</span><br><span class="line">mysqldumpslow -s t -t 10 -g “left join”  /var/log/mysql/slow.log </span><br></pre></td></tr></table></figure>
-
-<h5 id="percona-toolkit"><a href="#percona-toolkit" class="headerlink" title="percona-toolkit"></a>percona-toolkit</h5><p>高级命令行工具的集合，可以查看当前服务的摘要信息，磁盘检测，分析慢查询日志，查找重复索引，实现表同步等等。</p>
-<p>linux:</p>
-<p><a href="https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz">https://www.percona.com/downloads/percona-toolkit/3.0.11/binary/tarball/percona-toolkit-3.0.11_x86_64.tar.gz</a></p>
-<h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><h4 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h4><p>默认128M，修改为系统内存的4/5，尽量从内存中读取。</p>
-<p>buffer pool越大和存储引擎I/O次数越少。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; show global status like &#x27;innodb_buffer_pool_pages_%&#x27;; </span><br><span class="line">| Innodb_buffer_pool_pages_free | 0 | 0 表示已经被用光</span><br></pre></td></tr></table></figure>
-
-<p>修改 my.cnf</p>
-<p>innodb_buffffer_pool_size =3000M</p>
-<h4 id="redo-log-file"><a href="#redo-log-file" class="headerlink" title="redo log file"></a>redo log file</h4><p>默认8M,修改为Buffer的1/4.降低磁盘写入次数。</p>
-<h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><p>普通硬盘更换为SSD，提高磁盘读写，SSD寻道时间很短。</p>
-<h3 id="内存预热"><a href="#内存预热" class="headerlink" title="内存预热"></a>内存预热</h3><h3 id="表和字段设计"><a href="#表和字段设计" class="headerlink" title="表和字段设计"></a>表和字段设计</h3><ul>
-<li>减少关联查询，创建合理的冗余字段</li>
-<li>字段太多的大表，拆表</li>
-<li>表中不常用的字段或者存储数据比较多的字段，拆表。（商品表中的商品介绍字段单独拆解到另一个表中，使用ID关联）</li>
-<li>每张表都要有主键，主键最好是int类型。</li>
-</ul>
-<h3 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h3><h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><p>数量不要超过6个。通过索引返回的数据量需要小于1/3才有效。</p>
-<ul>
-<li><p><strong>建立索引：</strong></p>
-<ol>
-<li>on两边，where字段</li>
-<li>组合索引（最左前缀）</li>
-<li>order排序</li>
-<li>group by分组统计</li>
-</ol>
-</li>
-<li><p><strong>避免索引失效：</strong></p>
-<ol>
-<li>or，is null,is not null</li>
-<li>between右边</li>
-<li> where 子句中的“=”左边进行函数、算术运算或其他表达式运算</li>
-<li>不遵循组合索引最左前缀</li>
-<li>字符串不加’’(单引号)</li>
-<li>like (%abc)，可通过组合索引解决</li>
-</ol>
-</li>
-</ul>
-<h4 id="左连接"><a href="#左连接" class="headerlink" title="左连接"></a>左连接</h4><p>注意sql执行顺序</p>
-<ol>
-<li>小表驱动大表</li>
-<li>使用条件缩小左表后再连接右表，会有数量级的提升</li>
-</ol>
-<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>有截断效果（停止全表扫描），但还是在server层处理数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from user limit 10</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 一千万条数据</span><br><span class="line"># 速度很慢 10</span><br><span class="line">select * from user limit 9000000 for 10</span><br><span class="line"># 速度很快 0.03</span><br><span class="line">select * from user where id &gt; 9000000 limit 10</span><br></pre></td></tr></table></figure>
-
-<h4 id="count"><a href="#count" class="headerlink" title="count"></a>count</h4><p>count（*）找普通索引，即去最小的索引树遍历，包含null</p>
-<p>count（字段） ，走缓存，不包含null</p>
-<p>count（1） 包含null</p>
-]]></content>
-      <categories>
-        <category>Mysql</category>
-      </categories>
-      <tags>
-        <tag>Mysql</tag>
-        <tag>性能分析</tag>
-        <tag>优化</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL-索引</title>
     <url>/2020/07/24/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql-%E7%B4%A2%E5%BC%95/</url>
     <content><![CDATA[<p>索引原理</p>
@@ -6470,7 +6391,7 @@ public interface Strategy &#123;
       </tags>
   </entry>
   <entry>
-    <title>Hexo博客进阶：图片、主题、域名</title>
+    <title>Hexo博客进阶：图片、主题、域名、HTTPS</title>
     <url>/2018/04/12/%E5%8D%9A%E5%AE%A2/Hexo%E5%8D%9A%E5%AE%A2%E8%BF%9B%E9%98%B6%EF%BC%9A%E5%9B%BE%E7%89%87%E3%80%81%E4%B8%BB%E9%A2%98%E3%80%81%E5%9F%9F%E5%90%8D/</url>
     <content><![CDATA[<p>hexo搭建的个人博客上传图片,主题更换,域名固定</p>
 <span id="more"></span>
@@ -6486,6 +6407,10 @@ public interface Strategy &#123;
 <h2 id="修改博客的配置文件"><a href="#修改博客的配置文件" class="headerlink" title="修改博客的配置文件"></a>修改博客的配置文件</h2><p>打开博客目录下的站点配置文件_config.yml 把主题切换为next。<br><img src="Hexo%E5%8D%9A%E5%AE%A2%E8%BF%9B%E9%98%B6%EF%BC%9A%E5%9B%BE%E7%89%87%E3%80%81%E4%B8%BB%E9%A2%98%E3%80%81%E5%9F%9F%E5%90%8D/2-2.png"><br>完成之后主题就可以用了。<br>输入命令<br><code>hexo s </code><br>本地测试，可以在 localhost:4000 查看效果</p>
 <p>配置文件_config.yml在网站中中文显示乱码<br>可以使用notepad++将配置文件转为utf-8编码</p>
 <h1 id="域名固定"><a href="#域名固定" class="headerlink" title="域名固定"></a>域名固定</h1><p>上一篇绑定域名后，每次部署本地文件到GitHub，都需要到GitHub的setting中重写保存自己绑定的域名。<br>只保存一次的解决方法：到blog本地目录 source 文件夹下面新建一个文件，取名为 CNAME (无后缀)，内容就是上面所说到的自己的域名如下：<br>blog.xiaoruiit.com<br>就可以了。</p>
+<h1 id="https"><a href="#https" class="headerlink" title="https"></a>https</h1><p>阿里云域名控制台配置</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/9e5f13972c62601aaf8ea92f611f79c.png" alt="9e5f13972c62601aaf8ea92f611f79c"></p>
+<p>github配置</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/bf91ff50c2ac87d6c6c0e46efa87750.png" alt="bf91ff50c2ac87d6c6c0e46efa87750"></p>
 ]]></content>
       <categories>
         <category>博客</category>
@@ -14847,6 +14772,586 @@ public interface Strategy &#123;
       </categories>
       <tags>
         <tag>报错</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mysql性能分析和优化</title>
+    <url>/2020/05/31/214%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%92%8C%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[<p>查询慢查询日志</p>
+<span id="more"></span>
+<h1 id="Mysql性能分析和优化"><a href="#Mysql性能分析和优化" class="headerlink" title="Mysql性能分析和优化"></a>Mysql性能分析和优化</h1><p>性能分析，优化，监控工具</p>
+<h2 id="1-性能分析"><a href="#1-性能分析" class="headerlink" title="1.性能分析"></a>1.性能分析</h2><p>慢查询日志，profile性能监控，performance_schema性能监控</p>
+<h3 id="1-1慢查询日志"><a href="#1-1慢查询日志" class="headerlink" title="1.1慢查询日志"></a>1.1慢查询日志</h3><p>分析：</p>
+<ol>
+<li>通过慢查询日志获取查询时间较长的SQL</li>
+<li>查看SQL的执行计划explain</li>
+<li>使用show profile[s] 查看SQL的性能使用情况</li>
+</ol>
+<p>注意：开启慢查询日志影响mysql性能，排查问题时再开启。</p>
+<h4 id="1-1-1开启慢查询日志"><a href="#1-1-1开启慢查询日志" class="headerlink" title="1.1.1开启慢查询日志"></a>1.1.1开启慢查询日志</h4><ol>
+<li><p>连接服务器</p>
+<p>工具：FinalShell</p>
+</li>
+<li><p>登录mysql</p>
+</li>
+<li><p>慢查询日志</p>
+<ol>
+<li>开启</li>
+<li>设置参数</li>
+</ol>
+</li>
+<li><p>查看慢查询日志</p>
+</li>
+</ol>
+<h5 id="查看慢查询信息"><a href="#查看慢查询信息" class="headerlink" title="查看慢查询信息"></a>查看慢查询信息</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">## 登录mysql</span><br><span class="line">show variables like &#x27;%slow%&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="慢查询设置（开启、收集条件）"><a href="#慢查询设置（开启、收集条件）" class="headerlink" title="慢查询设置（开启、收集条件）"></a>慢查询设置（开启、收集条件）</h5><h6 id="临时"><a href="#临时" class="headerlink" title="临时"></a>临时</h6><p>重启失效</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">## 开启</span><br><span class="line">set global slow_query_log=&#x27;ON&#x27;;</span><br><span class="line">## 设置慢查询日志存放位置</span><br><span class="line">set global slow_query_log_file=&#x27;/usr/local/mysql/data/slow.log&#x27;;</span><br><span class="line">## 设置收集慢查询SQL时间</span><br><span class="line">set global long_query_time= 1;</span><br><span class="line"></span><br><span class="line">## 查看收集慢查询SQL时间</span><br><span class="line">show global variables like &#x27;long_query_time&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h6 id="永久"><a href="#永久" class="headerlink" title="永久"></a>永久</h6><p>修改配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">slow_query_log = ON</span><br><span class="line">slow_query_log_file = /var/lib/mysql/slow.log</span><br><span class="line">long_query_time = 1</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-2分析慢查询日志"><a href="#1-1-2分析慢查询日志" class="headerlink" title="1.1.2分析慢查询日志"></a>1.1.2分析慢查询日志</h4><h5 id="mysqldumpslow工具"><a href="#mysqldumpslow工具" class="headerlink" title="mysqldumpslow工具"></a>mysqldumpslow工具</h5><p>mysql自带</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 按照查询时间排序的前10条里面含有左连接的查询语句</span><br><span class="line">mysqldumpslow -s t -t 10 -g &quot;left join&quot; /var/lib/mysql/slow.log</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-s 表示按照何种方式排序</span><br><span class="line">    c 访问次数</span><br><span class="line">    l 锁定时间</span><br><span class="line">    r 返回记录</span><br><span class="line">    t 查询时间</span><br><span class="line">    al 平均锁定时间</span><br><span class="line">    ar 平均返回记录数</span><br><span class="line">    at  平均查询时间</span><br><span class="line">-t 返回前面多少条数据</span><br><span class="line">-g 搭配正则匹配模式，大小写不敏感</span><br></pre></td></tr></table></figure>
+
+<h5 id="percona-toolkit工具"><a href="#percona-toolkit工具" class="headerlink" title="percona-toolkit工具"></a>percona-toolkit工具</h5><h6 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h6><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install perl-DBD-MySQL</span><br><span class="line"># 安装perl-Digest-MD5工具</span><br><span class="line">yum -y install perl-Digest-MD5</span><br><span class="line"></span><br><span class="line">yum -y install perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker</span><br><span class="line"></span><br><span class="line">cd /usr/local/src</span><br><span class="line"># 下载percona-toolkit 工具包</span><br><span class="line">wget percona.com/get/percona-toolkit.tar.gz</span><br><span class="line">tar zxf percona-toolkit.tar.gz</span><br><span class="line">cd /usr/local/src/percona-toolkit-3.1.0</span><br><span class="line"></span><br><span class="line"># 安装perl模块，制定依赖路径</span><br><span class="line">perl Makefile.PL PREFIX=/usr/local/percona-toolkit</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<h6 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h6><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行工具pt-query-digest</span><br><span class="line">cd /usr/local/percona-toolkit/bin</span><br><span class="line">./pt-query-digest /usr/local/src/slowsqlExample/slow0312.log </span><br><span class="line"># 下载文件到本地</span><br><span class="line">sz slow0312.log </span><br></pre></td></tr></table></figure>
+
+<p>常用命令</p>
+<ol>
+<li><p>分析慢查询文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pt-query-digest  slow.log &gt; slow_report.log</span><br></pre></td></tr></table></figure>
+
+<p>报告：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">第一部分</span><br><span class="line">该工具执行日志分析的用户时间，系统时间，物理内存占用大小，虚拟内存占用大小</span><br><span class="line"># 95.2s user time, 1.9s system time, 1.09G rss, 1.17G vsz</span><br><span class="line">工具执行时间</span><br><span class="line"># Current date: Thu Jun 10 16:45:43 2021</span><br><span class="line">运行分析工具的主机名    </span><br><span class="line"># Hostname: iZbp15xr4imyrogpz1216f9Z</span><br><span class="line">被分析的文件名</span><br><span class="line"># Files: /usr/lib/mysql/slow.log</span><br><span class="line">语句总数量，唯一的语句数量，QPS，并发数</span><br><span class="line"># Overall: 38.97k total, 321 unique, 0.03 QPS, 0.06x concurrency _________</span><br><span class="line">日志记录的时间范围</span><br><span class="line"># Time range: 2021-05-25T07:31:57 to 2021-06-10T08:45:02</span><br><span class="line"># Attribute          total     min     max     avg     95%  stddev  median</span><br><span class="line"># ============     ======= ======= ======= ======= ======= ======= =======</span><br><span class="line"># Exec time         76953s      1s    467s      2s      3s      9s      1s</span><br><span class="line"># Lock time           729s       0     29s    19ms   214us   546ms   119us</span><br><span class="line"># Rows sent         98.47M       0   1.68M   2.59k    0.99  46.83k    0.99</span><br><span class="line"># Rows examine      57.71G       0   1.69M   1.52M   1.61M 303.67k   1.53M</span><br><span class="line"># Query size         1.34G       6  29.15M  35.96k   84.10 477.84k   84.10</span><br><span class="line"></span><br><span class="line">第二部分</span><br><span class="line"># Profile</span><br><span class="line">Rank：所有语句的排名，默认按查询时间降序排列，通过--order-by指定</span><br><span class="line">Query ID：语句的ID，（去掉多余空格和文本字符，计算hash值）</span><br><span class="line">Response：总的响应时间</span><br><span class="line">time：该查询在本次分析中总的时间占比</span><br><span class="line">calls：执行次数，即本次分析总共有多少条这种类型的查询语句</span><br><span class="line">R/Call：平均每次执行的响应时间</span><br><span class="line">V/M：响应时间Variance-to-mean的比率</span><br><span class="line">Item：查询对象</span><br><span class="line"># Rank Query ID                        Response time   Calls R/Call V/M   </span><br><span class="line"># ==== =============================== =============== ===== ====== ===== </span><br><span class="line">#    1 0xABD1DCCCCD5AA5128E10C27B34... 1246.6948 41.7%   283 4.4053  0.04 UPDATE ziweidashi_deviceinfo</span><br><span class="line">#    2 0x6914B81AAD1785E50708ABD113...  877.6900 29.3%   339 2.5891  0.09 SELECT birthDay_notify</span><br><span class="line">#    3 0x44D9474C6D5C58DD07B5FEEA0D...  299.4193 10.0%    71 4.2172  0.05 SELECT tmall_product_orders</span><br><span class="line">#    4 0xA9BE84CBE3DAA9B1CDD9B5A9EC...  127.0137  4.2%    46 2.7612  0.04 SELECT daily_user_action_log</span><br><span class="line">#    5 0xCF0E12117C971C3013142E3717...  118.3138  4.0%    49 2.4146  0.05 SELECT tmall_user_take_coupon_record</span><br><span class="line">#    6 0x94263184D24186330B13193534...   97.0805  3.2%    35 2.7737  0.56 SELECT tgg_users</span><br><span class="line">#    7 0xC51165F1287A2ECDA221AC1F54...   52.5870  1.8%    22 2.3903  0.04 SELECT util_user_task_log</span><br><span class="line">#    8 0xB8004D6D8A7A7967E04CD81E26...   43.7895  1.5%    16 2.7368  0.08 SELECT daily_user_action_log</span><br><span class="line">#    9 0x910E19224F33DAA6391927B8E8...   41.3720  1.4%    15 2.7581  1.17 SELECT qifugong_tianbi_record</span><br><span class="line"># MISC 0xMISC                            86.7871  2.9%    30 2.8929   0.0 &lt;12 ITEMS&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第三及后续部分，第一条查询语句 query id：0xABD1DCCCCD5AA5128E10C27B34BC04E7</span><br><span class="line"># Query 1: 0.01 QPS, 0.03x concurrency, ID 0xABD1DCCCCD5AA5128E10C27B34BC04E7 at byte 355748</span><br><span class="line"># Scores: V/M = 0.04</span><br><span class="line"># Time range: 2020-03-11 12:24:03 to 2020-03-12 00:16:13</span><br><span class="line"># Attribute    pct   total     min     max     avg     95%  stddev  median</span><br><span class="line"># ============ === ======= ======= ======= ======= ======= ======= =======</span><br><span class="line"># Count         31     283</span><br><span class="line"># Exec time     41   1247s      4s      8s      4s      5s   437ms      4s</span><br><span class="line"># Lock time     69   386ms    24us   371ms     1ms    93us    21ms    44us</span><br><span class="line"># Rows sent      0       0       0       0       0       0       0       0</span><br><span class="line"># Rows examine  18 180.00M 651.14k 651.45k 651.29k 650.62k       0 650.62k</span><br><span class="line"># Query size    10  27.64k     100     100     100     100       0     100</span><br><span class="line"># String:</span><br><span class="line">数据库名</span><br><span class="line"># Databases    taxen_ziweidashi</span><br><span class="line">执行主机</span><br><span class="line"># Hosts        118.190.93.166</span><br><span class="line">执行用户</span><br><span class="line"># Users        devAccount</span><br><span class="line">查询时间占比</span><br><span class="line"># Query_time distribution</span><br><span class="line">#   1us</span><br><span class="line">#  10us</span><br><span class="line"># 100us</span><br><span class="line">#   1ms</span><br><span class="line">#  10ms</span><br><span class="line"># 100ms</span><br><span class="line">#    1s  ################################################################</span><br><span class="line">#  10s+</span><br><span class="line"># Tables</span><br><span class="line">#    SHOW TABLE STATUS FROM `taxen_ziweidashi` LIKE &#x27;ziweidashi_deviceinfo&#x27;</span><br><span class="line">#    SHOW CREATE TABLE `taxen_ziweidashi`.`ziweidashi_deviceinfo`</span><br><span class="line">UPDATE ziweidashi_deviceinfo</span><br><span class="line">         SET expired = 1 </span><br><span class="line">        WHERE createTime   &lt;=   1583942580685\G</span><br><span class="line"># Converted for EXPLAIN</span><br><span class="line"># EXPLAIN /*!50100 PARTITIONS*/</span><br><span class="line">select  expired = 1 from ziweidashi_deviceinfo where  createTime   &lt;=   1583942580685\G</span><br><span class="line"></span><br><span class="line"># Query 2: 0.03 QPS, 0.07x concurrency, ID 0x6914B81AAD1785E50708ABD11319E02E at byte 13829</span><br><span class="line"># Scores: V/M = 0.09</span><br><span class="line"># Time range: 2020-03-11 12:22:13 to 16:05:47</span><br><span class="line"># Attribute    pct   total     min     max     avg     95%  stddev  median</span><br><span class="line"># ============ === ======= ======= ======= ======= ======= ======= =======</span><br><span class="line"># Count         37     339</span><br><span class="line"># Exec time     29    878s      2s      4s      3s      4s   472ms      2s</span><br><span class="line"># Lock time      5    29ms    31us     4ms    86us    98us   229us    66us</span><br><span class="line"># Rows sent      0      24       0       2    0.07       0    0.32       0</span><br><span class="line"># Rows examine  67 665.20M   1.96M   1.96M   1.96M   1.96M       0   1.96M</span><br><span class="line"># Query size    59 154.47k     462     467  466.60  463.90    2.07  463.90</span><br><span class="line"># String:</span><br><span class="line"># Hosts        10.66.186.115</span><br><span class="line"># Users        root</span><br><span class="line"># Query_time distribution</span><br><span class="line">#   1us</span><br><span class="line">#  10us</span><br><span class="line"># 100us</span><br><span class="line">#   1ms</span><br><span class="line">#  10ms</span><br><span class="line"># 100ms</span><br><span class="line">#    1s  ################################################################</span><br><span class="line">#  10s+</span><br><span class="line"># Tables</span><br><span class="line">#    SHOW TABLE STATUS LIKE &#x27;birthDay_notify&#x27;</span><br><span class="line">#    SHOW CREATE TABLE `birthDay_notify`</span><br><span class="line"># EXPLAIN /*!50100 PARTITIONS*/</span><br><span class="line">select birthdayno0_.id as id1_1_, birthdayno0_.index_card_show_date as index_ca2_1_, birthdayno0_.userId as userId3_1_, birthdayno0_.push_content as push_con4_1_, birthdayno0_.card_content as card_con5_1_, birthdayno0_.birthday_userId as birthday6_1_, birthdayno0_.birthday_contactId as birthday7_1_, birthdayno0_.need_push as need_pus8_1_ from birthDay_notify birthdayno0_ where birthdayno0_.userId=1304747 and birthdayno0_.index_card_show_date=&#x27;2020-03-11 00:00:00&#x27;</span><br></pre></td></tr></table></figure></li>
+<li><p>分析最近12小时内的查询</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pt-query-digest  --since=12h  slow.log &gt; slow_report_last12.log</span><br></pre></td></tr></table></figure></li>
+<li><p>分析制定时间范围内的查询</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pt-query-digest slow.log --since &#x27;2017-02-07 09:30:00&#x27; --until &#x27;2017-02-07 10:00:00&#x27;&gt; &gt; slow_report_time.log</span><br></pre></td></tr></table></figure></li>
+<li><p>分析bin log</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysqlbinlog mysql-bin.000093 &gt; mysql-bin000093.sql</span><br><span class="line">pt-query-digest --type=binlog mysql-bin000093.sql &gt; slow_report_bin.log</span><br></pre></td></tr></table></figure></li>
+<li><p>分析general log</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pt-query-digest --type=genlog localhost.log &gt; slow_report_general.log</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="1-2profile性能监控"><a href="#1-2profile性能监控" class="headerlink" title="1.2profile性能监控"></a>1.2profile性能监控</h3><p>MySQL5.6中已过时，使用performance_schema代替。<a href="https://dev.mysql.com/doc/refman/5.6/en/show-profile.html">13.7.5.31 SHOW PROFILE Statement</a></p>
+<h3 id="1-3performance-schema性能监控"><a href="#1-3performance-schema性能监控" class="headerlink" title="1.3performance_schema性能监控"></a>1.3performance_schema性能监控</h3><p>参考：MySql8.0<a href="https://dev.mysql.com/doc/refman/8.0/en/performance-schema-query-profiling.html">27.19.1 Query Profiling Using Performance Schema</a></p>
+<p>SQL在各阶段的耗时分析，默认开启</p>
+<h4 id="查看是否开启"><a href="#查看是否开启" class="headerlink" title="查看是否开启"></a>查看是否开启</h4><p>SHOW VARIABLES LIKE ‘performance_schema’;</p>
+<h4 id="开启"><a href="#开启" class="headerlink" title="开启"></a>开启</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">performance_schema=ON</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改performance-schema监控配置，并分析一个测试SQL"><a href="#修改performance-schema监控配置，并分析一个测试SQL" class="headerlink" title="修改performance_schema监控配置，并分析一个测试SQL"></a>修改performance_schema监控配置，并分析一个测试SQL</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看performance_schema是否开启</span><br><span class="line">SHOW VARIABLES LIKE &#x27;performance_schema&#x27;;</span><br><span class="line"></span><br><span class="line"># setup_actors表的初始内容是匹配任何用户和主机，因此对于所有前台线程，默认情况下启用监视和历史事件收集功能</span><br><span class="line">select * from `performance_schema`.setup_actors;</span><br><span class="line"></span><br><span class="line"># 更新setup_actors表中的默认行，以禁用对所有前台线程的历史事件收集和监视，并插入一个新行，为运行查询的用户启用监视和历史事件收集:</span><br><span class="line">UPDATE performance_schema.setup_actors</span><br><span class="line">       SET ENABLED = &#x27;NO&#x27;, HISTORY = &#x27;NO&#x27;</span><br><span class="line">       WHERE HOST = &#x27;%&#x27; AND USER = &#x27;%&#x27;;</span><br><span class="line">			 </span><br><span class="line">INSERT INTO performance_schema.setup_actors</span><br><span class="line">       (HOST,USER,ROLE,ENABLED,HISTORY)</span><br><span class="line">       VALUES(&#x27;localhost&#x27;,&#x27;test_user&#x27;,&#x27;%&#x27;,&#x27;YES&#x27;,&#x27;YES&#x27;);</span><br><span class="line"># 收集者</span><br><span class="line"># ​ instruments: 生产者，用于采集mysql中各种各样的操作产生的事件信息，对应配置表中的配置项我们可以称为监控采集配置项。</span><br><span class="line">select * from performance_schema.setup_instruments;</span><br><span class="line">		</span><br><span class="line"># 开启收集者		</span><br><span class="line">UPDATE performance_schema.setup_instruments</span><br><span class="line">       SET ENABLED = &#x27;YES&#x27;, TIMED = &#x27;YES&#x27;</span><br><span class="line">       WHERE NAME LIKE &#x27;%stage/%&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 消费者</span><br><span class="line"># ​ consumers:消费者，对应的消费者表用于存储来自instruments采集的数据，对应配置表中的配置项我们可以称为消费存储配置项。</span><br><span class="line">select * from performance_schema.setup_consumers;</span><br><span class="line"></span><br><span class="line"># 开启消费者</span><br><span class="line">UPDATE PERFORMANCE_SCHEMA.setup_consumers </span><br><span class="line">SET ENABLED = &#x27;YES&#x27; </span><br><span class="line">WHERE</span><br><span class="line">	NAME LIKE &#x27;%events_statements_%&#x27;;</span><br><span class="line">	</span><br><span class="line">UPDATE performance_schema.setup_consumers</span><br><span class="line">SET ENABLED = &#x27;YES&#x27;</span><br><span class="line">WHERE</span><br><span class="line">	NAME LIKE &#x27;%events_stages_%&#x27;;		 </span><br><span class="line"></span><br><span class="line"># 测试SQL语句</span><br><span class="line">select * from dept;</span><br><span class="line"></span><br><span class="line"># 查询测试SQL语句在events_statements_history_long中的id</span><br><span class="line">SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TEXT</span><br><span class="line">       FROM performance_schema.events_statements_history_long WHERE SQL_TEXT like &#x27;%select * from dept%&#x27;;</span><br><span class="line"># 查询测试SQL语句各模块执行耗时		 </span><br><span class="line">SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration</span><br><span class="line">       FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=258;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-优化"><a href="#2-优化" class="headerlink" title="2.优化"></a>2.优化</h2><p>表和字段结构设计，索引，SQL语句，Mysql配置，操作系统配置，硬件，内存预热</p>
+<p>开发人员关注表结构设计、索引和SQL语句方面的优化。</p>
+<p>DBA学习Mysql配置，操作系统配置，硬件</p>
+<h3 id="2-1表和字段结构设计"><a href="#2-1表和字段结构设计" class="headerlink" title="2.1表和字段结构设计"></a>2.1表和字段结构设计</h3><ul>
+<li><p>减少关联查询，创建合理的冗余字段</p>
+</li>
+<li><p>字段太多的大表，拆表</p>
+</li>
+<li><p>表中不常用的字段或者存储数据比较多的字段，拆表。（商品表中的商品介绍字段单独拆解到另一个表中，使用ID关联）</p>
+</li>
+<li><p>每张表都要有主键，主键最好是int类型。</p>
+</li>
+<li><p>字段数据类型优先选用较小的数据结构。</p>
+<p>例如：年龄使用TINYINT，而不是INT</p>
+</li>
+<li><p>日期类型使用int类型，日期排序以及对比等操作的效率会更高</p>
+</li>
+</ul>
+<h3 id="2-2索引"><a href="#2-2索引" class="headerlink" title="2.2索引"></a>2.2索引</h3><p>数量不要超过6个。通过索引返回的数据量需要小于1/3才有效。</p>
+<h4 id="建立索引"><a href="#建立索引" class="headerlink" title="建立索引"></a>建立索引</h4><ul>
+<li>on两边，where字段</li>
+<li>组合索引（最左前缀）</li>
+<li>order排序</li>
+<li>group by分组统计</li>
+</ul>
+<h4 id="避免失效"><a href="#避免失效" class="headerlink" title="避免失效"></a>避免失效</h4><ul>
+<li>or，is null,is not null</li>
+<li>between右边</li>
+<li>where 子句中的“=”左边进行函数、算术运算或其他表达式运算</li>
+<li>不遵循组合索引最左前缀</li>
+<li>字符串不加’’(单引号)</li>
+<li>like (%abc)，可通过组合索引解决</li>
+</ul>
+<h3 id="2-3SQL语句"><a href="#2-3SQL语句" class="headerlink" title="2.3SQL语句"></a>2.3SQL语句</h3><p>SQL分析，SQL注意点</p>
+<h4 id="2-3-1SQL分析"><a href="#2-3-1SQL分析" class="headerlink" title="2.3.1SQL分析"></a>2.3.1SQL分析</h4><p>SQL的执行计划explain，使用show profile[s] 查看SQL的性能使用情况</p>
+<p>explian 详见Mysql索引</p>
+<h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><ol>
+<li>asdf<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Count: 36240  Time=1.20s (43521s)  Lock=0.00s (4s)  Rows=1.0 (36240), root[root]@4hosts</span><br><span class="line">select IFNULL(max(zkkq_id), 1) from attendance_card;</span><br><span class="line"># attendance_card本身是有序的，从小到大</span><br><span class="line"># 优化 速度：1.2→0.1</span><br><span class="line">select ifnull( zkkq_id,1) from attendance_card order by id desc limit 1;</span><br><span class="line"></span><br><span class="line"># 判断表是否为空</span><br><span class="line"># 100万 0.6s</span><br><span class="line">select count(*) from table</span><br><span class="line"># 100万 0.01s</span><br><span class="line">select 1 from logmgr_log_history limit 1</span><br></pre></td></tr></table></figure></li>
+<li>索引失效。or、order by id limit<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">WHERE (branch_code = ? OR branch_name LIKE concat(?, ?, ?)) AND create_time &gt;= ? AND create_time &lt;= ? ORDER BY id DESC LIMIT ?</span><br></pre></td></tr></table></figure>
+or 导致branch_code失效。<br>order by id desc limit 20 使create_time失效，而使用了id</li>
+</ol>
+<h4 id="2-3-2SQL优化"><a href="#2-3-2SQL优化" class="headerlink" title="2.3.2SQL优化"></a>2.3.2SQL优化</h4><ol>
+<li><p>避免select *</p>
+</li>
+<li><p>日期条件字段使用bigint，存储时间戳</p>
+</li>
+<li><p>left join on 后不加and, where 后加and</p>
+</li>
+<li><p>表索引多，没有走正确的索引时，user index(index_user_id) ,强制走索引</p>
+</li>
+<li><p>左连接注意SQL执行顺序，mysql会做优化，小表驱动大表，也可自己优化</p>
+</li>
+<li><p>limit</p>
+<p>有截断效果（停止全表扫描），但还是在server层处理数据</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> 一千万条数据</span><br><span class="line"># 速度很慢 10</span><br><span class="line">select * from user limit 9000000 for 10</span><br><span class="line"># 速度很快 0.03</span><br><span class="line">select * from user where id &gt; 9000000 limit 10</span><br></pre></td></tr></table></figure></li>
+<li><p>count<br>count（*）找普通索引，即去最小的索引树遍历，包含null</p>
+<p>count（字段） ，走缓存，不包含null</p>
+<p>count（1） 包含null</p>
+</li>
+<li><p>exists<br>  尽量使用NOT EXISTS替代NOT IN，使用EXISTS替代DISTINCT。</p>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> r.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> task r</span><br><span class="line">         <span class="keyword">LEFT</span> JOINtask_sku_box box <span class="keyword">ON</span> r.rece_id <span class="operator">=</span> box.rece_id</span><br><span class="line"><span class="keyword">WHERE</span> box.sku_code <span class="operator">=</span> <span class="string">&#x27;1111&#x27;</span>;</span><br><span class="line"></span><br><span class="line">explain <span class="keyword">SELECT</span> r.<span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> task r</span><br><span class="line"><span class="keyword">where</span> <span class="keyword">exists</span>(</span><br><span class="line">        <span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> task_sku_box box <span class="keyword">where</span> r.rece_id <span class="operator">=</span> box.rece_id <span class="keyword">and</span> sku_code <span class="operator">=</span> <span class="string">&#x27;1111&#x27;</span></span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>sql索引字段上尽量不要使用函数，在Java中计算好，直接传入。</p>
+  <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> create_time <span class="operator">&gt;</span> now() <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+
+  <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 当前时间前三个月</span></span><br><span class="line">LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+<li></li>
+</ol>
+<h3 id="2-4Mysql配置"><a href="#2-4Mysql配置" class="headerlink" title="2.4Mysql配置"></a>2.4Mysql配置</h3><h4 id="Buffer-Pool"><a href="#Buffer-Pool" class="headerlink" title="Buffer Pool"></a>Buffer Pool</h4><p>默认128M，修改为系统内存的4/5，尽量从内存中读取。</p>
+<p>buffer pool越大和存储引擎I/O次数越少。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; show global status like &#x27;innodb_buffer_pool_pages_%&#x27;; </span><br><span class="line">| Innodb_buffer_pool_pages_free | 0 | 0 表示已经被用光</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 修改配置 my.cnf</span><br><span class="line">innodb_buffffer_pool_size =3000M</span><br></pre></td></tr></table></figure>
+
+<h4 id="redo-log-file"><a href="#redo-log-file" class="headerlink" title="redo log file"></a>redo log file</h4><p>默认8M,修改为Buffer的1/4.降低磁盘写入次数。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">innodb_log_file_size = 750M</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5操作系统设置"><a href="#2-5操作系统设置" class="headerlink" title="2.5操作系统设置"></a>2.5操作系统设置</h3><h3 id="2-6硬件"><a href="#2-6硬件" class="headerlink" title="2.6硬件"></a>2.6硬件</h3><p>固态硬盘</p>
+<h3 id="2-7内存预热"><a href="#2-7内存预热" class="headerlink" title="2.7内存预热"></a>2.7内存预热</h3><h2 id="mysql监控工具"><a href="#mysql监控工具" class="headerlink" title="mysql监控工具"></a>mysql监控工具</h2><p>收费：阿里云</p>
+<p>免费：druid连接池</p>
+]]></content>
+      <categories>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>Mysql</tag>
+        <tag>性能分析</tag>
+        <tag>优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态列的实现</title>
+    <url>/2024/03/14/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/table%E4%B8%AD%E5%8A%A8%E6%80%81%E5%88%97%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+    <content><![CDATA[<p>动态列的实现</p>
+<span id="more"></span>
+
+<h1 id="table中动态列的实现"><a href="#table中动态列的实现" class="headerlink" title="table中动态列的实现"></a>table中动态列的实现</h1><h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/DPk5ohdXMtRFQp3.png" alt="image-20210104183203013"></p>
+<h2 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h2><ol>
+<li>mysql行存储，取出时多行转1行。</li>
+<li>MongoDB</li>
+<li>存为json</li>
+<li>动态修改表字段</li>
+</ol>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="mysql行存储"><a href="#mysql行存储" class="headerlink" title="mysql行存储"></a>mysql行存储</h3><p>优点：统一数据库，InnoDB有事务支持</p>
+<p>缺点：增删改都是批量操作，复杂。</p>
+<h3 id="后端逻辑"><a href="#后端逻辑" class="headerlink" title="后端逻辑"></a>后端逻辑</h3><h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 新增</span><br><span class="line">List&lt;HrSalaryStandardConfigurationAddVO&gt; listAdd = new ArrayList&lt;HrSalaryStandardConfigurationAddVO&gt;();</span><br><span class="line">// 修改</span><br><span class="line">List&lt;HrSalaryStandardConfigurationUpdateVO&gt; listUpdate = new ArrayList&lt;HrSalaryStandardConfigurationUpdateVO&gt;();</span><br><span class="line">// 删除</span><br><span class="line">List&lt;String&gt; listLogialDelete = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">// 确定 money = null值是否传了薪档id</span><br><span class="line">// 修改前查询库中的薪资标准配置</span><br><span class="line">List&lt;String&gt; previousList =  hrSalaryStandardConfigurationMapper.getByDeptAndPost(data.get(0).getDeptId(), data.get(0).getPostId());</span><br><span class="line">// 库中与页面对比出 1.新增集合  2.修改集合  3.删除集合</span><br><span class="line"></span><br><span class="line">// 执行新增、修改、删除</span><br></pre></td></tr></table></figure>
+
+<h3 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB"></a>MongoDB</h3><p>单文档事务支持</p>
+<h3 id="json"><a href="#json" class="headerlink" title="json"></a>json</h3><p>优点：存储方便</p>
+<p>缺点：无法用sql进行条件查询</p>
+<h3 id="动态修改表字段"><a href="#动态修改表字段" class="headerlink" title="动态修改表字段"></a>动态修改表字段</h3><p>缺点：不安全</p>
+]]></content>
+      <categories>
+        <category>技术功能</category>
+      </categories>
+      <tags>
+        <tag>动态列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>批量操作</title>
+    <url>/2021/01/11/%E6%8A%80%E6%9C%AF%E5%8A%9F%E8%83%BD/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<p>批量操作</p>
+<span id="more"></span>
+
+<h1 id="批量操作"><a href="#批量操作" class="headerlink" title="批量操作"></a>批量操作</h1><p>批量保存数据</p>
+<p>页面的10条数据是一个<code>List&lt;SalaryLevelConf&gt; newList</code>;</p>
+<p>数据库的数据是一个<code>List&lt;SalaryLevelConf&gt; oldList</code>;</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   	&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;SalaryLevelConf&gt; newList = <span class="keyword">new</span> ArrayList&lt;&gt;();<span class="comment">// 页面</span></span><br><span class="line">List&lt;SalaryLevelConf&gt; oldList = <span class="keyword">new</span> ArrayList&lt;&gt;();<span class="comment">// 数据库</span></span><br><span class="line"><span class="comment">// 交集-更新</span></span><br><span class="line">List&lt;SalaryLevelConf&gt; intersectionUpdate = CollectionUtils.intersection(newList,oldList).stream().collect(Collectors.toList());</span><br><span class="line"><span class="comment">// 新-旧 差集-新增</span></span><br><span class="line">List&lt;SalaryLevelConf&gt; subtractAdd = CollectionUtils.subtract(newList,oldList).stream().collect(Collectors.toList());</span><br><span class="line"><span class="comment">// 旧-新 差集-删除</span></span><br><span class="line">List&lt;SalaryLevelConf&gt; subtractDelete = CollectionUtils.subtract(oldList,newList).stream().collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<p>集合中的id字段求交集</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">List&lt;SalaryLevelConf&gt; newList = new ArrayList&lt;&gt;();// 页面数据</span><br><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">    SalaryLevelConf salaryLevelConf = new SalaryLevelConf();</span><br><span class="line">    salaryLevelConf.setId(String.valueOf(i));</span><br><span class="line">    newList.add(salaryLevelConf);</span><br><span class="line">&#125;</span><br><span class="line">List&lt;SalaryLevelConf&gt; oldList = new ArrayList&lt;&gt;();// 数据库数据</span><br><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">    SalaryLevelConf salaryLevelConf = new SalaryLevelConf();</span><br><span class="line">    salaryLevelConf.setId(String.valueOf(i+2));</span><br><span class="line">    oldList.add(salaryLevelConf);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 老ID集合</span><br><span class="line">List&lt;String&gt; oldIdList = oldList.stream().map(SalaryLevelConf::getId).collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line">// 交集-更新</span><br><span class="line">List&lt;SalaryLevelConf&gt; intersectionUpdate = newList.stream().filter(</span><br><span class="line">        salaryLevelConf -&gt; oldIdList.contains(salaryLevelConf.getId())</span><br><span class="line">).collect(Collectors.toList());</span><br><span class="line">System.out.println(intersectionUpdate);</span><br><span class="line">// 新-旧 差集-新增</span><br><span class="line">List&lt;SalaryLevelConf&gt; subtractAdd = newList.stream().filter(</span><br><span class="line">        salaryLevelConf -&gt; !oldIdList.contains(salaryLevelConf.getId())</span><br><span class="line">).collect(Collectors.toList());</span><br><span class="line">System.out.println(subtractAdd);</span><br><span class="line">// 旧-新 差集-删除</span><br><span class="line">List&lt;String&gt; newIdList = newList.stream().map(SalaryLevelConf::getId).collect(Collectors.toList());</span><br><span class="line">List&lt;SalaryLevelConf&gt; subtractDelete = oldList.stream().filter(</span><br><span class="line">        salaryLevelConf -&gt; !newIdList.contains(salaryLevelConf.getId())</span><br><span class="line">).collect(Collectors.toList());</span><br><span class="line">System.out.println(subtractDelete);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@Data</span><br><span class="line">public class SalaryLevelConf &#123;</span><br><span class="line">    private String id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>技术功能</category>
+      </categories>
+      <tags>
+        <tag>批量&#39;</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>认知觉醒-笔记</title>
+    <url>/2022/06/09/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E8%AE%A4%E7%9F%A5%E8%A7%89%E9%86%92-%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>认知觉醒-笔记</p>
+<span id="more"></span>
+
+<h1 id="认知觉醒-读书笔记"><a href="#认知觉醒-读书笔记" class="headerlink" title="认知觉醒-读书笔记"></a>认知觉醒-读书笔记</h1><h2 id="其他书"><a href="#其他书" class="headerlink" title="其他书"></a>其他书</h2><h2 id="辅助"><a href="#辅助" class="headerlink" title="辅助"></a>辅助</h2><p>作者个人公众号：清脑，时间2018.5</p>
+<h2 id="本书"><a href="#本书" class="headerlink" title="本书"></a>本书</h2><p>关于成长的原理、方法论，作者的实践。</p>
+<p>将原理、方法论、实践之间建立了联系。<br>对原理的讲述不够准确。</p>
+<h2 id="书内容安排"><a href="#书内容安排" class="headerlink" title="书内容安排"></a>书内容安排</h2><p>上篇<br>    一、二、三章，大脑、潜意识、元认知。<br>下篇<br>    四五六七，能力。专注能力、学习能力、行动能力、情绪能力<br>    八，早起、冥想、阅读、写作、跑步</p>
+<h2 id="阅读建议"><a href="#阅读建议" class="headerlink" title="阅读建议"></a>阅读建议</h2><ol>
+<li>对 书中 的 某个 主题 感兴趣， 拿到 书 后 便 直接 跳到 相关 章节。</li>
+<li>若是 时间 充裕， 最 好还 是 从头开始 阅读， 因为 一些 基础 概念 会 像 插 塑 积木 一样 慢慢 呈现 具体 形态， 前文 的 一些 背景 信息 可能 会对 理解 后文 产生 影响。</li>
+<li>时常 回顾本书，然后 思考 和 实践，</li>
+</ol>
+<h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><h3 id="自序-记录"><a href="#自序-记录" class="headerlink" title="自序-记录"></a>自序-记录</h3><p>人的智商、财富可以通过基因、基金传递给下一代。</p>
+<p>心智：看待人的和事物的态度，以及做出的行为（包括判断和选择）。<br>人生下来，人生观、世界观、价值观从零开始。<br>人的习性、习惯、模式从人性的初始状态开始发展。<br>人的天性是追求简单、轻松、舒适、确定。<br>大部分人对心智了解很少。</p>
+<p>作者认为人与人的根本差异是认知能力。<br>作者学习脑科学、认知科学、心理学、行为科学、社会学等学科，看到了自己成长的可能性。<br>方法论：包含大脑构造、潜意识、元认知、刻意练习等基本概念；包含自控力、专注力、行动力、学习力、情绪力等能力使用；包括早起、冥想、阅读、写作、运动等必备习惯养成。</p>
+<p>真正 的 觉醒 是一 种 发自内心 的 渴望， 立足 长远， 保持 耐心， 运用 认知 的 力量 与 时间 做 朋友；？？？</p>
+<p>如何 激发 和 保持 自我 提升 的 内在 动力， 如何 变苦 涩的 毅力 支撑 为 科学 的 认知 驱动。？？？</p>
+<h3 id="自序-总结"><a href="#自序-总结" class="headerlink" title="自序-总结"></a>自序-总结</h3><p>外围命题逻辑性很差。<br>举例：<br>    想努力，却总是陷入低效的状态。<br>    因为 认知 影响 选择， 而 选择 改变 命运， 所以 成长 的 本质 就是 让 大脑 的 认知 变得 更加 清晰；</p>
+<h3 id="第一章-大脑-一切问题的根源-记录"><a href="#第一章-大脑-一切问题的根源-记录" class="headerlink" title="第一章 大脑-一切问题的根源-记录"></a>第一章 大脑-一切问题的根源-记录</h3><h4 id="大脑"><a href="#大脑" class="headerlink" title="大脑"></a>大脑</h4><p>大脑的组成、各个部分作用、弊端，大脑与成长的联系</p>
+<h5 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h5><p>本能脑：3.6亿年，爬行动物控制是否战斗、是否躲避；捕食；追求异性<br>情绪脑：2亿年，哺乳动物。恐惧，兴奋情绪让自己专注捕猎？愉悦增加同伴亲密度；伤心引来同情者关爱。<br>理智脑:250万年。大脑前额的新皮层。7万-20万年前成形。语言、艺术、富有远见、善于权衡，立足未来获得延时满足。</p>
+<p>为什么理智脑的力量弱：</p>
+<ol>
+<li>出现的晚，进化时间短。本能脑出现了3.6亿年；情绪脑出现了2亿年；理智脑出现了250万年。</li>
+<li>生长过程中发育成熟迟。</li>
+<li>大脑中所占比例少。</li>
+<li>运行速度慢。</li>
+<li>耗能高</li>
+</ol>
+<h5 id="作用、决策弊端"><a href="#作用、决策弊端" class="headerlink" title="作用、决策弊端"></a>作用、决策弊端</h5><p>生活中的大部分决策是本能脑和情绪脑做出的。</p>
+<p>本能脑、情绪脑的作用：生存至上，及时满足，远古社会中不被吃掉、饿死。<br>    举例：<br>        喜欢吃高糖食物<br>        排斥耗能高，如：剧烈运动、思考<br>        不动脑的娱乐消遣行为<br>本能脑、情绪脑的弊端：带来了一些成长的问题。<br>本能脑、情绪脑弊端总结：避难趋易、急于求成。<br>    避难趋易：只做简单和舒适的事，喜欢在核心区域周边打转，呆在舒适区，逃避困难。<br>    急于求成：凡事希望立刻看到结果、效果，对不能看到结果的事没有耐心，非常容易放弃。<br>本能脑、情绪脑与做不成事的联系：天性压倒了愿望和意志力。<br>理智脑明明知道，本能脑、情绪脑让我们做不到；理智脑特别想要，本能脑、情绪脑让我们得不到。</p>
+<h5 id="大脑与成长的联系"><a href="#大脑与成长的联系" class="headerlink" title="大脑与成长的联系"></a>大脑与成长的联系</h5><p>成长需要克服本能脑和情绪脑缺点。成长需要强大理智脑。成长需要巧妙利用情绪的行动力、本能的计算能力。<br>理智脑如何变强：<br>    1. 知道理智脑需要变强，可以变强<br>    2. 遵守用进废退的原则<br>    3. 遵循科学的方法练习<br>习惯为什么难以改变：越用越强，越强越用。</p>
+<h4 id="焦虑的根源"><a href="#焦虑的根源" class="headerlink" title="焦虑的根源"></a>焦虑的根源</h4><p>根源：<br>    想做事，并且想立刻看到效果。<br>    想少付出立即看到效果。<br>    欲望大于当前能力，并且没有耐心。</p>
+<p>人类的安全感来源：自己在某一方面的独特优势。如：能力、财富、权力、影响力。<br>焦虑和我们大脑的生理结构有关。<br>焦虑的形式：</p>
+<ol>
+<li>事多完不成</li>
+<li>定位高</li>
+<li>面对不确定性（选择太多）</li>
+<li>环境</li>
+<li>事难<h4 id="耐心"><a href="#耐心" class="headerlink" title="耐心"></a>耐心</h4>婴儿→孩子→成人，耐心在增长。<br>认识事物发展的基本规律，可以提升耐心。</li>
+</ol>
+<p>规律：价值积累规律、舒适区边缘、成长权重对比、学习平台期。<br>价值积累规律：复利曲线，前期增长缓慢，拐点后飞速增长。<br>舒适区边缘规律：能力形式，舒适区→拉伸区→困难区<br>    高速成长需要在舒适区边缘，拉伸区内，不进入困难区。<br>    拉伸区既有挑战，又有成就。困难区容易因畏惧而逃避。<br>    <img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/YaSwZymMx8cdECe.png" alt="舒适区边缘"><br>成长权重对比。改变量（思维改变)、行动量、思考量、学习量。</p>
+<p>改变量虽小，但效用最大，权重最高。</p>
+<p>学习量虽大，权重最小。</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/3WMRamlJ7FyUzrL.png" alt="成长权重"></p>
+<p>学习平台期：学习进展和学习时间的关系是波浪式上升曲线，而不是线性上升。</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/OJo2W5rdtG1uhER.png" alt="学习平台期"></p>
+<p>耐心的构成：</p>
+<ul>
+<li><p>长远目光，知道的越多，越知道自己所处的位置、阶段，越能预测结果。</p>
+</li>
+<li><p>不放弃</p>
+</li>
+<li><p>是否了解做的事的意义和益处</p>
+</li>
+</ul>
+<p>如何不被诱惑：</p>
+<ul>
+<li>思想上<ul>
+<li>抵制娱乐。相信娱乐是短暂的，负面的？</li>
+</ul>
+</li>
+<li>方法上<ul>
+<li>将诱惑分层次。类别：看新闻，看短视频，玩游戏。时间：5分钟，30分钟，2小时。</li>
+<li>先做事，后娱乐。</li>
+</ul>
+</li>
+</ul>
+<p>对我来说，很重的是娱乐消耗的精力小，学习消耗的精力大，身体支撑不了一直学习。</p>
+<p>用本能脑和情绪脑解决困难。第五章第六节</p>
+<h3 id="第一章-大脑-一切问题的根源-总结"><a href="#第一章-大脑-一切问题的根源-总结" class="headerlink" title="第一章 大脑-一切问题的根源-总结"></a>第一章 大脑-一切问题的根源-总结</h3><p>作者认为理智脑比本能脑、情绪脑高级，但只是某一方面比其他两个脑强。<br>是否在制造本能脑、情绪脑假想敌，并且提高理智脑重要性，来驱动人理智思考。</p>
+<p>坏习惯改变：最好的方法不是用意志力；而是改变思维，提升好习惯重要性，制造假想敌。</p>
+<h3 id="第二章-潜意识-总结"><a href="#第二章-潜意识-总结" class="headerlink" title="第二章 潜意识-总结"></a>第二章 潜意识-总结</h3><p>潜意识与人工智能对比</p>
+<h4 id="潜意识与成长"><a href="#潜意识与成长" class="headerlink" title="潜意识与成长"></a>潜意识与成长</h4><p>成长需要消除潜意识中的模糊</p>
+<h4 id="潜意识与模糊"><a href="#潜意识与模糊" class="headerlink" title="潜意识与模糊"></a>潜意识与模糊</h4><p>模糊种类：</p>
+<ul>
+<li>认知模糊</li>
+<li>情绪模糊</li>
+<li>行动模糊<br>  认知模糊：<br>  介绍：<br>  如何消除：学习知识<br>  情绪模糊：<br>  介绍：<br>  举例：心理师的工作就是在消除情绪对人的负面影响。童年 的 不幸 经历， 虽然 意识 早已 将其 淡忘， 但 潜意识 可能保留 着 这些 印记， 并 隐蔽 地 影响 着 我们 的 性格 和 行为。<br>  如何消除：<pre><code>  对于童年的隐藏，挖出来，面对它，看清它，拆解它，化解它。
+  对于当下，心中有说不清道不明的感觉时，面对它，不让它进入潜意识。
+</code></pre>
+  消除时遇到的问题：<pre><code>  短时间可能加剧痛苦。
+</code></pre>
+  行动模糊：<br>  介绍：认知+情绪模糊。不确定结果（认知），不愿接受差结果（情绪）<br>  如何消除：<pre><code>  花费很多的脑力清晰目标，将目标细化，层级化。建立单行道。
+</code></pre>
+<h4 id="潜意识与感觉"><a href="#潜意识与感觉" class="headerlink" title="潜意识与感觉"></a>潜意识与感觉</h4><h4 id="感觉与学习"><a href="#感觉与学习" class="headerlink" title="感觉与学习"></a>感觉与学习</h4>用理性对要学的内容的难度分级。<br>用感觉分析哪个层级的内容的困难度对自己来说是拉伸区。</li>
+</ul>
+<h4 id="感觉与人生目标"><a href="#感觉与人生目标" class="headerlink" title="感觉与人生目标"></a>感觉与人生目标</h4><p>用感觉分析自己的需求，用理性分析外界需求对应的事物。两者不断结合。</p>
+<h3 id="第三章-元认知-总结"><a href="#第三章-元认知-总结" class="headerlink" title="第三章 元认知-总结"></a>第三章 元认知-总结</h3><p>介绍：<br>    元认知是对自己认知的认知。<br>举例：学习认知觉醒是在认知。元认知是指对学习认知觉醒的过程的认知，对这个学习过程的监控、调节。监控学习进度，学习结果，学习时间。调节什么时候增加学习时间等。<br>    理性脑中的自我觉察、自我控制。即观察、反思、判断、选择能力。<br>    普通认知是理性脑中的学习、理解、记忆、运算等能力。<br>元认知<br>元认知意向性分类：</p>
+<p>元认知主动性分类：<br>    主动元认知。如：走神时，提醒自己集中注意力；生气时，梳理情绪；<br>    被动元认知。被批评、指责时反思。处于顺境，依靠本性生活。<br>元认知和认知的区别：</p>
+<ul>
+<li>思考的对象不同。<ul>
+<li>认知的对象是具体的。</li>
+<li>元认知的对象是抽象的，变化的。</li>
+</ul>
+</li>
+<li>内容不同。<ul>
+<li>认知是掌握一个具体的知识。</li>
+<li>元认知是控制监控和调节掌握具体知识的过程。</li>
+</ul>
+</li>
+<li>作用方式<ul>
+<li>认知使我们取得认知活动的进展。</li>
+<li>元认知通过直接影响认知活动，间接的影响我们取得认知活动进展。</li>
+</ul>
+</li>
+<li>发展速度<br>我们的年龄上，元认知远落后认知。<ul>
+<li>婴儿出生后便有认知能力。</li>
+<li>学前期，才获得一点元认知能力。<br>学校中提升的是我们的普通认知能力，我们还需要主动提升元认知能力。</li>
+</ul>
+</li>
+</ul>
+<p>元认知需要锻炼，元认知和肌肉一样，用进废退。每一次克制，都是一次锻炼。<br>锻炼元认知的方法：<br>    1. 冥想。<br>    2. 练习。监控、调节学习内容。</p>
+<h5 id="自我觉察"><a href="#自我觉察" class="headerlink" title="自我觉察"></a>自我觉察</h5><h5 id="自我控制"><a href="#自我控制" class="headerlink" title="自我控制"></a>自我控制</h5><p>明确需要做的事。控制当下的时间、全天的形成、长远的目标中的关键节点。<br>    当下：有明确的主张。<br>    全天：一天中起床时、拿起手机前、睡觉前。一天做的事种类、数量、做事结果。<br>    长远目标：想清楚意义、动机，时间，结果。</p>
+<p>消除模糊可以提升控制。<br>元认知策略：计划、监控、调节。</p>
+<h3 id="第四章-专注力-情绪与理智的交集-总结"><a href="#第四章-专注力-情绪与理智的交集-总结" class="headerlink" title="第四章 专注力-情绪与理智的交集-总结"></a>第四章 专注力-情绪与理智的交集-总结</h3><p>专注：行动与脑子中想的一致。</p>
+<p>专注的表现：</p>
+<ul>
+<li>主动选择信息。选择重要的事去做；</li>
+<li>深度沉浸。做重要的事，不被次要的事打扰。<br>  专注例子：<br>  动物，狮子吃饱后，沐浴阳光，就只在关注阳光。<br>  人：<pre><code>  不专注的例子：工作中因为手机的消息，从思考中脱离去玩手机。
+  专注的例子：专心工作，不被旁边的说话打扰。
+</code></pre>
+  如何专注：<ol>
+<li>目标明确<br> 要达到的结果明确。如：理解这个知识点，记住这个知识点，可表达出这个知识点。<br> 次一级时间上的明确。如：学这个知识点半小时。<br> 目标过大时，细分目标。</li>
+<li>感受当下，享受当下；不要分心。</li>
+<li>有效的反馈。<br> 向他人讲授得到反馈，老师指导，反思</li>
+<li>拉伸区练习。<br> 每天都要做那些让自己感到有些困难但又可以通过努力来完成的事情。<ul>
+<li>容易的事，不需要调动很多心神，多余的心神容易引导自己走神。</li>
+<li>困难的事，解决不了，容易逃避。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p>灵感：做事时极度专注，在用意识思考问题，主动在特定区域寻找答案。休息时，完全不想，潜意识可能在别的区域找到了答案。</p>
+<p>边界不清的习惯会降低专注能力。<br>边界不清的习惯举例：如果 在做 A 的 时候 想着 B， 在做 B 的 时候 又 想着 A， 那么 意识 工作 的 深度 不够，潜意识也无法顺利开启。</p>
+<h3 id="第五章-学习力-记录"><a href="#第五章-学习力-记录" class="headerlink" title="第五章-学习力-记录"></a>第五章-学习力-记录</h3><p>找到适合自己的方法，适合自己的计划。<br>如何找到适合自己的目标与计划：<br>    先找到一个标准化的目标和计划。<br>    执行。<br>    执行过程中结合自己的实际情况，不断调整。<br>例如：读书，通过名人获取到了书单。自己读着觉得晦涩难懂，那就再去找入门的、有趣的读。<br>错误的例子：<br>    给 自己 设定 一个 很高 的 标准， 还会 经常 给 自己“ 打 鸡血”。</p>
+<p>没有约束的生活，做 选择 是一 件 极为 耗能 的 事情， 如果 没有 与之 匹配 的 清醒 和 定力， 绝大多数 人 最终 都会 被 强大 的 天性 支配， 去 选择 娱乐 消遣。</p>
+<p>学习金字塔：<br>    不同学习方法留存率<br>        被动学习：听 5% 阅读 10% 视听 20% 演示30%<br>        主动学习：讨论 50% 实践 75% 教授 90%<br>    我感觉不同方法所需时间和精力是不同的，不知道花费时间比例如何。</p>
+<p><img src="https://xiaoruiit.oss-cn-beijing.aliyuncs.com/img/ok4a6EyPA51TvmH.png" alt="学习方式留存知识金字塔"></p>
+<h3 id="个人成长-总结"><a href="#个人成长-总结" class="headerlink" title="个人成长-总结"></a>个人成长-总结</h3><ol>
+<li>明确目标</li>
+<li>克服本能脑、情绪脑急于求成、趋难避易，通过及时正向反馈利用本能脑、情绪脑强大之处</li>
+<li>强大理智脑</li>
+<li>消除潜意识中的各类模糊</li>
+<li>提升元认知能力</li>
+<li>强壮身体</li>
+<li>通过冥想、行动和思想一致提升专注力</li>
+<li>学习<ol>
+<li>深度学习</li>
+<li>符合成长权重</li>
+<li>舒适区边缘和体系学习平衡</li>
+<li>番茄钟</li>
+<li>结合效率峰值</li>
+<li>费曼技巧</li>
+</ol>
+</li>
+<li>认清阻碍<ol>
+<li>适应期</li>
+<li>平台期</li>
+<li>平台期<h2 id="书评"><a href="#书评" class="headerlink" title="书评"></a>书评</h2>用词准确性、逻辑性比较差。例子不恰当。<br>集结了很多成长底层规律（知识）。<br>底层规律（知识）、方法论、实践串到了一块，讲了规律、方法论、时间的一些联系。<br>适合了解成长规律（知识）、成长计划、成长实践入门。</li>
+</ol>
+</li>
+</ol>
+<h2 id="随想"><a href="#随想" class="headerlink" title="随想"></a>随想</h2><p>无用知识：<br>    通用知识、深度知识</p>
+]]></content>
+      <categories>
+        <category>读书笔记</category>
+      </categories>
+      <tags>
+        <tag>认知</tag>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单的逻辑学-读书笔记</title>
+    <url>/2022/06/04/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%A6-%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p>《渴望生活》即梵高传，描写了温森特·梵高青年到37岁时的生活。</p>
+<span id="more"></span>
+
+<h1 id="简单的逻辑学-读书笔记"><a href="#简单的逻辑学-读书笔记" class="headerlink" title="简单的逻辑学-读书笔记"></a>简单的逻辑学-读书笔记</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>聪明伶俐只是逻辑思考的潜能高。</p>
+<h2 id="本书"><a href="#本书" class="headerlink" title="本书"></a>本书</h2><p>逻辑学的基本原理和技巧。<br>第一次 遇到 严肃 的 逻辑 学问 题的 读者， 可能 会对 大量 的 专业 术语 和 频繁 使用 的 象征性 符号 反感。 我们没 必要 被 这种 第一 印象 吓倒。<br>为了 更好 地 服务于 日常 实践， 在 叙述 中， 有些 地方 我 采取 了 不是 那么 委婉 的 方式。 很多 时候， 我 更 像 一个 教练 或是 班主任， 用 教导 的 口吻 告诉 我的 读者 应该 怎么 做。</p>
+<h2 id="书内容安排"><a href="#书内容安排" class="headerlink" title="书内容安排"></a>书内容安排</h2><ol>
+<li>作为逻辑思考者搭建思想框架。</li>
+<li>逻辑思维的基本原理</li>
+<li>逻辑思维的具体表现形式</li>
+<li>非逻辑思维的根源。</li>
+<li>谬误（miu4wu4），非逻辑的表现形式</li>
+</ol>
+<h2 id="阅读建议"><a href="#阅读建议" class="headerlink" title="阅读建议"></a>阅读建议</h2><h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><h3 id="1-学习逻辑学的思想准备"><a href="#1-学习逻辑学的思想准备" class="headerlink" title="1.学习逻辑学的思想准备"></a>1.学习逻辑学的思想准备</h3><h4 id="1-全神贯注"><a href="#1-全神贯注" class="headerlink" title="1.全神贯注"></a>1.全神贯注</h4><p>许多错误的产生源自我们注意力不集中。<br>从严格意义上来讲，世界上没有两片相同的叶子。每个情景都有它的特殊性。<br>我们需要注意力帮助我们对所处的环境以及环境中的每个要素都作出敏捷主动的反应。<br>全神贯注和被动接受是不兼容的，对周边的事物要用心去看，用心去听。</p>
+<h4 id="2-确认事实"><a href="#2-确认事实" class="headerlink" title="2.确认事实"></a>2.确认事实</h4><p>事实的客观表现形式是事物和事件。<br>有形的事物是客观存在，无形的事件基本构成是事物。<br>确认事件的真实性。</p>
+<ul>
+<li>最直接有效确认事物的方法是亲自实地去看。也可以从值得信赖的人口中证实，或者照片作为证据。</li>
+<li>过去的事件，如林肯被杀，无法直接去看，那就得间接通过官方记录（警察案件记录）/当时的报纸/照片/国会档案等证实。<br>主观事实是指带有人的想法的事件。个人亲身经历或间接通过别人的经历确认的事实。<br>由于人脑中的自我错觉或理性化思维机制，人们可能无法确认关于自身的事实。<br>主观事实确认的基础是对其他当事人的完全信任。<h4 id="3-观念与对象"><a href="#3-观念与对象" class="headerlink" title="3.观念与对象"></a>3.观念与对象</h4>观念是我们对客观世界的描摹，被描摹的对象是客观存在的。<br>正确的观念反映其对象的客观秩序。<br>错误的观念是对客观世界的wai q歪曲表达。<br>观念与其对应的对象关系是扭曲脆弱的，那这个观念是错误的。<br>观念是了解外界的工具，观念不是目的，观念是桥梁。<br>我们不仅仅只能把握观念。<br>我们需要通过观念去观察其表现的对象。<h4 id="4-留意观念的本源"><a href="#4-留意观念的本源" class="headerlink" title="4.留意观念的本源"></a>4.留意观念的本源</h4>观念是大脑观察其对象在外部世界的机遇产生的。<br>与事物接触的越多，对其理解越深刻。<br>观念的客观根源是客观世界的对象。<h4 id="5-观念与事实"><a href="#5-观念与事实" class="headerlink" title="5.观念与事实"></a>5.观念与事实</h4></li>
+</ul>
+<p><strong>人类认知的组成</strong>：</p>
+<ol>
+<li>客观存在的事物</li>
+<li>事物在大脑中的反映</li>
+<li>我们为其创造的语言，介之，我们才能与他人交流。<br>先有事物，人根据事物形成观念，最后用语言表达观念。</li>
+</ol>
+<p><strong>简单观念</strong>：观念与事物之间的联系简单明了。例如：猫。简单观念容易验证，因为所对应的客观事物只有一个。包含的意思明确具体。<br><strong>复杂观念</strong>：指的是哪些与客观事物并非一一对应的观念。例如：民主，我们可以把它联系到客观世界。但民主的内涵有丰富的来源：人物、事件、宪法、立法行动、旧制度、新制度。讨论民主避免陷入主观主义，需要说现实中大家都明白的事物，必须不断涉及现实中的种种事件，这些事件都是民主内涵的现实土壤。</p>
+<p><strong>错误观念如何产生：</strong><br>错误观念即对客观事物作出偏离其本源的错误反映。<br>没有任何观念可以完全脱离客观世界。<br>观念和客观世界的联系可以变得遥远而难以捉摸。<br>错误观念偏离了事物的本源，它或许不能提供客观事物的真实情况，但可以反映错误观念人的精神状态。</p>
+<h4 id="6-将观念付诸语言（用语言表达观念）"><a href="#6-将观念付诸语言（用语言表达观念）" class="headerlink" title="6.将观念付诸语言（用语言表达观念）"></a>6.将观念付诸语言（用语言表达观念）</h4><p>观念必须与语言紧密结合，是顺畅交流的一个条件。<br>如何确认找到了合适的语言？重新审视观念的外在来源，理清思路。<br>语言要忠实表达出客观事物的本来面貌，从而使我们的沟通有坚实的事实基础。<br>主观事实不是现实得真实情况，主观事实揭示了思想状态。</p>
+<h4 id="7-有效沟通"><a href="#7-有效沟通" class="headerlink" title="7.有效沟通"></a>7.有效沟通</h4><p>在逻辑学中，陈述只针对可以判断真假的命题。<br>词语是语言的基石，逻辑的基础是命题。</p>
+<ol>
+<li>观念清晰，思维有条理。思维混乱带不来有效沟通。</li>
+<li>观念正确</li>
+<li>语言准确表达观念</li>
+<li>不要想当然地认为听众会领悟我们没有直接表达的意思。比如：背景信息。唠唠叨叨比挂一漏万强。</li>
+<li>别人无法把握所要讨论的问题跑题时，得把话题往回收。</li>
+<li>说完整的语句。</li>
+<li>不要将主观事实当做客观事实。想让主观命题被大家接收，必须为它论证。</li>
+<li>避免使用双重否定。容易有歧义。</li>
+<li>根据对象选择合适的语言。讲述方与对象对讲述的语言理解相同。专业人士之间可讲名词，专业人士给普通人讲通俗语言。</li>
+<li>避免使用模糊和多义的语言。范围不要过大。如：不喜欢那种音乐（摇滚），这个椅子（躺椅）挺好的。</li>
+<li>避免使用闪避式语言<h4 id="10-真相"><a href="#10-真相" class="headerlink" title="10.真相"></a>10.真相</h4>有些情况下，真相难以捉摸。但我们不能放弃追寻真相。<br>真相有两种基本形态：</li>
+</ol>
+<ul>
+<li>本体真相。本体真相更基础。指的是关乎存在的真相。</li>
+<li>逻辑真相。逻辑学家直接关注的真相形式。仅仅是关乎命题的真理性。<br>命题的定义：可以做出真假判断的语言表述。<br>一个命题如果真实的反映了客观世界，那就为真。<br>真命题的作用：将大脑中的观念（主观事实）以语言为媒介，对应到相应事物的真实状态（客观事实）。</li>
+</ul>
+<p>在任 何 情况下， 对 真相 的 确认 都要 去 检查 别人 所 认定 或 推测 所得 的 真相 在 现实 中 是否 存在 依据。 确认 真相 就是 要 达到 主观 与 客观 的 统一。</p>
+<p>语言描述是否与客观事实对应。对应即真相。<br><strong>谎言</strong>：脑子里清楚现实世界的真相，也能够用语言去表达，表述时却有意的欺瞒篡改。<br>符合论，语言是否与客观事实对应。<br>融贯学，语言描述是否与已被证明的思想、学说对应。<br>    即使已被证明，思想和学说仍可能是错的。<br>    可能某一理论已经过时，不符合现实世界。</p>
+<h3 id="1-学习逻辑学的思想准备-总结"><a href="#1-学习逻辑学的思想准备-总结" class="headerlink" title="1.学习逻辑学的思想准备-总结"></a>1.学习逻辑学的思想准备-总结</h3><p>人与外界连接过程：<br>精神活动 ➡️  观念 ➡️  语言 ➡️   事物</p>
+<h3 id="2-逻辑的基本原理"><a href="#2-逻辑的基本原理" class="headerlink" title="2.逻辑的基本原理"></a>2.逻辑的基本原理</h3><p>四个基本原理。</p>
+<h4 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1.基本原理"></a>1.基本原理</h4><p>同一律<br>排中律<br>充足理由律<br>矛盾律</p>
+<h4 id="2-灰色地带及人为灰色地带"><a href="#2-灰色地带及人为灰色地带" class="headerlink" title="2.灰色地带及人为灰色地带"></a>2.灰色地带及人为灰色地带</h4><p>不要把灰色地带当成世界的全部。<br>灰色地带只是因为我们没有看清楚。<br>灰色地带是短暂的。</p>
+<h4 id="3-万物终有其根源"><a href="#3-万物终有其根源" class="headerlink" title="3.万物终有其根源"></a>3.万物终有其根源</h4><p>原因和结果之间有一部分特性是相同的。</p>
+<h4 id="4-对原因的探寻不要半途而废"><a href="#4-对原因的探寻不要半途而废" class="headerlink" title="4.对原因的探寻不要半途而废"></a>4.对原因的探寻不要半途而废</h4><h4 id="5-区分原因"><a href="#5-区分原因" class="headerlink" title="5.区分原因"></a>5.区分原因</h4><p>动力因。背景<br>目的因。即作用<br>质料因。组成原料<br>形式因。特性</p>
+<h4 id="6-定义术语"><a href="#6-定义术语" class="headerlink" title="6.定义术语"></a>6.定义术语</h4><p>如何定义：</p>
+<ol>
+<li>先把其归类到最相近的分类。</li>
+<li>再指出本类中与其他事物的不同。<h4 id="7-直言命题"><a href="#7-直言命题" class="headerlink" title="7.直言命题"></a>7.直言命题</h4></li>
+</ol>
+<h4 id="8-普遍命题"><a href="#8-普遍命题" class="headerlink" title="8.普遍命题"></a>8.普遍命题</h4><h3 id="3-逻辑表现形式"><a href="#3-逻辑表现形式" class="headerlink" title="3.逻辑表现形式"></a>3.逻辑表现形式</h3><h4 id="1-创建一个论证"><a href="#1-创建一个论证" class="headerlink" title="1.创建一个论证"></a>1.创建一个论证</h4><p>一个命题是前提，另一个是结论</p>
+<h4 id="2-全称到特称"><a href="#2-全称到特称" class="headerlink" title="2.全称到特称"></a>2.全称到特称</h4><p>全称可以到特称。马都是脊椎动物。➡️   有些马是脊椎动物。</p>
+<h4 id="3-特称到全称"><a href="#3-特称到全称" class="headerlink" title="3.特称到全称"></a>3.特称到全称</h4><p>特称不可以到全称。<br>特称到全称可以加模糊词。全村的人<strong>可能</strong>都是黄头发，蓝眼睛。</p>
+<h4 id="4-断言"><a href="#4-断言" class="headerlink" title="4.断言"></a>4.断言</h4><p>断言描述事实关联性的过程。</p>
+<h4 id="5-否定命题"><a href="#5-否定命题" class="headerlink" title="5.否定命题"></a>5.否定命题</h4><p>缺点：不够直观。<br>优点：委婉。 这个事不是不行。</p>
+<h4 id="6-比较"><a href="#6-比较" class="headerlink" title="6.比较"></a>6.比较</h4><p>比较，判断，反映。<br>判断是一种精神活动，通过观念的链接，使我们对客观世界作出连贯的描述。<br>判断是命题的基础。<br>一个判断真实反映了客观世界事物之间的联系，这个判断是正确的。<br>反映在命题中是基础，将观念联结在一起反映事物之间联系。<br>比较任何两个事物，起决定作用的是特征的重要性，特征的数量次要一些。主要特性被遗漏，不能得出可靠结论。</p>
+<h4 id="7-比较和论证"><a href="#7-比较和论证" class="headerlink" title="7.比较和论证"></a>7.比较和论证</h4><p>将论证放到比较中。<br>类比论<br>用在哪？<br>    - A与B，无法直接得出B；<br>    - 未来要发生的，如：根据越南战争推测美国怎样做也会发生战争。<br>定义：基于两个事物拥有大量相同特性的事实，当其中一个事物具有其他某个特性时，很可能另一个事物也同时具有。</p>
+<h4 id="8-正确论证"><a href="#8-正确论证" class="headerlink" title="8.正确论证"></a>8.正确论证</h4><p>正确论证的两个基本要素：前提和结论。<br>论证提供给我们知识的可靠性远远高于权威。<br>正确论证，我们依靠自己知道了一些东西是正确的。我们知其然，也知其所以然。<br>正确论证依靠事实（内容）和形式（结构）。<br>真实性针对命题的内容，有效性针对命题的形式。</p>
+<p>三种简单的论证形式：<br>联言论证、选言论证、条件论证。</p>
+<ul>
+<li>联言论证。<br>  A·B<br>  安娜是明尼苏达大学二年级的学生，主修生物学。</li>
+<li>选言论证。<br>  AvB<br>  阿迪尔昨晚或者是坐火车去了华盛顿，或者是坐飞机。</li>
+<li>条件论证<h4 id="9-条件论证"><a href="#9-条件论证" class="headerlink" title="9.条件论证"></a>9.条件论证</h4>条件论证又称假言论证。<br>A→B，A，所以B<br>A-&gt;B，-B，所以-A<br>大前提A→B告诉我们如果A（无论它是什么）成立，那么B也必然成立。</li>
+</ul>
+<p>现实生活中，严格逻辑学意义上的条件论证真的很少。在我们的论证中，鲜有在前提和结论之间存在必然联系的情况。这样造成的结果是，即使前提实现，我们也不一定能得到论证中的结论。但这并不意味着条件论证是没有意义的，即使它看起来并不总是带来必然的结果。在我们大量使用的条件论证中，结论只是众多可能性中的一个。我们的目标是尽可能严谨地建立我们的论证，保证结论出现的最大可能性。</p>
+<p>条件论证是具有前瞻性的，可靠的预言来自于对过去事实的积累。</p>
+<h4 id="10-三段论"><a href="#10-三段论" class="headerlink" title="10.三段论"></a>10.三段论</h4><p>每一个M都是P。每一个S都是M。所以，每一个S都是P。<br>第一个命题是大前提，第二个命题是小前提，第三个是结论。<br>M代表中项，P代表大项，S代表小项。<br>M是桥梁。</p>
+<h4 id="11-前提的真实性"><a href="#11-前提的真实性" class="headerlink" title="11.前提的真实性"></a>11.前提的真实性</h4><p>错误的前提会带来错误的结论。</p>
+<h4 id="12-前提的相关性"><a href="#12-前提的相关性" class="headerlink" title="12.前提的相关性"></a>12.前提的相关性</h4><p>前提与结论的相关性。前提不支持结论，前提会失去作用。</p>
+<h4 id="13-事实命题，价值命题"><a href="#13-事实命题，价值命题" class="headerlink" title="13.事实命题，价值命题"></a>13.事实命题，价值命题</h4><p>音乐家是演奏音乐的人”，是个千真万确的命题。<br>音乐家都是杰出的人”，这个命题不是关于事实而是关于价值的，它反映了提出命题的人的观点（主观）。</p>
+<h4 id="14-论证结构"><a href="#14-论证结构" class="headerlink" title="14.论证结构"></a>14.论证结构</h4><p>主项、谓项；周延性</p>
+<h4 id="15-结论必须反映前提的量"><a href="#15-结论必须反映前提的量" class="headerlink" title="15.结论必须反映前提的量"></a>15.结论必须反映前提的量</h4><p>命题的量指的是它是全称还是特称。命题的量取决于它的主项。</p>
+<p>在结论中，命题的量必须以更绝对的量展现出来。结论是全称，则前提必须是全称。<br>两个特称前提无法得出必然结果。中项无法联结大项和小项。</p>
+<h4 id="16-结论必须反映前提的质"><a href="#16-结论必须反映前提的质" class="headerlink" title="16.结论必须反映前提的质"></a>16.结论必须反映前提的质</h4><p>命题的质指的是肯定还是否定。</p>
+<p>两个否定前提无法得出肯定结论。<br>两个肯定前提无法得出否定结论。</p>
+<h4 id="17-归纳论证-总结"><a href="#17-归纳论证-总结" class="headerlink" title="17.归纳论证-总结"></a>17.归纳论证-总结</h4><p>演绎论证：一般到个别。全称到特称；整体到部分；普遍的事实到组成等部分。<br>演绎论证的前提：通常是全称命题。<br>演绎论证结论：必然性结论。<br>演绎论证的基本原理：从一个我们知道的命题（大前提）开始，经过抽丝剥茧的分析（通过小前提得出结论）得出原始命题后隐含的是什么。</p>
+<p>归纳论证：个别到一般。特称到全称；部分到整体。<br>归纳论证的前提：一系列特称命题。<br>归纳论证的结论：可能性结论。</p>
+<p>归纳论证的步骤：<br>    1.假设，假设事物是什么样子的推测。假设来源：1.某次偶然观察；2.长期研究测算<br>    2.以整体中的某一部分作为样本研究，以此代替整体。样本范围的大小决定了它的代表性。<br>归纳论证作用（目的）：举一反三，对大量的事物做出可信的一般性结论。</p>
+<h4 id="18-评定论证-记录"><a href="#18-评定论证-记录" class="headerlink" title="18.评定论证-记录"></a>18.评定论证-记录</h4><p>？前提：证据不充足的前提只是观点。<br>实体生活中的前提：经常会遇到部分为真。</p>
+<h4 id="18-评定论证-总结"><a href="#18-评定论证-总结" class="headerlink" title="18.评定论证-总结"></a>18.评定论证-总结</h4><p>评定步骤：</p>
+<ol>
+<li>是否有明确的前提和结论</li>
+<li>前提是否证据充足</li>
+<li>前提是否正确</li>
+<li>前提与结论是否强相关</li>
+<li>论证结构是否合理<ol>
+<li>必然性结论</li>
+<li>可能性结论。可靠性评定：前提信息的可靠程度。</li>
+</ol>
+</li>
+<li>论证力量评定：论证对客观规律的反映程度<h4 id="19-构造一个论证-记录"><a href="#19-构造一个论证-记录" class="headerlink" title="19.构造一个论证-记录"></a>19.构造一个论证-记录</h4>论证的目的：得出正确的结论，说服听众接受。<br>说服听众接受，在论证时，需要选择适合于听众的方式。<h3 id="3-逻辑学的语言总结"><a href="#3-逻辑学的语言总结" class="headerlink" title="3.逻辑学的语言总结"></a>3.逻辑学的语言总结</h3>思维导图位置：有道云笔记-430思维-简单的逻辑学<h4 id="19-构造一个论证-总结"><a href="#19-构造一个论证-总结" class="headerlink" title="19.构造一个论证-总结"></a>19.构造一个论证-总结</h4>两个要素：前提和结论。<br>前提：<ul>
+<li>真实性。是否可判断命题真假，命题是否为真</li>
+<li>是否可被对方接受。<ul>
+<li>语言描述。例如：我想告诉一个 老奶奶我是自由职业者，我说：“ 我是soho一族。”</li>
+<li>逻辑描述。</li>
+</ul>
+</li>
+<li>力度。<ul>
+<li>对结论支持程度。</li>
+<li>听众接收到的力度：<ul>
+<li>如果几个前提同时支持一个结论，可能没必要全部用上。<br>   原因：前提多了会分散接收人的关注度。<pre><code>  - 去掉支持力度弱的前提，可让接收着关注支持力度强的前提，效果会更好。
+  - 多个前提的相关度都很强，也最好不要全部使用，少量前提可让论证重点突出。
+</code></pre>
+</li>
+<li>某些前提对某些特殊的听众有不同寻常的意义，这时候使用特殊前提。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-非逻辑思维的根源"><a href="#4-非逻辑思维的根源" class="headerlink" title="4.非逻辑思维的根源"></a>4.非逻辑思维的根源</h3><h4 id="1-怀疑论-记录"><a href="#1-怀疑论-记录" class="headerlink" title="1.怀疑论-记录"></a>1.怀疑论-记录</h4><p>积极作用：前提有争议时，不接受结论。<br>错误：<br>    极端怀疑论：世界没有真相<br>    中度怀疑论：世界有真相，但人无法探知真相</p>
+<h4 id="2-逃避型不可知论-记录"><a href="#2-逃避型不可知论-记录" class="headerlink" title="2.逃避型不可知论-记录"></a>2.逃避型不可知论-记录</h4><p>没有足够的证据可以对某个事物作出确定的判断。<br>既不 否定 真相 的 存在 也不 认为 它可 望而 不可 即。<br>人们对任何确定的事物的真相都所知甚少。</p>
+<h4 id="3-悲观和盲目乐观主义-记录"><a href="#3-悲观和盲目乐观主义-记录" class="headerlink" title="3.悲观和盲目乐观主义-记录"></a>3.悲观和盲目乐观主义-记录</h4><p>悲观者假设：<br>    （1） 要 辩论 的 问题是 荒谬 的；<br>    （2） 他的 对手 很 愚蠢；<br>    （3） 辩论 本身 不能 带来 任何 好处。</p>
+<h4 id="5-情感和论证-记录"><a href="#5-情感和论证-记录" class="headerlink" title="5.情感和论证-记录"></a>5.情感和论证-记录</h4><p>情绪越紧张，越难有清晰的思维，冷静行动的难度越大。<br>在辩论中，我们必须使论证远离情绪的影响。但成功做到这点很难。事实上，即使我们成功 了， 这也不见得会是一件好事。</p>
+<h4 id="6-推理的原因-记录"><a href="#6-推理的原因-记录" class="headerlink" title="6.推理的原因-记录"></a>6.推理的原因-记录</h4><p> 如果 一个 人的 思维 起点 本身 是 扭曲 的（ 即 不 反映 物质 世界 的 客观规律）， 那么 即使 推理 做到 了 和他 的 思维 保持 统一， 同样是 不合逻辑 的。</p>
+<h4 id="7-论证不是争吵-记录"><a href="#7-论证不是争吵-记录" class="headerlink" title="7.论证不是争吵-记录"></a>7.论证不是争吵-记录</h4><p>论证 是 理性 的 探讨， 不要 将它 和 争吵 混为一谈。<br>论证 的 目的 是 发现 真相， 争吵 的 目的 是 击败 你的 对手。<br>    有 许多人， 虽然 他们 愿意 和你 争吵， 但却 不愿意 或者 没能 力 和你 进行 论证。 不要 浪费时间、 精力 和 这种 人进行 争论。</p>
+<h4 id="9-常识-记录"><a href="#9-常识-记录" class="headerlink" title="9.常识-记录"></a>9.常识-记录</h4><p>逻辑， 生于 常识， 但又 高于 常识。 逻辑思维 的 出现 以及 对 非逻辑 思维 的 避免， 都 根植 于 常识 的 某 一面。 常识 是对 日常生活 中 显而易见 的 事物 的 敏锐 洞悉。 它以 可靠 的 辨别 力 为 标志， 以 语言 作为 首要 的 揭示 事物 的 方式， 不 欺瞒， 将 语言 的 作用 定位 于 表达 而 不是 炫耀。 常识 更 接近 本源， 服务于 推理 的 基本原则。</p>
+<h3 id="5-非逻辑思维的主要形式"><a href="#5-非逻辑思维的主要形式" class="headerlink" title="5.非逻辑思维的主要形式"></a>5.非逻辑思维的主要形式</h3><p>错误推理可通过直接作用于人的情感的方式来战胜正确推理。</p>
+<h4 id="1-否定前件"><a href="#1-否定前件" class="headerlink" title="1.否定前件"></a>1.否定前件</h4><p>条件论证中的无效形式：否定前件得出否定后件<br>举例：<br>    如果路易斯在跑步，那么他在移动。<br>    路易斯没有跑步。<br>    结论：他没有移动。</p>
+<pre><code>路易斯跑步是他移动的充分非必要条件。否定A得不出否定B。
+</code></pre>
+<h4 id="2-肯定后件"><a href="#2-肯定后件" class="headerlink" title="2.肯定后件"></a>2.肯定后件</h4><p>条件论证中的无效形式：肯定后件得出肯定前件。<br>举例：<br>    如果路易斯在跑步，那么他在移动。<br>    路易斯在移动。<br>    结论：他在跑步。</p>
+<pre><code>大前提是A → B，例子中却是 B → A。
+</code></pre>
+<h4 id="3-中项不周延"><a href="#3-中项不周延" class="headerlink" title="3.中项不周延"></a>3.中项不周延</h4><p>三段论中的大前提和小前提中的中项不是全称。<br>举例：<br>    几个纳粹党人是恺撒俱乐部的成员。<br>    张三是恺撒俱乐部的成员。<br>    结论：张三是纳粹党人。<br>    中项：恺撒俱乐部在大前提中的纳粹党人是特称，没有周延性</p>
+<h4 id="4-偷换概念"><a href="#4-偷换概念" class="headerlink" title="4.偷换概念"></a>4.偷换概念</h4><p>三段论中的中项用了多义词、多义字、有广泛含义的词、有广泛含义的字。<br>举例：<br>    鬼是迷信的人所说的人死后的灵魂。<br>    他目标闪烁，心里有鬼。<br>    所以，他心里有人死后的灵魂。</p>
+<pre><code>小前提心里有鬼的鬼的含义是不光明的事物，和大前提中的鬼的含义不同。
+</code></pre>
+<p>有意使用多义词不一定都是恶意的，可能只是为了幽默。</p>
+<p>举例：<br>    关爱他人是利他主义的标志。<br>    唐璜是博爱者。<br>    所以，唐璜是利他主义者。</p>
+<pre><code>爱的含义太广泛，此处小前提的爱是花花公子的意思。
+</code></pre>
+<h4 id="5-窃取论题"><a href="#5-窃取论题" class="headerlink" title="5.窃取论题"></a>5.窃取论题</h4><p>前提和结论意思相同。相当于用结论推导结论。<br>举例：<br>    因为雪梨撒过谎，<br>    所以，雪梨是个撒谎者。</p>
+<h4 id="6-虚假假设"><a href="#6-虚假假设" class="headerlink" title="6.虚假假设"></a>6.虚假假设</h4><p>用假设推导结论，后来发现假设是错误的。</p>
+<h4 id="7-稻草人谬误"><a href="#7-稻草人谬误" class="headerlink" title="7.稻草人谬误"></a>7.稻草人谬误</h4><p>与人争辩，为了削弱对方的论点而故意扭曲其论证过程。？？？</p>
+<h4 id="8-误用传统"><a href="#8-误用传统" class="headerlink" title="8.误用传统"></a>8.误用传统</h4><p>以前的事情都是这么处理的，并不能成为强制后来者遵循老方法的充分理由。</p>
+<p>但对于 传统， 如果 将 历史 悠久 作为 坚持 传统 的 唯一 原因 是 不合逻辑 的，那么 将 历史 悠久 作为 拒绝 传统 的 唯一 理由 同样 也 不合逻辑。</p>
+<h4 id="9-以暴制暴"><a href="#9-以暴制暴" class="headerlink" title="9.以暴制暴"></a>9.以暴制暴</h4><p>他们先做了，我们应该以牙还牙。</p>
+<h4 id="10-民主谬误"><a href="#10-民主谬误" class="headerlink" title="10.民主谬误"></a>10.民主谬误</h4><p>解释：一个给定的社会中，大多数人认为是正确的命题。自己也认为是正确的。<br>民主谬误在情感上有很强的说服力。</p>
+<h4 id="11-对人不对事"><a href="#11-对人不对事" class="headerlink" title="11.对人不对事"></a>11.对人不对事</h4><p>解释：与他人辩论时，通过想观众传达对手与论证无关的信息，比如生活中的负面信息，以此达到击败对手的目的。</p>
+<p>如果论证的目的只是为了获胜，对人不对事谬误将会有效地发挥作用。<br>这种胜利并非源于观点的价值，而是扰乱观众视听的能力。</p>
+<h4 id="12-压制理性"><a href="#12-压制理性" class="headerlink" title="12.压制理性"></a>12.压制理性</h4><p>通过强制而不是理性说服他人，强迫别人想不愿去想的事情。<br>人只有在独立思考、独立判断的情况下才能确定什么是真。</p>
+<h4 id="13-滥用专家意见"><a href="#13-滥用专家意见" class="headerlink" title="13.滥用专家意见"></a>13.滥用专家意见</h4><p>专家给了意见，我们需要追问给出意见的理由。<br>对于专家给的意见，我们需要论证。<br>如果 我们 仅仅 满足于 专家 的 话， 那么 本质上 就是：“ 不要 问 任何 问题， 按照 我们 的 话 去做。”<br>一个专家只有在其已经建立微信的领域内做出的主张，才是值得我们关注的。</p>
+<h4 id="14-质的量化错误"><a href="#14-质的量化错误" class="headerlink" title="14.质的量化错误"></a>14.质的量化错误</h4><p>举例1：<br>    将体感温度量化，体感温度包含：温度、风力、湿度。<br>    假设昨天是39℃，今天是40℃。只以温度量化体感温度今天比昨天热，但实际因为别的因素，可能今天比昨天凉快。<br>举例2：<br>    对爱、美丽、善良、公正、自由、正义、和平量化是对它们的亵渎。</p>
+<p>从严格意义上质无法准确量化。如果质量可以完美的被数量表示，那么数量和质量之间界限的基础就会消失。<br>我们 在 纵容 一种 关于 精度 的 假象， 似乎 只要 质量 被 量化 了， 我们 就能 更好 地 了解 它。</p>
+<h4 id="15-以出身论英雄"><a href="#15-以出身论英雄" class="headerlink" title="15.以出身论英雄"></a>15.以出身论英雄</h4><p>某个学校出的学生大部分都不好。这个学校的学生投了简历给我，我认为学生不好。<br>这个学生不好不是必然成立。</p>
+<p>实际情况下，我们应该认为的是，不值得判断这个学生好不好花费很多时间和精力。</p>
+<h4 id="16-分析不到位"><a href="#16-分析不到位" class="headerlink" title="16.分析不到位"></a>16.分析不到位</h4><p>分解只能针对合成的产物，仅仅分解是不够的，还要能把他们重新组装成整体。</p>
+<p>分析除了要分析出整体中的每一个部分，还要了解部分之间的相互作用、相互联系，最终组装成一个整体。</p>
+<h4 id="17-简化主义"><a href="#17-简化主义" class="headerlink" title="17.简化主义"></a>17.简化主义</h4><p>一个整体大于其组成部分的和。<br>举例：<br>    人的身体可以根据化学元素被分解，生成称人的身体等同于一堆化学元素。<br>这种谬误发生于我们只对整体的一部分加以关注。</p>
+<h4 id="18-分类错误"><a href="#18-分类错误" class="headerlink" title="18.分类错误"></a>18.分类错误</h4><p>举例：<br>    苹果当成橙子。<br>    图书馆中书的错误分类可能导致几年找不到。</p>
+<h4 id="19-混淆视听"><a href="#19-混淆视听" class="headerlink" title="19.混淆视听"></a>19.混淆视听</h4><p>故意提出一些无关的情感信息来分散对方的注意力。<br>    1.直接诉诸情感，而不是推理。<br>    2.所提供的信息与所要进行的论证毫不相关。</p>
+<h4 id="20-以笑饰非"><a href="#20-以笑饰非" class="headerlink" title="20.以笑饰非"></a>20.以笑饰非</h4><p>无法应对论证时，让人们嘲笑每个论证。</p>
+<p>让人们嘲笑论证是反对论证强有力的方式。</p>
+<h4 id="21-以泪掩过"><a href="#21-以泪掩过" class="headerlink" title="21.以泪掩过"></a>21.以泪掩过</h4><p>转移注意力到主论证的外围问题，并博取同情，达到听众支持主论证的目的</p>
+<h4 id="22-无法反驳"><a href="#22-无法反驳" class="headerlink" title="22.无法反驳"></a>22.无法反驳</h4><p>无法反驳也无法证明的命题是猜想，而不是正确论点。</p>
+<h4 id="23-两难陷阱"><a href="#23-两难陷阱" class="headerlink" title="23.两难陷阱"></a>23.两难陷阱</h4><h4 id="24-以先后论因果"><a href="#24-以先后论因果" class="headerlink" title="24.以先后论因果"></a>24.以先后论因果</h4><p>举例：<br>    鸟先唱歌，太阳后升起来。<br>    得出鸟唱歌是太阳升起的条件。</p>
+<h4 id="25-情感误导"><a href="#25-情感误导" class="headerlink" title="25.情感误导"></a>25.情感误导</h4><p>忽略与我们的信仰或喜欢的东西负面的信息。</p>
+<h4 id="26-功利误导"><a href="#26-功利误导" class="headerlink" title="26.功利误导"></a>26.功利误导</h4><p>为达目的，不择手段。仅仅关注一个方法对想要得到结果的作用，而不考虑其他方面。</p>
+<h4 id="27-避免结论"><a href="#27-避免结论" class="headerlink" title="27.避免结论"></a>27.避免结论</h4><p>人们推理的目的，发现问题，研究其解决之道。<br>若果论证的目的只是为了使自己听到自己在说什么，那是将论证庸俗化的。</p>
+<h4 id="28-简化推理-记录"><a href="#28-简化推理-记录" class="headerlink" title="28.简化推理-记录"></a>28.简化推理-记录</h4><p>同17简化主义<br>一部分人的接受能力只在自己想听的范围内。一部分人只想听自己喜欢的答案，这往往是愤世嫉俗者的特点。</p>
+<h2 id="其他书"><a href="#其他书" class="headerlink" title="其他书"></a>其他书</h2><p>影响力。作者西奥迪尼将社会现象通过基础逻辑串联起来， 就解释了人们互相影响的基本 规律。<br>风格的要素-写作</p>
+]]></content>
+      <categories>
+        <category>读书笔记</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>简单的逻辑学</tag>
       </tags>
   </entry>
 </search>
